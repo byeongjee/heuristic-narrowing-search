@@ -1,0 +1,404 @@
+load nat2.maude
+load heuristic-narrowing.maude
+
+set include BOOL off .
+
+mod BOOL2 is
+    sorts Bool2 InitialBool2 .
+    subsort InitialBool2 < Bool2 .
+    op false : -> InitialBool2 [ctor] .
+    op true : -> Bool2 [ctor] .
+
+    op _and_ : Bool2 Bool2 -> Bool2 [assoc comm] .
+    vars A B C : Bool2 .
+
+    eq true and A = A [variant] .
+    eq false and A = false [variant] .
+    eq A and A = A [variant] .
+
+endm
+
+mod VALUE is
+    protecting BOOL2 .
+
+    sorts Value NilValue NonNilValue .
+    subsort NilValue NonNilValue < Value .
+    subsort Bool2 < NonNilValue .
+
+    op nil : -> NilValue [ctor] .
+endm
+
+fmod STEP is
+    sorts Step InitialStep .
+    subsort InitialStep < Step .
+    op init : -> InitialStep [ctor] .
+    ops waiting finished : -> Step [ctor] .
+endfm
+
+
+mod NODE is
+  sorts Node Cid  .
+  subsort Node < Cid .
+  op Node : -> Cid [ctor] .
+endm
+
+mod CONFIGURATION is
+    protecting BOOL2 .
+    protecting NAT2 .
+    protecting VALUE .
+    protecting NODE .
+    protecting STEP .
+
+    sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
+    subsort Attribute < AttributeSet .
+    subsort  InitialAttributeSet < AttributeSet .
+
+    sorts Oid None Object Msg ObjectSet MsgSet Configuration InitialObject InitialObjectSet .
+
+    subsort MsgSet ObjectSet < Configuration .
+    subsort InitialObject < Object InitialObjectSet < ObjectSet .
+    subsort None < ObjectSet MsgSet .
+    subsort Msg < MsgSet .
+
+    sort OidSet .    subsort Oid < OidSet .
+    op none : -> OidSet [ctor] .
+    op _;_ : OidSet OidSet -> OidSet [ctor assoc comm id: none] .
+
+    op round`:_`,value`:_`,step`:_`,decision`:_`,votes`:_`,_/_`,neighbors`:_
+    : Zero2 NonNilValue InitialStep NilValue Zero2 Zero2 Zero2 OidSet -> InitialAttributeSet [ctor] .
+    op round`:_`,value`:_`,step`:_`,decision`:_`,votes`:_`,_/_`,neighbors`:_
+    : Nat2 NonNilValue Step Value Nat2 Nat2 Nat2 OidSet -> AttributeSet [ctor] .
+
+    op <_:_|_> : Oid Cid InitialAttributeSet -> InitialObject [ctor object] .
+    op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object] .
+    op none : -> None [ctor] .
+    op __ : None None -> None [ctor config assoc comm id: none] .
+    op __ : InitialObjectSet InitialObjectSet -> InitialObjectSet [ctor config assoc comm id: none] .
+    op __ : ObjectSet ObjectSet -> ObjectSet [ctor config assoc comm id: none] .
+    op __ : MsgSet MsgSet -> MsgSet [ctor config assoc comm id: none] .
+    op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
+
+endm
+
+
+fmod MESSAGE-CONTENT is
+  sort MsgContent . 
+endfm
+
+
+mod MULTICAST is 
+  including CONFIGURATION .
+  including MESSAGE-CONTENT .
+
+  op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
+  var MC : MsgContent . var SENDER : Oid .
+  eq multicast MC from SENDER to none = none [variant] .
+endm
+
+mod GLOBAL is
+    protecting CONFIGURATION .
+    protecting NAT2 .
+
+    sort State .
+
+    op {_,_} : Nat2 Configuration -> State [ctor] .
+endm
+
+
+
+mod VOTE is
+    protecting NAT2 .
+    including MESSAGE-CONTENT .
+
+    ops trueVote falseVote : Nat2 -> MsgContent [ctor] .
+endm
+
+
+
+
+mod ONETHIRDRULE is
+    including GLOBAL .
+    protecting NAT2 .
+    protecting VALUE .
+    protecting VOTE .
+    protecting MULTICAST .
+    protecting BOOL2 .
+    protecting BOOL .
+
+    vars O O' O'' : Oid . vars CONF REST : Configuration . vars C C' : Cid .
+    var MSG : Msg .  var MC : MsgContent .
+    vars ATTS ATTS' : AttributeSet .
+    vars NEIGHBORS OIDS : OidSet .
+    var R : Nat2 .
+    vars N N' REM REM' : Nat2 .
+    vars V_TRUE V_FALSE V_TOT : Nat2 .
+    vars STEP STEP' : Step .
+    vars V D : Value .
+
+    rl [vote-true] : 
+    {N,
+        < O : Node | round : R, value : true, step : init, decision : nil, votes : 0, 0 / 0, neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | round : R, value : true, step : waiting, decision : nil, votes : s, 0 / s, neighbors : NEIGHBORS > 
+        (multicast trueVote(R) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-false] : 
+    {N,
+        < O : Node | round : R, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | round : R, value : false, step : waiting, decision : nil, votes : 0, s / s, neighbors : NEIGHBORS > 
+        (multicast falseVote(R) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+
+    rl [receive-true-vote] :
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS > 
+        (multicast trueVote(R) from O' to (O ; OIDS))
+        CONF
+    } =>
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : s V_TRUE, V_FALSE / s V_TOT, neighbors : NEIGHBORS > 
+        (multicast trueVote(R) from O' to OIDS)  
+        CONF
+    } [narrowing] .
+
+    rl [receive-false-vote] :
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS > 
+        (multicast falseVote(R) from O' to (O ; OIDS))
+        CONF
+    } =>
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, s V_FALSE / s V_TOT, neighbors : NEIGHBORS > 
+        (multicast falseVote(R) from O' to OIDS)  
+        CONF
+    } [narrowing] .
+
+
+    op decideTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op decideFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op timeoutTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op timeoutFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
+
+    op leq : Nat2 Nat2 -> Bool2 .
+    eq leq(N, N N') = true [variant] .
+
+    rl [decideTrue-1] :
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    decideTrue(leq(N, V_TRUE),
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    ) [narrowing] .
+
+    rl [decideTrue-2] :
+    decideTrue(true,
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    ) 
+    =>
+    {N,
+        < O : Node | round : R, value : V, step : finished, decision : true, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+        CONF
+    } [narrowing] .
+
+    rl [decideFalse-1] :
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    decideFalse(leq(N, V_FALSE),
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    ) [narrowing] .
+
+    rl [decideFalse-2] :
+    decideFalse(true,
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF)
+    =>
+    {N,
+        < O : Node | round : R, value : V, step : finished, decision : false, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+        CONF
+    } [narrowing] .
+
+    rl [timeoutTrue-1] : 
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+        CONF
+    }
+    =>
+    timeoutTrue(
+        leq(s V_TRUE, N) and leq(N, V_TOT) and leq(V_FALSE, V_TRUE),
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    ) [narrowing] .
+
+    rl [timeoutTrue-2] : 
+    timeoutTrue(
+        true,
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    )
+    =>
+    {N,
+        < O : Node | round : s R, value : true, step : init, decision : nil, votes : 0, 0 / 0, neighbors : NEIGHBORS >
+        CONF
+    } [narrowing] .
+
+    rl [timeoutFalse-1] : 
+    {N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+        CONF
+    }
+    =>
+    timeoutFalse(
+        leq(s V_FALSE, N) and leq(N, V_TOT) and leq(s V_TRUE, V_FALSE),
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    ) [narrowing] .
+
+    rl [timeoutFalse-2] : 
+    timeoutFalse(
+        true,
+        N,
+        < O : Node | round : R, value : V, step : waiting, decision : nil, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >,
+        CONF
+    )
+    =>
+    {N,
+        < O : Node | round : s R, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : NEIGHBORS >
+        CONF
+    } [narrowing] .
+
+
+
+
+
+    var S : State . var M : Msg .
+    var SS : [State] .
+
+    op invariant : State -> Bool .
+    eq invariant(SS) = true .
+
+    op initialInvariant : State -> Bool [memo] .
+    eq initialInvariant({N, CONF}) 
+    = noDuplicateInNeighbor(getNeighborSet(CONF)) 
+    and noDuplicate(getOids(CONF)) 
+    and isThresholdValid(getOids(CONF), N) .
+
+
+
+
+    sort NeighborSet .
+    op _:_ : Oid OidSet -> NeighborSet .
+    op emptyNeighborSet : -> NeighborSet .
+    op _,_ : NeighborSet NeighborSet -> NeighborSet [ctor assoc comm id: emptyNeighborSet] .
+    op getNeighborSet : Configuration -> NeighborSet [memo] .
+    eq getNeighborSet(
+        < O : Node | round : R, value : V, step : STEP, decision : D, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+        CONF
+    ) = (O : NEIGHBORS), getNeighborSet(CONF) .
+    eq getNeighborSet(M CONF) = getNeighborSet(CONF) .
+    eq getNeighborSet(none) = emptyNeighborSet .
+
+    var NEIGHBOR_SET : [NeighborSet] .
+
+    op noDuplicateInNeighbor : NeighborSet -> Bool [memo] .
+    eq noDuplicateInNeighbor((O : (O' ; O' ; NEIGHBORS)), NEIGHBOR_SET) = false .
+    eq noDuplicateInNeighbor((O : (O ; NEIGHBORS)), NEIGHBOR_SET) = false .
+
+    op getOids : Configuration -> OidSet [memo] .
+
+    eq getOids(< O : C | ATTS > CONF) = O ; getOids(CONF) .
+    eq getOids(M CONF) =  getOids(CONF) .
+    eq getOids(none) =  none .
+
+    op noDuplicate : OidSet -> Bool [memo] .
+    eq noDuplicate(O ; O ; OIDS) = false .
+
+    var Z : Zero2 .
+
+    op isThresholdValid : OidSet Nat2 -> Bool [memo] .
+    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+    eq isThresholdValid(none, s N) = true .
+***(
+    eq isThresholdValid((O ; O' ; O'' ; OIDS), s s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid((O ; O' ; O'' ; OIDS), s Z) = false .
+    eq isThresholdValid(OIDS, Z) = false .
+    eq isThresholdValid(none, s N) = true .
+)
+
+endm
+
+
+mod ONETHIRDRULE-TEST is
+    including ONETHIRDRULE .
+    protecting HEURISTIC-NARROWING .
+
+    vars O O' O'' O1 O2 O3 O4 : Oid .
+    vars C1 C2 C3 C4 : Cid .
+    vars OIDS ALL : OidSet .
+    vars R R' : Nat2 .
+    vars V V' : Value .
+    vars N N' : Nat2 .
+    vars V_TRUE V_FALSE V_TOT  : Nat2 .
+    vars V_TRUE' V_FALSE' V_TOT' : Nat2 .
+    vars NEIGHBORS NEIGHBORS' : OidSet .
+    var INITIAL : InitialObjectSet .
+    var ATTS : AttributeSet .
+    vars STEP STEP' : Step .
+    var CONF : Configuration .
+
+    ops a b c d : -> Oid .
+
+endm
+
+
+***(
+
+search [1]
+    {s s, 
+    < a : Node | round : 0, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : b ; c >
+    < b : Node | round : 0, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : a ; c >
+    < c : Node | round : 0, value : true, step : init, decision : nil, votes : 0, 0 / 0, neighbors : a ; b >
+    } =>* 
+{s s,
+    < O : Node | round : R, value : V, step : STEP, decision : true, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+    < O' : Node | round : R', value : V', step : STEP', decision : false, votes : V_TRUE', V_FALSE' / V_TOT', neighbors : NEIGHBORS' >
+    CONF
+    } .
+)
+
+
+
+red metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-TEST, false),
+    upTerm({N, INITIAL}),
+    upTerm({N',
+    < O : Node | round : R, value : V, step : STEP, decision : true, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
+    < O' : Node | round : R' , value : V', step : STEP', decision : false, votes : V_TRUE', V_FALSE' / V_TOT', neighbors : NEIGHBORS' >
+    CONF}),
+    delay filter) .
