@@ -1,0 +1,423 @@
+load base-types.maude
+
+mod SORTS is
+  including STATUS .
+  including VOTE .
+  including STEP .
+  including VALUE .
+  including OID-SET .
+
+  sorts StatusAttr ValueAttr DecisionAttr VoteAttr NeighborsAttr .
+
+  op status`:_ : Status -> StatusAttr [ctor] .
+  op value`:_ : Value -> ValueAttr [ctor] .
+  op decision`:_ : Value -> DecisionAttr [ctor] .
+  op votes`:_ : Vote -> VoteAttr [ctor] .
+  op neighbors`:_ : OidSet -> NeighborsAttr [ctor] .
+
+--- {}
+
+--- {1}
+
+  sort U1S .
+  subsort StatusAttr  < U1S .
+
+--- {1,2}
+
+  sort U2S .
+  subsort ValueAttr  < U2S .
+
+  sort U12S .
+  subsort U1S U2S < U12S .
+  op _,_ : U1S U2S -> U12S [ctor assoc comm] .
+
+--- {1, 2, 3}
+  sort U3S .
+  subsort DecisionAttr  < U3S .
+
+  sort U13S .
+  subsort U1S U3S < U13S .
+  op _,_ : U1S U3S -> U13S [ctor ditto] .
+
+  sort U23S .
+  subsort U2S U3S < U23S .
+  op _,_ : U2S U3S -> U23S [ctor ditto] .
+
+  sort U123S .
+  subsort U12S U13S U23S < U123S .
+  op _,_ : U1S U23S -> U123S [ctor ditto] .
+  op _,_ : U2S U13S -> U123S [ctor ditto] .
+  op _,_ : U3S U12S -> U123S [ctor ditto] .
+
+--- {1, 2, 3, 4}
+  sort U4S .
+  subsort VoteAttr  < U4S .
+
+  sort U14S .
+  subsort U1S U4S < U14S .
+  op _,_ : U1S U4S -> U14S [ctor ditto] .
+
+  sort U24S .
+  subsort U2S U4S < U24S .
+  op _,_ : U2S U4S -> U24S [ctor ditto] .
+
+  sort U34S .
+  subsort U3S U4S < U34S .
+  op _,_ : U3S U4S -> U34S [ctor ditto] .
+
+  sort U124S .
+  subsort U12S U14S U24S < U124S .
+  op _,_ : U1S U24S -> U124S [ctor ditto] .
+  op _,_ : U2S U14S -> U124S [ctor ditto] .
+  op _,_ : U4S U12S -> U124S [ctor ditto] .
+
+  sort U134S .
+  subsort U13S U14S U34S < U134S .
+  op _,_ : U1S U34S -> U134S [ctor ditto] .
+  op _,_ : U3S U14S -> U134S [ctor ditto] .
+  op _,_ : U4S U13S -> U134S [ctor ditto] .
+
+  sort U234S .
+  subsort U23S U24S U34S < U234S .
+  op _,_ : U2S U34S -> U234S [ctor ditto] .
+  op _,_ : U3S U24S -> U234S [ctor ditto] .
+  op _,_ : U4S U23S -> U234S [ctor ditto] .
+
+  sort U1234S .
+  subsort U123S U124S U134S U234S < U1234S .
+  op _,_ : U1S U234S -> U1234S [ctor ditto] .
+  op _,_ : U2S U134S -> U1234S [ctor ditto] .
+  op _,_ : U3S U124S -> U1234S [ctor ditto] .
+  op _,_ : U4S U123S -> U1234S [ctor ditto] .
+  op _,_ : U12S U34S -> U1234S [ctor ditto] .
+  op _,_ : U13S U24S -> U1234S [ctor ditto] .
+  op _,_ : U14S U23S -> U1234S [ctor ditto] .
+  op _,_ : U23S U14S -> U1234S [ctor ditto] .
+
+--- {1, 2, 3, 4, 5}
+  sort U5S .
+  subsort NeighborsAttr  < U5S .
+
+  sort U15S .
+  subsort U1S U5S < U15S .
+  op _,_ : U1S U5S -> U15S [ctor ditto] .
+
+  sort U25S .
+  subsort U2S U5S < U25S .
+  op _,_ : U2S U5S -> U25S [ctor ditto] .
+
+  sort U35S .
+  subsort U3S U5S < U35S .
+  op _,_ : U3S U5S -> U35S [ctor ditto] .
+
+  sort U45S .
+  subsort U4S U5S < U45S .
+  op _,_ : U4S U5S -> U45S [ctor ditto] .
+
+  sort U125S .
+  subsort U12S U15S U25S < U125S .
+  op _,_ : U1S U25S -> U125S [ctor ditto] .
+  op _,_ : U2S U15S -> U125S [ctor ditto] .
+  op _,_ : U5S U12S -> U125S [ctor ditto] .
+
+  sort U135S .
+  subsort U13S U15S U35S < U135S .
+  op _,_ : U1S U35S -> U135S [ctor ditto] .
+  op _,_ : U3S U15S -> U135S [ctor ditto] .
+  op _,_ : U5S U13S -> U135S [ctor ditto] .
+
+  sort U145S .
+  subsort U14S U15S U45S < U145S .
+  op _,_ : U1S U45S -> U145S [ctor ditto] .
+  op _,_ : U4S U15S -> U145S [ctor ditto] .
+  op _,_ : U5S U14S -> U145S [ctor ditto] .
+
+  sort U235S .
+  subsort U23S U25S U35S < U235S .
+  op _,_ : U2S U35S -> U235S [ctor ditto] .
+  op _,_ : U3S U25S -> U235S [ctor ditto] .
+  op _,_ : U5S U23S -> U235S [ctor ditto] .
+
+  sort U245S .
+  subsort U24S U25S U45S < U245S .
+  op _,_ : U2S U45S -> U245S [ctor ditto] .
+  op _,_ : U4S U25S -> U245S [ctor ditto] .
+  op _,_ : U5S U24S -> U245S [ctor ditto] .
+
+  sort U345S .
+  subsort U34S U35S U45S < U345S .
+  op _,_ : U3S U45S -> U345S [ctor ditto] .
+  op _,_ : U4S U35S -> U345S [ctor ditto] .
+  op _,_ : U5S U34S -> U345S [ctor ditto] .
+
+  sort U1235S .
+  subsort U123S U125S U135S U235S < U1235S .
+  op _,_ : U1S U235S -> U1235S [ctor ditto] .
+  op _,_ : U2S U135S -> U1235S [ctor ditto] .
+  op _,_ : U3S U125S -> U1235S [ctor ditto] .
+  op _,_ : U5S U123S -> U1235S [ctor ditto] .
+  op _,_ : U12S U35S -> U1235S [ctor ditto] .
+  op _,_ : U13S U25S -> U1235S [ctor ditto] .
+  op _,_ : U15S U23S -> U1235S [ctor ditto] .
+  op _,_ : U23S U15S -> U1235S [ctor ditto] .
+
+  sort U1245S .
+  subsort U124S U125S U145S U245S < U1245S .
+  op _,_ : U1S U245S -> U1245S [ctor ditto] .
+  op _,_ : U2S U145S -> U1245S [ctor ditto] .
+  op _,_ : U4S U125S -> U1245S [ctor ditto] .
+  op _,_ : U5S U124S -> U1245S [ctor ditto] .
+  op _,_ : U12S U45S -> U1245S [ctor ditto] .
+  op _,_ : U14S U25S -> U1245S [ctor ditto] .
+  op _,_ : U15S U24S -> U1245S [ctor ditto] .
+  op _,_ : U24S U15S -> U1245S [ctor ditto] .
+
+  sort U1345S .
+  subsort U134S U135S U145S U345S < U1345S .
+  op _,_ : U1S U345S -> U1345S [ctor ditto] .
+  op _,_ : U3S U145S -> U1345S [ctor ditto] .
+  op _,_ : U4S U135S -> U1345S [ctor ditto] .
+  op _,_ : U5S U134S -> U1345S [ctor ditto] .
+  op _,_ : U13S U45S -> U1345S [ctor ditto] .
+  op _,_ : U14S U35S -> U1345S [ctor ditto] .
+  op _,_ : U15S U34S -> U1345S [ctor ditto] .
+  op _,_ : U34S U15S -> U1345S [ctor ditto] .
+
+  sort U2345S .
+  subsort U234S U235S U245S U345S < U2345S .
+  op _,_ : U2S U345S -> U2345S [ctor ditto] .
+  op _,_ : U3S U245S -> U2345S [ctor ditto] .
+  op _,_ : U4S U235S -> U2345S [ctor ditto] .
+  op _,_ : U5S U234S -> U2345S [ctor ditto] .
+  op _,_ : U23S U45S -> U2345S [ctor ditto] .
+  op _,_ : U24S U35S -> U2345S [ctor ditto] .
+  op _,_ : U25S U34S -> U2345S [ctor ditto] .
+  op _,_ : U34S U25S -> U2345S [ctor ditto] .
+
+  sort U12345S .
+  subsort U1234S U1235S U1245S U1345S U2345S < U12345S .
+  op _,_ : U1S U2345S -> U12345S [ctor ditto] .
+  op _,_ : U2S U1345S -> U12345S [ctor ditto] .
+  op _,_ : U3S U1245S -> U12345S [ctor ditto] .
+  op _,_ : U4S U1235S -> U12345S [ctor ditto] .
+  op _,_ : U5S U1234S -> U12345S [ctor ditto] .
+  op _,_ : U12S U345S -> U12345S [ctor ditto] .
+  op _,_ : U13S U245S -> U12345S [ctor ditto] .
+  op _,_ : U14S U235S -> U12345S [ctor ditto] .
+  op _,_ : U15S U234S -> U12345S [ctor ditto] .
+  op _,_ : U23S U145S -> U12345S [ctor ditto] .
+  op _,_ : U24S U135S -> U12345S [ctor ditto] .
+  op _,_ : U25S U134S -> U12345S [ctor ditto] .
+  op _,_ : U34S U125S -> U12345S [ctor ditto] .
+  op _,_ : U35S U124S -> U12345S [ctor ditto] .
+  op _,_ : U45S U123S -> U12345S [ctor ditto] .
+  
+endm
+
+mod INITIAL-SORTS is
+  including SORTS .
+
+  sorts InitialStatusAttr InitialDecisionAttr InitialVoteAttr .
+
+  subsort InitialStatusAttr < StatusAttr .
+  subsort InitialDecisionAttr < DecisionAttr .
+  subsort InitialVoteAttr < VoteAttr .
+
+  op status`:_ : InitialStatus -> InitialStatusAttr [ctor] .
+  op decision`:_ : NilValue -> InitialDecisionAttr [ctor] .
+  op votes`:_ : InitialVote -> InitialVoteAttr [ctor] .
+
+  sort IU1S .
+  subsort InitialStatusAttr < IU1S < U1S .
+
+--- {1,2}
+
+  sort IU2S .
+  subsort ValueAttr < IU2S < U2S .
+
+  sort IU12S .
+  subsort IU1S IU2S < IU12S < U12S .
+  op _,_ : IU1S IU2S -> IU12S [ctor ditto] .
+
+--- {1, 2, 3}
+  sort IU3S .
+  subsort InitialDecisionAttr < IU3S < U3S .
+
+  sort IU13S .
+  subsort IU1S IU3S < IU13S < U13S .
+  op _,_ : IU1S IU3S -> IU13S [ctor ditto] .
+
+  sort IU23S .
+  subsort IU2S IU3S < IU23S < U23S .
+  op _,_ : IU2S IU3S -> IU23S [ctor ditto] .
+
+  sort IU123S .
+  subsort IU12S IU13S IU23S < IU123S < U123S .
+  op _,_ : IU1S IU23S -> IU123S [ctor ditto] .
+  op _,_ : IU2S IU13S -> IU123S [ctor ditto] .
+  op _,_ : IU3S IU12S -> IU123S [ctor ditto] .
+
+--- {1, 2, 3, 4}
+  sort IU4S .
+  subsort InitialVoteAttr < IU4S < U4S .
+
+  sort IU14S .
+  subsort IU1S IU4S < IU14S < U14S .
+  op _,_ : IU1S IU4S -> IU14S [ctor ditto] .
+
+  sort IU24S .
+  subsort IU2S IU4S < IU24S < U24S .
+  op _,_ : IU2S IU4S -> IU24S [ctor ditto] .
+
+  sort IU34S .
+  subsort IU3S IU4S < IU34S < U34S .
+  op _,_ : IU3S IU4S -> IU34S [ctor ditto] .
+
+  sort IU124S .
+  subsort IU12S IU14S IU24S < IU124S < U124S .
+  op _,_ : IU1S IU24S -> IU124S [ctor ditto] .
+  op _,_ : IU2S IU14S -> IU124S [ctor ditto] .
+  op _,_ : IU4S IU12S -> IU124S [ctor ditto] .
+
+  sort IU134S .
+  subsort IU13S IU14S IU34S < IU134S < U134S .
+  op _,_ : IU1S IU34S -> IU134S [ctor ditto] .
+  op _,_ : IU3S IU14S -> IU134S [ctor ditto] .
+  op _,_ : IU4S IU13S -> IU134S [ctor ditto] .
+
+  sort IU234S .
+  subsort IU23S IU24S IU34S < IU234S < U234S .
+  op _,_ : IU2S IU34S -> IU234S [ctor ditto] .
+  op _,_ : IU3S IU24S -> IU234S [ctor ditto] .
+  op _,_ : IU4S IU23S -> IU234S [ctor ditto] .
+
+  sort IU1234S .
+  subsort IU123S IU124S IU134S IU234S < IU1234S < U1234S .
+  op _,_ : IU1S IU234S -> IU1234S [ctor ditto] .
+  op _,_ : IU2S IU134S -> IU1234S [ctor ditto] .
+  op _,_ : IU3S IU124S -> IU1234S [ctor ditto] .
+  op _,_ : IU4S IU123S -> IU1234S [ctor ditto] .
+  op _,_ : IU12S IU34S -> IU1234S [ctor ditto] .
+  op _,_ : IU13S IU24S -> IU1234S [ctor ditto] .
+  op _,_ : IU14S IU23S -> IU1234S [ctor ditto] .
+  op _,_ : IU23S IU14S -> IU1234S [ctor ditto] .
+
+--- {1, 2, 3, 4, 5}
+  sort IU5S .
+  subsort NeighborsAttr < IU5S < U5S .
+
+  sort IU15S .
+  subsort IU1S IU5S < IU15S < U15S .
+  op _,_ : IU1S IU5S -> IU15S [ctor ditto] .
+
+  sort IU25S .
+  subsort IU2S IU5S < IU25S < U25S .
+  op _,_ : IU2S IU5S -> IU25S [ctor ditto] .
+
+  sort IU35S .
+  subsort IU3S IU5S < IU35S < U35S .
+  op _,_ : IU3S IU5S -> IU35S [ctor ditto] .
+
+  sort IU45S .
+  subsort IU4S IU5S < IU45S < U45S .
+  op _,_ : IU4S IU5S -> IU45S [ctor ditto] .
+
+  sort IU125S .
+  subsort IU12S IU15S IU25S < IU125S < U125S .
+  op _,_ : IU1S IU25S -> IU125S [ctor ditto] .
+  op _,_ : IU2S IU15S -> IU125S [ctor ditto] .
+  op _,_ : IU5S IU12S -> IU125S [ctor ditto] .
+
+  sort IU135S .
+  subsort IU13S IU15S IU35S < IU135S < U135S .
+  op _,_ : IU1S IU35S -> IU135S [ctor ditto] .
+  op _,_ : IU3S IU15S -> IU135S [ctor ditto] .
+  op _,_ : IU5S IU13S -> IU135S [ctor ditto] .
+
+  sort IU145S .
+  subsort IU14S IU15S IU45S < IU145S < U145S .
+  op _,_ : IU1S IU45S -> IU145S [ctor ditto] .
+  op _,_ : IU4S IU15S -> IU145S [ctor ditto] .
+  op _,_ : IU5S IU14S -> IU145S [ctor ditto] .
+
+  sort IU235S .
+  subsort IU23S IU25S IU35S < IU235S < U235S .
+  op _,_ : IU2S IU35S -> IU235S [ctor ditto] .
+  op _,_ : IU3S IU25S -> IU235S [ctor ditto] .
+  op _,_ : IU5S IU23S -> IU235S [ctor ditto] .
+
+  sort IU245S .
+  subsort IU24S IU25S IU45S < IU245S < U245S .
+  op _,_ : IU2S IU45S -> IU245S [ctor ditto] .
+  op _,_ : IU4S IU25S -> IU245S [ctor ditto] .
+  op _,_ : IU5S IU24S -> IU245S [ctor ditto] .
+
+  sort IU345S .
+  subsort IU34S IU35S IU45S < IU345S < U345S .
+  op _,_ : IU3S IU45S -> IU345S [ctor ditto] .
+  op _,_ : IU4S IU35S -> IU345S [ctor ditto] .
+  op _,_ : IU5S IU34S -> IU345S [ctor ditto] .
+
+  sort IU1235S .
+  subsort IU123S IU125S IU135S IU235S < IU1235S < U1235S .
+  op _,_ : IU1S IU235S -> IU1235S [ctor ditto] .
+  op _,_ : IU2S IU135S -> IU1235S [ctor ditto] .
+  op _,_ : IU3S IU125S -> IU1235S [ctor ditto] .
+  op _,_ : IU5S IU123S -> IU1235S [ctor ditto] .
+  op _,_ : IU12S IU35S -> IU1235S [ctor ditto] .
+  op _,_ : IU13S IU25S -> IU1235S [ctor ditto] .
+  op _,_ : IU15S IU23S -> IU1235S [ctor ditto] .
+  op _,_ : IU23S IU15S -> IU1235S [ctor ditto] .
+
+  sort IU1245S .
+  subsort IU124S IU125S IU145S IU245S < IU1245S < U1245S .
+  op _,_ : IU1S IU245S -> IU1245S [ctor ditto] .
+  op _,_ : IU2S IU145S -> IU1245S [ctor ditto] .
+  op _,_ : IU4S IU125S -> IU1245S [ctor ditto] .
+  op _,_ : IU5S IU124S -> IU1245S [ctor ditto] .
+  op _,_ : IU12S IU45S -> IU1245S [ctor ditto] .
+  op _,_ : IU14S IU25S -> IU1245S [ctor ditto] .
+  op _,_ : IU15S IU24S -> IU1245S [ctor ditto] .
+  op _,_ : IU24S IU15S -> IU1245S [ctor ditto] .
+
+  sort IU1345S .
+  subsort IU134S IU135S IU145S IU345S < IU1345S < U1345S .
+  op _,_ : IU1S IU345S -> IU1345S [ctor ditto] .
+  op _,_ : IU3S IU145S -> IU1345S [ctor ditto] .
+  op _,_ : IU4S IU135S -> IU1345S [ctor ditto] .
+  op _,_ : IU5S IU134S -> IU1345S [ctor ditto] .
+  op _,_ : IU13S IU45S -> IU1345S [ctor ditto] .
+  op _,_ : IU14S IU35S -> IU1345S [ctor ditto] .
+  op _,_ : IU15S IU34S -> IU1345S [ctor ditto] .
+  op _,_ : IU34S IU15S -> IU1345S [ctor ditto] .
+
+  sort IU2345S .
+  subsort IU234S IU235S IU245S IU345S < IU2345S < U2345S .
+  op _,_ : IU2S IU345S -> IU2345S [ctor ditto] .
+  op _,_ : IU3S IU245S -> IU2345S [ctor ditto] .
+  op _,_ : IU4S IU235S -> IU2345S [ctor ditto] .
+  op _,_ : IU5S IU234S -> IU2345S [ctor ditto] .
+  op _,_ : IU23S IU45S -> IU2345S [ctor ditto] .
+  op _,_ : IU24S IU35S -> IU2345S [ctor ditto] .
+  op _,_ : IU25S IU34S -> IU2345S [ctor ditto] .
+  op _,_ : IU34S IU25S -> IU2345S [ctor ditto] .
+
+  sort IU12345S .
+  subsort IU1234S IU1235S IU1245S IU1345S IU2345S < IU12345S < U12345S .
+  op _,_ : IU1S IU2345S -> IU12345S [ctor ditto] .
+  op _,_ : IU2S IU1345S -> IU12345S [ctor ditto] .
+  op _,_ : IU3S IU1245S -> IU12345S [ctor ditto] .
+  op _,_ : IU4S IU1235S -> IU12345S [ctor ditto] .
+  op _,_ : IU5S IU1234S -> IU12345S [ctor ditto] .
+  op _,_ : IU12S IU345S -> IU12345S [ctor ditto] .
+  op _,_ : IU13S IU245S -> IU12345S [ctor ditto] .
+  op _,_ : IU14S IU235S -> IU12345S [ctor ditto] .
+  op _,_ : IU15S IU234S -> IU12345S [ctor ditto] .
+  op _,_ : IU23S IU145S -> IU12345S [ctor ditto] .
+  op _,_ : IU24S IU135S -> IU12345S [ctor ditto] .
+  op _,_ : IU25S IU134S -> IU12345S [ctor ditto] .
+  op _,_ : IU34S IU125S -> IU12345S [ctor ditto] .
+  op _,_ : IU35S IU124S -> IU12345S [ctor ditto] .
+  op _,_ : IU45S IU123S -> IU12345S [ctor ditto] .
+
+endm
