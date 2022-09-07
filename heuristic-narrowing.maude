@@ -1,7 +1,6 @@
 load priority-queue.maude
 
 fmod SCORE is
-*** subject to be parameterized
     protecting META-LEVEL .
     protecting INT .
 
@@ -9,34 +8,40 @@ fmod SCORE is
     vars NETL NETL' : NeTermList .
     vars F Q Q' : Qid . var C : Constant . var X : Variable .
 
-    op score : NeTermList -> Int [memo] .
+    var D : Nat .
+
+    op score : NeTermList Nat -> Int [memo] .
+    op sizeOne : NeTermList -> Int [memo] .
+    op sizeNat : Term -> Int [memo] .
 
     eq score(
-        'decideTrue[T, T', T'', T''']
-    ) = score((T'', T''')) .
+        'decideTrue[T, T', T'', T'''], D
+    ) = sizeOne((T'', T''')) .
     eq score(
-        'decideFalse[T, T', T'', T''']
-    ) = score((T'', T''')) .
+        'decideFalse[T, T', T'', T'''], D
+    ) = sizeOne((T'', T''')) .
     eq score(
-        'timeoutTrue[T, T', T'', T''']
-    ) = score((T'', T''')) .
+        'timeoutTrue[T, T', T'', T'''], D
+    ) = sizeOne((T'', T''')) .
     eq score(
-        'timeoutFalse[T, T', T'', T''']
-    ) = score((T'', T''')) .
+        'timeoutFalse[T, T', T'', T'''], D
+    ) = sizeOne((T'', T''')) .
 
     eq score(
-        '`{_`,_`}[T, NETL]
-    ) = score(NETL) .
+        '`{_`,_`}[T, NETL], D
+    ) = sizeOne(NETL) .
 
-    eq score('__[NETL]) = score(NETL) .
-    eq score((T, NETL)) = score(T) + score(NETL) .
+    eq sizeOne('__[NETL]) = sizeOne(NETL) .
+    eq sizeOne((T, NETL)) = sizeOne(T) + sizeOne(NETL) .
 
-    eq score('<_:_|_>[NETL]) = 100 .
+    eq sizeOne('<_:_|_>[NETL]) 
+    = 100 .
+    ***= if N == '0.Nat2 or getType(N) == 'Zero2 then 100 else 200 fi .
 
-    eq score('multicast_from_to_[NETL]) = -1 .
-    eq score(X) = 0 .
-    eq score(empty) = 0 .
-    eq score(T) = 0 [owise] .
+    eq sizeOne('multicast_from_to_[NETL]) = -1 .
+    eq sizeOne(X) = 0 .
+    eq sizeOne(empty) = 0 .
+    eq sizeOne(T) = 0 [owise] .
 endfm
 
 
@@ -73,6 +78,13 @@ fmod TERM-SET is
 
     op emptyTermSet : -> TermSet [ctor] .
     op _;;_ : TermSet TermSet -> TermSet [ctor assoc comm id: emptyTermSet] .
+
+    op size : TermSet -> Nat .
+    var T : Term .
+    var TS : TermSet .
+    eq size(T) = 1 .
+    eq size(T ;; TS) = 1 + size(TS) .
+    eq size(emptyTermSet) = 0 .
 endfm
 
 fmod TERM-ITEM-SET is 
@@ -98,7 +110,7 @@ view TermItem from TOSET<= to TERM-ITEM is
 endv
 
 
-mod HEURISTIC-NARROWING is
+mod BOUNDED-NARROWING is
     protecting SCORE .
     protecting TERM-SET .
     protecting TERM-ITEM-SET .
@@ -107,15 +119,15 @@ mod HEURISTIC-NARROWING is
     protecting CONVERSION .
 
 
-    sort HeuristicNarrowingSearchResult .
-    op noSolution : -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : TermItem -> HeuristicNarrowingSearchResult [ctor] . *** TODO: Add information
+    sort BoundedNarrowingSearchResult .
+    op noSolution : Nat -> BoundedNarrowingSearchResult [ctor] .
+    op sol : TermItem Nat -> BoundedNarrowingSearchResult [ctor] .
 
-    *** module, initial term, goal term, variant option set (TODO: solution number)
-    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
+    *** module, initial term, goal term, variant option set 
+    op metaBoundedNarrowingSearch : Module Term Term VariantOptionSet -> BoundedNarrowingSearchResult .
 
-    *** module, initial term, goal term, variant option set, pending, most general so far, (TODO: solution number)
-    op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} TermSet -> HeuristicNarrowingSearchResult .
+    *** module, initial term, goal term, variant option set, pending, most general so far
+    op metaBoundedNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} TermSet -> BoundedNarrowingSearchResult .
 
     var M : Module .
     vars T T' S I I' : Term .
@@ -128,10 +140,14 @@ mod HEURISTIC-NARROWING is
     var C : Constant . var NETL : NeTermList .  var B : Bool .
     vars QUEUE QUEUE' : LTree{TermItem} .
 
+    var F' : Qid .
+    vars NETL' : NeTermList .
 
-    op _isSubsumedBy_under_ : Term TermSet Module -> Bool [memo] .
+    op _isSubsumedBy_under_ : Term TermSet Module -> Bool  .
     eq T isSubsumedBy emptyTermSet under M = false .
-    eq T isSubsumedBy T' under M = metaMatch(M, T', T, nil, 0) =/= noMatch .
+    eq F[NETL] isSubsumedBy F[NETL'] under M = metaMatch(M, F[NETL'], F[NETL], nil, 0) =/= noMatch .
+    ceq F[NETL] isSubsumedBy F'[NETL'] under M = false if F =/= F' .
+    eq T isSubsumedBy T' under M = false [owise] .
     eq T isSubsumedBy (T' ;; TS) under M = T isSubsumedBy T' under M or T isSubsumedBy TS under M .
 
     var V : Variable .
@@ -155,29 +171,34 @@ mod HEURISTIC-NARROWING is
     sort InsertStateResult .
     subsort TermSet < InsertStateResult .
     op subsumed : -> InsertStateResult [ctor] .
-    op insertState : Module Term Nat TermSet -> InsertStateResult [memo] .
+    op insertState : Module Term Nat TermSet -> InsertStateResult .
 
+    op evict : Module TermSet Term -> TermSet .
+    eq evict(M, emptyTermSet, T') = emptyTermSet .
+    eq evict(M, T ;; TS, T') = if T isSubsumedBy T' under M then evict(M, TS, T') else T ;; evict(M, TS, T') fi .
 
 *** apply folding 
 ***(
+
     eq insertState(M, T, D, TS) = 
         if T isSubsumedBy TS under M
         then subsumed
-        else TS ;; rename(T, D)
+        else 
+        ***TS ;; rename(T, D)
+        evict(M, TS, rename(T,D)) ;; rename(T, D)
         fi .
 )
     *** do not apply folding
-    eq insertState(M, T, D, TS) = TS .
-
+    eq insertState(M, T, D, TS) = TS ;; rename(T, D) .
 
     op getChildren : Module TermItem VariantOptionSet -> TermItemSet [memo] .
-    op getChildrenInternal : Module TermItem VariantOptionSet Nat -> TermItemSet [memo] .
+    op getChildrenInternal : Module TermItem VariantOptionSet Nat -> TermItemSet .
 
     eq getChildren(M, TI, VOS) = getChildrenInternal(M, TI, VOS, 0) .
 
 
     ceq getChildrenInternal(M, (< T, I, Q, N, D >), VOS, SOLN) 
-    = < T', I', Q', score(T'), D + 1 > ;; TIS
+    = < T', I', Q', score(T', D + 1), D + 1 > ;; TIS
     if {T', TY', CO, RULE_LABEL, S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) 
     /\ TIS := getChildrenInternal(M, < T, I, Q, N, D >, VOS, SOLN + 1) 
     /\ I' := getTerm(metaReduce(M, metaAnd(applySubstitution(M, I, S1), metaWrapInvariant(T')))) .
@@ -196,17 +217,17 @@ mod HEURISTIC-NARROWING is
     op {_,_} : TermItemSet TermSet -> ProcessChildrenResult [ctor] .
 
     *** module, children, most general so far
-    op processChildren : Module TermItemSet TermSet -> ProcessChildrenResult [memo] .
+    op processChildren : Module TermItemSet TermSet -> ProcessChildrenResult .
 
     eq processChildren(M, emptyTermItemSet, MOST_GENERAL_SO_FAR) = {emptyTermItemSet, MOST_GENERAL_SO_FAR} .
 
-    ceq processChildren(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) = 
-    processChildren(M, TIS, MOST_GENERAL_SO_FAR)
+    ceq processChildren(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) 
+    = processChildren(M, TIS, MOST_GENERAL_SO_FAR)
     if insertState(M, T, D, MOST_GENERAL_SO_FAR) == subsumed 
     or I == 'false.Bool .
 
-    ceq processChildren(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) = 
-    {< T, I, Q, N, D > ;; FILTERED, MOST_GENERAL_SO_FAR''}
+    ceq processChildren(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) 
+    = {< T, I, Q, N, D > ;; FILTERED, MOST_GENERAL_SO_FAR''}
     if MOST_GENERAL_SO_FAR' := insertState(M, T, D, MOST_GENERAL_SO_FAR) 
     /\ I =/= 'false.Bool 
     /\ {FILTERED, MOST_GENERAL_SO_FAR''} := processChildren(M, TIS, MOST_GENERAL_SO_FAR') .
@@ -214,7 +235,7 @@ mod HEURISTIC-NARROWING is
 
     var UP : UnificationPair .
 
-    op isSolution : Module TermItem Term -> Bool [memo] .
+    op isSolution : Module TermItem Term -> Bool .
 
     ceq isSolution(M, < T, I, Q, N, D >, T') = true
     if UP := metaUnify(M, T =? T', Q, 0) 
@@ -237,48 +258,31 @@ mod HEURISTIC-NARROWING is
     ceq findSolution(M, T', TI ;; TIS) 
     = findSolution(M, T', TIS) 
     if not isSolution(M, TI, T') .
-    
 
     op insertAll : TermItemSet LTree{TermItem} -> LTree{TermItem} .
     eq insertAll(emptyTermItemSet, QUEUE) = QUEUE .
     eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
 
- 
-    *** the given term is already a solution
-    ceq metaHeuristicNarrowingSearch(M, T, T', VOS)
-    = sol(TI) 
-    if TI :=  < T, metaWrapInitialInvariant(T), '@, score(T), 0 >
+    eq metaBoundedNarrowingSearch(M, T, T', VOS)
+    = metaBoundedNarrowingSearchInternal(M, T, T', VOS, insert(< T, metaWrapInitialInvariant(T), '@, score(T, 0), 0 >, empty), emptyTermSet) .
+
+    ceq metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
+    = sol(TI, size(MOST_GENERAL_SO_FAR))
+    if QUEUE =/= empty 
+    /\ TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
-    *** otherwise, execute the auxiliary function
-    ceq metaHeuristicNarrowingSearch(M, T, T', VOS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, insert(TI, empty), emptyTermSet)
-    if TI := < T, metaWrapInitialInvariant(T), '@, score(T), 0 >
-    /\ not isSolution(M, TI, T') .
-
-    *** solution found in the children set
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
-    = sol(SOL)
+    ceq metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
+    = metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE', MOST_GENERAL_SO_FAR')
     if QUEUE =/= empty 
     /\ TI := findMin(QUEUE)
+    /\ not isSolution(M, TI, T')
     /\ CHILDREN := getChildren(M, TI, VOS)
     /\ {FILTERED, MOST_GENERAL_SO_FAR'} := processChildren(M, CHILDREN, MOST_GENERAL_SO_FAR)
-    /\ found(SOL) := findSolution(M, T', FILTERED)
-    /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE))  .
-
-
-    *** solution not found in the children set
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE', MOST_GENERAL_SO_FAR')
-    if QUEUE =/= empty 
-    /\ TI := findMin(QUEUE)
-    /\ CHILDREN := getChildren(M, TI, VOS)
-    /\ {FILTERED, MOST_GENERAL_SO_FAR'} := processChildren(M, CHILDREN, MOST_GENERAL_SO_FAR)
-    /\ findSolution(M, T', FILTERED) == notFound
     /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) [print "TI: " TI] .
 
     *** the queue is empty
-    eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, MOST_GENERAL_SO_FAR)
-    = noSolution .
+    eq metaBoundedNarrowingSearchInternal(M, T, T', VOS, empty, MOST_GENERAL_SO_FAR)
+    = noSolution(size(MOST_GENERAL_SO_FAR)) .
 
 endm
