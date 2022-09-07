@@ -110,7 +110,7 @@ view TermItem from TOSET<= to TERM-ITEM is
 endv
 
 
-mod BOUNDED-NARROWING is
+mod HEURISTIC-NARROWING is
     protecting SCORE .
     protecting TERM-SET .
     protecting TERM-ITEM-SET .
@@ -124,10 +124,10 @@ mod BOUNDED-NARROWING is
     op sol : TermItem Nat -> BoundedNarrowingSearchResult [ctor] .
 
     *** module, initial term, goal term, variant option set 
-    op metaBoundedNarrowingSearch : Module Term Term VariantOptionSet -> BoundedNarrowingSearchResult .
+    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> BoundedNarrowingSearchResult .
 
     *** module, initial term, goal term, variant option set, pending, most general so far
-    op metaBoundedNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} TermSet -> BoundedNarrowingSearchResult .
+    op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} TermSet -> BoundedNarrowingSearchResult .
 
     var M : Module .
     vars T T' S I I' : Term .
@@ -263,17 +263,17 @@ mod BOUNDED-NARROWING is
     eq insertAll(emptyTermItemSet, QUEUE) = QUEUE .
     eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
 
-    eq metaBoundedNarrowingSearch(M, T, T', VOS)
-    = metaBoundedNarrowingSearchInternal(M, T, T', VOS, insert(< T, metaWrapInitialInvariant(T), '@, score(T, 0), 0 >, empty), emptyTermSet) .
+    eq metaHeuristicNarrowingSearch(M, T, T', VOS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, insert(< T, metaWrapInitialInvariant(T), '@, score(T, 0), 0 >, empty), emptyTermSet) .
 
-    ceq metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
     = sol(TI, size(MOST_GENERAL_SO_FAR))
     if QUEUE =/= empty 
     /\ TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
-    ceq metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
-    = metaBoundedNarrowingSearchInternal(M, T, T', VOS, QUEUE', MOST_GENERAL_SO_FAR')
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE', MOST_GENERAL_SO_FAR')
     if QUEUE =/= empty 
     /\ TI := findMin(QUEUE)
     /\ not isSolution(M, TI, T')
@@ -282,7 +282,7 @@ mod BOUNDED-NARROWING is
     /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) [print "TI: " TI] .
 
     *** the queue is empty
-    eq metaBoundedNarrowingSearchInternal(M, T, T', VOS, empty, MOST_GENERAL_SO_FAR)
+    eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, MOST_GENERAL_SO_FAR)
     = noSolution(size(MOST_GENERAL_SO_FAR)) .
 
 endm
