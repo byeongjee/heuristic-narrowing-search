@@ -1,0 +1,67 @@
+
+mod BOOL2 is
+    sorts Bool2 InitialBool2 .
+    subsort InitialBool2 < Bool2 .
+    op false : -> InitialBool2 [ctor] .
+    op true : -> Bool2 [ctor] .
+
+    op _and_ : Bool2 Bool2 -> Bool2 [assoc comm] .
+    vars A B C : Bool2 .
+
+    eq true and A = A [variant] .
+    eq false and A = false [variant] .
+    eq A and A = A [variant] .
+
+endm
+
+mod VALUE is
+    protecting BOOL2 .
+
+    sorts Value NilValue NonNilValue .
+    subsort NilValue NonNilValue < Value .
+    subsort Bool2 < NonNilValue .
+
+    op nil : -> NilValue [ctor] .
+endm
+
+fmod STEP is
+    sorts Step InitialStep .
+    subsort InitialStep < Step .
+    op init : -> InitialStep [ctor] .
+    ops waiting finished : -> Step [ctor] .
+endfm
+
+
+mod NODE is
+  sorts Node Cid  .
+  subsort Node < Cid .
+  op Node : -> Cid [ctor] .
+endm
+
+mod STATUS is
+    protecting NAT2 .
+    protecting STEP .
+
+    sorts Status InitialStatus .
+    subsort InitialStatus < Status .
+
+    op _`,_ : Zero2 InitialStep -> InitialStatus [ctor] . 
+    op _`,_ : Nat2 Step -> Status [ctor] . 
+endm
+
+mod VOTE is
+    protecting NAT2 .
+
+    sorts Vote InitialVote .
+    subsort InitialVote < Vote .
+
+    op _`,_/_ : Zero2 Zero2 Zero2 -> InitialVote [ctor] .
+    op _`,_/_ : Nat2 Nat2 Nat2 -> Vote [ctor] .
+endm
+
+mod OID-SET is
+    sorts Oid OidSet .
+    subsort Oid < OidSet .
+    op none : -> OidSet [ctor] .
+    op _;_ : OidSet OidSet -> OidSet [ctor assoc comm id: none] .
+endm
