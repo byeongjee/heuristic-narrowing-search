@@ -79,7 +79,7 @@ mod ONETHIRDRULE is
     vars NEIGHBORS OIDS : OidSet .
     var R : Nat2 .
     vars N N' REM REM' : Nat2 .
-    vars V_TRUE V_FALSE V_TOT : Nat2 .
+    vars VT VF VA : Nat2 .
     vars STEP STEP' : Step .
     vars V D : Value .
 
@@ -115,24 +115,24 @@ mod ONETHIRDRULE is
 
     rl [receive-true-vote] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
         (multicast trueVote(R) from O' to (O ; OIDS))
         CONF
     } =>
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (s V_TRUE, V_FALSE, s V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U25S > 
         (multicast trueVote(R) from O' to OIDS)  
         CONF
     } [narrowing] .
 
     rl [receive-false-vote] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
         (multicast falseVote(R) from O' to (O ; OIDS))
         CONF
     } =>
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, s V_FALSE, s V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U25S > 
         (multicast falseVote(R) from O' to OIDS)  
         CONF
     } [narrowing] .
@@ -148,13 +148,13 @@ mod ONETHIRDRULE is
 
     rl [decideTrue-1] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
         CONF
     }
     =>
-    decideTrue(N <= V_TRUE,
+    decideTrue(N <= VT,
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
@@ -172,37 +172,37 @@ mod ONETHIRDRULE is
 
     rl [decideFalse-1] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
         CONF
     }
     =>
-    decideFalse(N <= V_FALSE,
+    decideFalse(N <= VF,
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
     rl [decideFalse-2] :
     decideFalse(true,
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U245S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U245S >,
         CONF)
     =>
     {N,
-        < O : Node | status : (R, finished), decision : false, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U245S >
+        < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U245S >
         CONF
     } [narrowing] .
 
     rl [updateTrue-1] : 
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >
         CONF
     }
     =>
     updateTrue(
-        (s V_TRUE <=  N) and (N <= V_TOT) and (V_FALSE <= V_TRUE),
+        (s VT <=  N) and (N <= VA) and (VF <= VT),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
@@ -210,7 +210,7 @@ mod ONETHIRDRULE is
     updateTrue(
         true,
         N,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U5S >,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
         CONF
     )
     =>
@@ -221,14 +221,14 @@ mod ONETHIRDRULE is
 
     rl [updateFalse-1] : 
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >
         CONF
     }
     =>
     updateFalse(
-        (s V_FALSE <= N) and (N <= V_TOT) and (s V_TRUE <= V_FALSE),
+        (s VF <= N) and (N <= VA) and (s VT <= VF),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
@@ -236,7 +236,7 @@ mod ONETHIRDRULE is
     updateFalse(
         true,
         N,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U5S >,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
         CONF
     )
     =>
@@ -317,8 +317,8 @@ mod ONETHIRDRULE-TEST is
     vars R R' : Nat2 .
     vars V V' : Value .
     vars N N' : Nat2 .
-    vars V_TRUE V_FALSE V_TOT  : Nat2 .
-    vars V_TRUE' V_FALSE' V_TOT' : Nat2 .
+    vars VT VF VA  : Nat2 .
+    vars VT' VF' VA' : Nat2 .
     vars NEIGHBORS NEIGHBORS' : OidSet .
     var INITIAL : InitialObjectSet .
     vars STEP STEP' : Step .
@@ -338,8 +338,8 @@ search [1]
     < c : Node | status : 0, value : true, step : init, decision : nil, votes : 0, 0 / 0, neighbors : a ; b >
     } =>* 
 {s s,
-    < O : Node | status : R, value : V, step : STEP, decision : true, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
-    < O' : Node | status : R', value : V', step : STEP', decision : false, votes : V_TRUE', V_FALSE' / V_TOT', neighbors : NEIGHBORS' >
+    < O : Node | status : R, value : V, step : STEP, decision : true, votes : VT, VF / VA, neighbors : NEIGHBORS >
+    < O' : Node | status : R', value : V', step : STEP', decision : false, votes : VT', VF' / VA', neighbors : NEIGHBORS' >
     CONF
     } .
 )
@@ -349,8 +349,8 @@ search [1]
 {N, INITIAL} =>*
 {
     N,
-    < O : Node | status : R, value : V, step : STEP, decision : true, votes : V_TRUE, V_FALSE / V_TOT, neighbors : NEIGHBORS >
-    < O' : Node | status : R' , value : V', step : STEP', decision : false, votes : V_TRUE', V_FALSE' / V_TOT', neighbors : NEIGHBORS' >
+    < O : Node | status : R, value : V, step : STEP, decision : true, votes : VT, VF / VA, neighbors : NEIGHBORS >
+    < O' : Node | status : R' , value : V', step : STEP', decision : false, votes : VT', VF' / VA', neighbors : NEIGHBORS' >
     CONF
 } .
 )
