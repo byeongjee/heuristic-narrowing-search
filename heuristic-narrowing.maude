@@ -1,57 +1,68 @@
 load priority-queue.maude
 
 fmod SCORE is
-    protecting META-LEVEL .
-    protecting INT .
+  protecting META-LEVEL .
+  protecting INT .
 
-    vars T T' T'' T''' N : Term .
-    vars NETL NETL' : NeTermList .
-    vars F Q Q' : Qid . var C : Constant . var X : Variable .
+  op score : Term Nat -> Int .
 
-    var D : Nat .
+  vars T BT NT OT CT ST : Term .
+  var D : Nat .
+  var NETL : NeTermList .
 
-    op score : NeTermList Nat -> Int [memo] .
-    op sizeOne : NeTermList -> Int [memo] .
-    op sizeNat : Term -> Int [memo] .
+  eq score(
+        'decideTrue[BT, NT, OT, CT], D
+    ) = scoreConf((OT, CT)) .
+  eq score(
+        'decideFalse[BT, NT, OT, CT], D
+    ) = scoreConf((OT, CT)) .
+  eq score(
+        'timeoutTrue[BT, NT, OT, CT], D
+    ) = scoreConf((OT, CT)) .
+  eq score(
+        'timeoutFalse[BT, NT, OT, CT], D
+    ) = scoreConf((OT, CT)) .
 
-***    eq score(T, D) = D .
+  eq score(
+      '`{_`,_`}[T, NETL], D
+  ) = scoreConf(NETL) .
 
-    eq score(
-        'decideTrue[T, T', T'', T'''], D
-    ) = sizeOne((T'', T''')) .
-    eq score(
-        'decideFalse[T, T', T'', T'''], D
-    ) = sizeOne((T'', T''')) .
-    eq score(
-        'timeoutTrue[T, T', T'', T'''], D
-    ) = sizeOne((T'', T''')) .
-    eq score(
-        'timeoutFalse[T, T', T'', T'''], D
-    ) = sizeOne((T'', T''')) .
+  op scoreConf : NeTermList -> Int .
 
-    eq score(
-        '`{_`,_`}[T, NETL], D
-    ) = sizeOne(NETL) .
+  eq scoreConf('__[NETL]) = scoreConf(NETL) .
+  eq scoreConf((T, NETL)) 
+  = scoreConf(T) + scoreConf(NETL) .
 
-    eq sizeOne('__[NETL]) = sizeOne(NETL) .
-    eq sizeOne((T, NETL)) = sizeOne(T) + sizeOne(NETL) .
+***(
+    score 1
+)
 
-    eq sizeOne('<_:_|_>[T, T', '_`,_['status`:_['_`,_[N, T'']], NETL]]) = 100 .
+***(
+    score 2
+)
 
-    eq sizeOne('multicast_from_to_[NETL]) = -1 .
-    eq sizeOne(X) = 0 .
-    eq sizeOne(empty) = 0 .
-    eq sizeOne(T) = 0 [owise] .
+*** score 3
+  eq scoreConf('<_:_|_>[OT, CT, 
+      '_`,_['status`:_['_`,_[NT, ST]], NETL]
+  ]) 
+  =  100 + 10 * max(2, toNumber(NT)) .
 
-    op toNumber : Term -> Nat [memo] .
-    eq toNumber('0.Nat2) = 0 .
-    ceq toNumber(T) = 0 if getType(T) == 'Zero2 .
-    eq toNumber('s.Nat2) = 1 .
-    eq toNumber('__[NETL]) = length(NETL) .
+  eq scoreConf('multicast_from_to_[NETL]) 
+  = -1 .
 
-    op length : NeTermList -> Nat .
-    eq length(T) = 1 .
-    eq length((T, NETL)) = 1 + length(NETL) .
+  eq scoreConf(T) = 0 [owise] .
+
+  *** auxiliary functions
+  op toNumber : Term -> Int .
+  eq toNumber('0.Nat2) = 0 .
+  eq toNumber('s.Nat2) = 1 .
+  eq toNumber(T) = 0 [owise] .
+  eq toNumber('__[NETL]) = countS(NETL) .
+
+  op countS : NeTermList -> Int .
+  eq countS('s.Nat2) = 1 .
+  eq countS(T) = 0 [owise] .
+  eq countS((T, NETL)) = countS(T) + countS(NETL) .
 endfm
 
 
