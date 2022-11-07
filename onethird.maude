@@ -245,22 +245,14 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-
-
-
-
-    var S : State . var M : Msg .
-    var SS : [State] .
-
     op invariant : State -> Bool .
-    eq invariant(SS) = true .
+    eq invariant(SK:[State]) = true .
 
-    op initialInvariant : State -> Bool [memo] .
+    op initialInvariant : State -> Bool .
     eq initialInvariant({N, CONF}) 
     = noDuplicateInNeighbor(getNeighborSet(CONF)) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .
-
 
 
 
@@ -273,29 +265,24 @@ mod ONETHIRDRULE is
         < O : Node | neighbors : NEIGHBORS, ATTS:U1234S >
         CONF
     ) = (O : NEIGHBORS), getNeighborSet(CONF) .
-    eq getNeighborSet(M CONF) = getNeighborSet(CONF) .
+    eq getNeighborSet(M:Msg CONF) = getNeighborSet(CONF) .
     eq getNeighborSet(none) = emptyNeighborSet .
 
-    var NEIGHBOR_SET : [NeighborSet] .
-
     op noDuplicateInNeighbor : NeighborSet -> Bool [memo] .
-    eq noDuplicateInNeighbor((O : (O' ; O' ; NEIGHBORS)), NEIGHBOR_SET) = false .
-    eq noDuplicateInNeighbor((O : (O ; NEIGHBORS)), NEIGHBOR_SET) = false .
+    eq noDuplicateInNeighbor((O : (O' ; O' ; NEIGHBORS)), NS:[NeighborSet]) = false .
+    eq noDuplicateInNeighbor((O : (O ; NEIGHBORS)), NS:[NeighborSet]) = false .
 
     op getOids : Configuration -> OidSet [memo] .
-
     eq getOids(< O : C | ATTS:U12345S > CONF) = O ; getOids(CONF) .
-    eq getOids(M CONF) =  getOids(CONF) .
+    eq getOids(M:Msg CONF) =  getOids(CONF) .
     eq getOids(none) =  none .
 
     op noDuplicate : OidSet -> Bool [memo] .
     eq noDuplicate(O ; O ; OIDS) = false .
 
-    var Z : Zero2 .
-
     op isThresholdValid : OidSet Nat2 -> Bool [memo] .
     eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
+    eq isThresholdValid(OIDS, Z:Zero2) = false .
 
 endm
 

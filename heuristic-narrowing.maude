@@ -172,7 +172,6 @@ mod HEURISTIC-NARROWING is
     protecting INDEXED-TERM-SET .
     protecting TERM-ITEM-SET .
     protecting LEFTIST-TREES{TermItem} .
-    protecting COUNTER .
     protecting CONVERSION .
 
 
@@ -238,10 +237,8 @@ mod HEURISTIC-NARROWING is
     = insertStateInternal(IDX_T, IDX_TS, IDX_T isSubsumedBy IDX_TS under M) .
 
     eq insertStateInternal(IDX_T, IDX_TS, true) = subsumed .
-    eq insertStateInternal({T, IDX, D}, IDX_TS, false) = rename({T, IDX, D}), IDX_TS ***[print "inserted " D].
+    eq insertStateInternal({T, IDX, D}, IDX_TS, false) = rename({T, IDX, D}), IDX_TS 
     .
-
-***    eq insertState(M, IDX_T, IDX_TS) = rename(IDX_T), IDX_TS .
 
     op getChildren : Module TermItem VariantOptionSet -> TermItemSet [memo] .
     op getChildrenInternal : Module TermItem VariantOptionSet Nat -> TermItemSet .
