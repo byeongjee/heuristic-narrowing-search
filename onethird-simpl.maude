@@ -85,13 +85,13 @@ mod ONETHIRDRULE is
 
     rl [vote-true] : 
     {N,
-        < O : Node | status : (R, init), value : true, decision : nil, votes : (0, 0 / 0) > 
+        < O : Node | status : (R, init), value : true, decision : nil, votes : (0, 0, 0) > 
         < O' : Node | ATTS:U1234S >
         CONF
     }
     =>
     {N,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s, 0 / s) > 
+        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s, 0, s) > 
         < O' : Node | ATTS:U1234S >
         (multicast trueVote(R) from O to O')
         CONF
@@ -99,13 +99,13 @@ mod ONETHIRDRULE is
 
     rl [vote-false] : 
     {N,
-        < O : Node | status : (R, init), value : false, decision : nil, votes : (0, 0 / 0) > 
+        < O : Node | status : (R, init), value : false, decision : nil, votes : (0, 0, 0) > 
         < O' : Node | ATTS:U1234S >
         CONF
     }
     =>
     {N,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (0, s / s) > 
+        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (0, s, s) > 
         < O' : Node | ATTS:U1234S >
         (multicast falseVote(R) from O to O')
         CONF
@@ -114,24 +114,24 @@ mod ONETHIRDRULE is
 
     rl [receive-true-vote] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S > 
         (multicast trueVote(R) from O' to (O ; OIDS))
         CONF
     } =>
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (s V_TRUE, V_FALSE / s V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (s V_TRUE, V_FALSE, s V_TOT), ATTS:U2S > 
         (multicast trueVote(R) from O' to OIDS)  
         CONF
     } [narrowing] .
 
     rl [receive-false-vote] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S > 
         (multicast falseVote(R) from O' to (O ; OIDS))
         CONF
     } =>
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, s V_FALSE / s V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, s V_FALSE, s V_TOT), ATTS:U2S > 
         (multicast falseVote(R) from O' to OIDS)  
         CONF
     } [narrowing] .
@@ -147,13 +147,13 @@ mod ONETHIRDRULE is
 
     rl [decideTrue-1] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S > 
         CONF
     }
     =>
     decideTrue(leq(N, V_TRUE),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
@@ -171,37 +171,37 @@ mod ONETHIRDRULE is
 
     rl [decideFalse-1] :
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S > 
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S > 
         CONF
     }
     =>
     decideFalse(leq(N, V_FALSE),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
     rl [decideFalse-2] :
     decideFalse(true,
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U24S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U24S >,
         CONF)
     =>
     {N,
-        < O : Node | status : (R, finished), decision : false, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U24S >
+        < O : Node | status : (R, finished), decision : false, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U24S >
         CONF
     } [narrowing] .
 
     rl [timeoutTrue-1] : 
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >
         CONF
     }
     =>
     timeoutTrue(
         leq(s V_TRUE, N) and leq(N, V_TOT) and leq(V_FALSE, V_TRUE),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
@@ -209,25 +209,25 @@ mod ONETHIRDRULE is
     timeoutTrue(
         true,
         N,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE / V_TOT) >,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT) >,
         CONF
     )
     =>
     {N,
-        < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0 / 0) >
+        < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0) >
         CONF
     } [narrowing] .
 
     rl [timeoutFalse-1] : 
     {N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >
         CONF
     }
     =>
     timeoutFalse(
         leq(s V_FALSE, N) and leq(N, V_TOT) and leq(s V_TRUE, V_FALSE),
         N,
-        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE / V_TOT), ATTS:U2S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
@@ -235,12 +235,12 @@ mod ONETHIRDRULE is
     timeoutFalse(
         true,
         N,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE / V_TOT) >,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT) >,
         CONF
     )
     =>
     {N,
-        < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0 / 0) >
+        < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
         CONF
     } [narrowing] .
 

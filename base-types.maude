@@ -55,8 +55,8 @@ mod VOTE is
     sorts Vote InitialVote .
     subsort InitialVote < Vote .
 
-    op _`,_/_ : Zero2 Zero2 Zero2 -> InitialVote [ctor] .
-    op _`,_/_ : Nat2 Nat2 Nat2 -> Vote [ctor] .
+    op _`,_`,_ : Zero2 Zero2 Zero2 -> InitialVote [ctor] .
+    op _`,_`,_ : Nat2 Nat2 Nat2 -> Vote [ctor] .
 endm
 
 mod OID-SET is
