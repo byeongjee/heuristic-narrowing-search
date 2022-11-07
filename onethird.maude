@@ -140,8 +140,8 @@ mod ONETHIRDRULE is
 
     op decideTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
     op decideFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op timeoutTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op timeoutFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op updateTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op updateFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
 
     op leq : Nat2 Nat2 -> Bool2 .
     eq leq(N, N N') = true [variant] .
@@ -193,21 +193,21 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    rl [timeoutTrue-1] : 
+    rl [updateTrue-1] : 
     {N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >
         CONF
     }
     =>
-    timeoutTrue(
+    updateTrue(
         leq(s V_TRUE, N) and leq(N, V_TOT) and leq(V_FALSE, V_TRUE),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
-    rl [timeoutTrue-2] : 
-    timeoutTrue(
+    rl [updateTrue-2] : 
+    updateTrue(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U5S >,
@@ -219,21 +219,21 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    rl [timeoutFalse-1] : 
+    rl [updateFalse-1] : 
     {N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >
         CONF
     }
     =>
-    timeoutFalse(
+    updateFalse(
         leq(s V_FALSE, N) and leq(N, V_TOT) and leq(s V_TRUE, V_FALSE),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
     ) [narrowing] .
 
-    rl [timeoutFalse-2] : 
-    timeoutFalse(
+    rl [updateFalse-2] : 
+    updateFalse(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U5S >,

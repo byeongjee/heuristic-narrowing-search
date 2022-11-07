@@ -17,10 +17,10 @@ fmod SCORE is
         'decideFalse[BT, NT, OT, CT], D
     ) = scoreConf((OT, CT)) .
   eq score(
-        'timeoutTrue[BT, NT, OT, CT], D
+        'updateTrue[BT, NT, OT, CT], D
     ) = scoreConf((OT, CT)) .
   eq score(
-        'timeoutFalse[BT, NT, OT, CT], D
+        'updateFalse[BT, NT, OT, CT], D
     ) = scoreConf((OT, CT)) .
 
   eq score(
@@ -120,8 +120,8 @@ fmod INDEXED-TERM-SET is
     op getConfig : Term -> NeTermList .
     eq getConfig('decideTrue[T, NT, T', T'']) = (T', getConfig(T'')) .
     eq getConfig('decideFalse[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('timeoutTrue[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('timeoutFalse[T, NT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateTrue[T, NT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateFalse[T, NT, T', T'']) = (T', getConfig(T'')) .
     eq getConfig('`{_`,_`}[NT, T]) = getConfig(T) .
     eq getConfig('__[NETL]) = NETL .
 
