@@ -167,7 +167,7 @@ view TermItem from TOSET<= to TERM-ITEM is
 endv
 
 
-mod BOUNDED-NARROWING is
+mod HEURISTIC-NARROWING is
     protecting SCORE .
     protecting INDEXED-TERM-SET .
     protecting TERM-ITEM-SET .
@@ -176,15 +176,15 @@ mod BOUNDED-NARROWING is
     protecting CONVERSION .
 
 
-    sort BoundedNarrowingSearchResult .
-    op noSolution : Nat -> BoundedNarrowingSearchResult [ctor] .
-    op sol : TermItem Nat -> BoundedNarrowingSearchResult [ctor] .
+    sort HeuristicNarrowingSearchResult .
+    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : TermItem Nat -> HeuristicNarrowingSearchResult [ctor] .
 
     *** module, initial term, goal term, variant option set 
-    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> BoundedNarrowingSearchResult .
+    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
 
     *** module, initial term, goal term, variant option set, pending, most general so far
-    op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet -> BoundedNarrowingSearchResult .
+    op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
     vars T T' S I I' : Term .
@@ -310,7 +310,7 @@ mod BOUNDED-NARROWING is
     = checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, isSolution(M, TI, T'))
     if TI := findMin(QUEUE) .
 
-    op checkSolution : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet TermItem Bool -> BoundedNarrowingSearchResult .
+    op checkSolution : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet TermItem Bool -> HeuristicNarrowingSearchResult .
 
     eq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, true)
     = sol(TI, termSetSize(MOST_GENERAL_SO_FAR)) .

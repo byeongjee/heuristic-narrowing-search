@@ -309,7 +309,7 @@ endm
 
 mod ONETHIRDRULE-TEST is
     including ONETHIRDRULE .
-    protecting BOUNDED-NARROWING .
+    protecting HEURISTIC-NARROWING .
 
     vars O O' O'' O1 O2 O3 O4 : Oid .
     vars C1 C2 C3 C4 : Cid .
