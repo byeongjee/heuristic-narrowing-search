@@ -143,8 +143,8 @@ mod ONETHIRDRULE is
     op updateTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
     op updateFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
 
-    op leq : Nat2 Nat2 -> Bool2 .
-    eq leq(N, N N') = true [variant] .
+    op _<=_ : Nat2 Nat2 -> Bool2 .
+    eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :
     {N,
@@ -152,7 +152,7 @@ mod ONETHIRDRULE is
         CONF
     }
     =>
-    decideTrue(leq(N, V_TRUE),
+    decideTrue(N <= V_TRUE,
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
@@ -176,7 +176,7 @@ mod ONETHIRDRULE is
         CONF
     }
     =>
-    decideFalse(leq(N, V_FALSE),
+    decideFalse(N <= V_FALSE,
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
@@ -200,7 +200,7 @@ mod ONETHIRDRULE is
     }
     =>
     updateTrue(
-        leq(s V_TRUE, N) and leq(N, V_TOT) and leq(V_FALSE, V_TRUE),
+        (s V_TRUE <=  N) and (N <= V_TOT) and (V_FALSE <= V_TRUE),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
@@ -226,7 +226,7 @@ mod ONETHIRDRULE is
     }
     =>
     updateFalse(
-        leq(s V_FALSE, N) and leq(N, V_TOT) and leq(s V_TRUE, V_FALSE),
+        (s V_FALSE <= N) and (N <= V_TOT) and (s V_TRUE <= V_FALSE),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (V_TRUE, V_FALSE, V_TOT), ATTS:U25S >,
         CONF
