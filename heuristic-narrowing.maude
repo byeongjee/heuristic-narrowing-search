@@ -178,7 +178,7 @@ mod HEURISTIC-NARROWING is
 
     sort HeuristicNarrowingSearchResult .
     op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : TermItem Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : Term Nat -> HeuristicNarrowingSearchResult [ctor] .
 
     *** module, initial term, goal term, variant option set 
     op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
@@ -187,7 +187,7 @@ mod HEURISTIC-NARROWING is
     op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
-    vars T T' S I I' : Term .
+    vars T T' T'' S I I' : Term .
     vars N D D' SOLN : Nat .
     var VOS : VariantOptionSet .
     var IDX_T : IndexedTerm .
@@ -312,8 +312,8 @@ mod HEURISTIC-NARROWING is
 
     op checkSolution : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet TermItem Bool -> HeuristicNarrowingSearchResult .
 
-    eq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, true)
-    = sol(TI, termSetSize(MOST_GENERAL_SO_FAR)) .
+    eq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, < T'', I, Q, N, D >, true)
+    = sol(T'', termSetSize(MOST_GENERAL_SO_FAR)) .
 
     ceq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, false)
     = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , MOST_GENERAL_SO_FAR') 
