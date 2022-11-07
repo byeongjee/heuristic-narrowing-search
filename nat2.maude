@@ -9,24 +9,4 @@ fmod NAT2 is
     ops 1 2 3 : -> Nat2 .
     op __ : Zero2 Zero2 -> Zero2 [ctor assoc comm id: 0].
     op __ : Nat2 Nat2 -> Nat2 [ctor assoc comm id: 0].
-
-    vars N N1 N2 DELTA : Nat2 .
-    var Z : Zero2 . 
-    op _+_ : Nat2 Nat2 -> Nat2 .
-    eq N1 + N2 = N1 N2 .
-    eq  N + Z = N .
-
-    ops _<_ _>_ _<=_ _>=_ _<>_ : Nat2 Nat2 -> Bool .
-
-    eq N <= N DELTA = true [variant] .
-    eq N s DELTA <= N = false [variant] .
-
-    eq N < N s DELTA = true [variant] .
-    eq N DELTA < N = false [variant] .
-
-    eq N1 > N2 = not (N1 <= N2) [variant] .
-
-    eq N1 >= N2 = not (N1 < N2) [variant] .
-
-    eq N1 <> N2 = N1 < N2 or N1 > N2 [variant] .
 endfm
