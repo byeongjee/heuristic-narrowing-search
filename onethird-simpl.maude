@@ -295,13 +295,6 @@ mod ONETHIRDRULE is
     op isThresholdValid : OidSet Nat2 -> Bool [memo] .
     eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
     eq isThresholdValid(OIDS, Z) = false .
-    eq isThresholdValid(none, s N) = true .
-***(
-    eq isThresholdValid((O ; O' ; O'' ; OIDS), s s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid((O ; O' ; O'' ; OIDS), s Z) = false .
-    eq isThresholdValid(OIDS, Z) = false .
-    eq isThresholdValid(none, s N) = true .
-)
 
 endm
 

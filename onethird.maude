@@ -296,13 +296,6 @@ mod ONETHIRDRULE is
     op isThresholdValid : OidSet Nat2 -> Bool [memo] .
     eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
     eq isThresholdValid(OIDS, Z) = false .
-    eq isThresholdValid(none, s N) = true .
-***(
-    eq isThresholdValid((O ; O' ; O'' ; OIDS), s s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid((O ; O' ; O'' ; OIDS), s Z) = false .
-    eq isThresholdValid(OIDS, Z) = false .
-    eq isThresholdValid(none, s N) = true .
-)
 
 endm
 
@@ -327,34 +320,6 @@ mod ONETHIRDRULE-TEST is
     ops a b c d : -> Oid .
 
 endm
-
-
-***(
-
-search [1]
-    {s s, 
-    < a : Node | status : 0, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : b ; c >
-    < b : Node | status : 0, value : false, step : init, decision : nil, votes : 0, 0 / 0, neighbors : a ; c >
-    < c : Node | status : 0, value : true, step : init, decision : nil, votes : 0, 0 / 0, neighbors : a ; b >
-    } =>* 
-{s s,
-    < O : Node | status : R, value : V, step : STEP, decision : true, votes : VT, VF / VA, neighbors : NEIGHBORS >
-    < O' : Node | status : R', value : V', step : STEP', decision : false, votes : VT', VF' / VA', neighbors : NEIGHBORS' >
-    CONF
-    } .
-)
-
-***(
-{fold} vu-narrow
-{N, INITIAL} =>*
-{
-    N,
-    < O : Node | status : R, value : V, step : STEP, decision : true, votes : VT, VF / VA, neighbors : NEIGHBORS >
-    < O' : Node | status : R' , value : V', step : STEP', decision : false, votes : VT', VF' / VA', neighbors : NEIGHBORS' >
-    CONF
-} .
-)
-
 
 set print attribute on .
 
