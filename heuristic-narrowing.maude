@@ -243,7 +243,7 @@ mod HEURISTIC-NARROWING is
 
 ***    eq insertState(M, IDX_T, IDX_TS) = rename(IDX_T), IDX_TS .
 
-    op getChildren : Module TermItem VariantOptionSet -> TermItemSet .
+    op getChildren : Module TermItem VariantOptionSet -> TermItemSet [memo] .
     op getChildrenInternal : Module TermItem VariantOptionSet Nat -> TermItemSet .
     op checkNarrowingResult : Module TermItem VariantOptionSet Nat NarrowingApplyResult? -> TermItemSet .
 
