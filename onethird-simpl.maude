@@ -254,9 +254,6 @@ mod ONETHIRDRULE-SIMPL-TEST is
     vars O : Oid .
     var INITIAL : InitialObjectSet .
     var CONF : Configuration .
-
-    ops a b c d : -> Oid .
-
 endm
 
 

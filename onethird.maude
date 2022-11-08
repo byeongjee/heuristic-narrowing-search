@@ -6,13 +6,7 @@ set include BOOL off .
 
 
 mod CONFIGURATION is
-    protecting BOOL2 .
-    protecting NAT2 .
-    protecting VALUE .
     protecting NODE .
-    protecting STATUS .
-    protecting VOTE .
-    protecting OID-SET .
     protecting INITIAL-SORTS .
 
     sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
@@ -74,14 +68,10 @@ mod ONETHIRDRULE is
     protecting BOOL2 .
     protecting BOOL .
 
-    vars O O' O'' : Oid . vars CONF REST : Configuration . vars C C' : Cid .
-    var MSG : Msg .  var MC : MsgContent .
-    vars NEIGHBORS OIDS : OidSet .
-    var R : Nat2 .
-    vars N N' REM REM' : Nat2 .
-    vars VT VF VA : Nat2 .
-    vars STEP STEP' : Step .
-    vars V D : Value .
+    vars O O' : Oid . vars CONF : Configuration . var MSG : Msg . var C : Cid .
+    vars NEIGHBORS OIDS : OidSet . 
+    var R N N' VT VF VA : Nat2 .
+    vars V : Value .
 
     rl [loss] : 
     {N, MSG CONF}
@@ -265,7 +255,7 @@ mod ONETHIRDRULE is
         < O : Node | neighbors : NEIGHBORS, ATTS:U1234S >
         CONF
     ) = (O : NEIGHBORS), getNeighborSet(CONF) .
-    eq getNeighborSet(M:Msg CONF) = getNeighborSet(CONF) .
+    eq getNeighborSet(MSG CONF) = getNeighborSet(CONF) .
     eq getNeighborSet(none) = emptyNeighborSet .
 
     op noDuplicateInNeighbor : NeighborSet -> Bool [memo] .
@@ -274,7 +264,7 @@ mod ONETHIRDRULE is
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U12345S > CONF) = O ; getOids(CONF) .
-    eq getOids(M:Msg CONF) =  getOids(CONF) .
+    eq getOids(MSG CONF) =  getOids(CONF) .
     eq getOids(none) =  none .
 
     op noDuplicate : OidSet -> Bool [memo] .
@@ -291,21 +281,10 @@ mod ONETHIRDRULE-TEST is
     including ONETHIRDRULE .
     protecting HEURISTIC-NARROWING .
 
-    vars O O' O'' O1 O2 O3 O4 : Oid .
-    vars C1 C2 C3 C4 : Cid .
-    vars OIDS ALL : OidSet .
-    vars R R' : Nat2 .
-    vars V V' : Value .
+    vars O O' : Oid .
     vars N N' : Nat2 .
-    vars VT VF VA  : Nat2 .
-    vars VT' VF' VA' : Nat2 .
-    vars NEIGHBORS NEIGHBORS' : OidSet .
     var INITIAL : InitialObjectSet .
-    vars STEP STEP' : Step .
     var CONF : Configuration .
-
-    ops a b c d : -> Oid .
-
 endm
 
 set print attribute on .
