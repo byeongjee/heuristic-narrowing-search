@@ -215,17 +215,6 @@ mod HEURISTIC-NARROWING is
     eq rename(F[NETL], D) = F[rename(NETL, D)] .
     eq rename((T, NETL), D) = rename(T, D) , rename(NETL, D) .
 
-
-
-    op metaAnd : Term Term -> Term .
-    eq metaAnd(T, T') = '_and_[T, T'] .
-
-    ops metaWrapInvariant metaWrapInitialInvariant : Term -> Term .
-    eq metaWrapInvariant(T) = 'invariant[T] .
-    eq metaWrapInitialInvariant(T) = 'initialInvariant[T] .
-
-
-
     sort InsertStateResult .
     subsort IndexedTermSet < InsertStateResult .
     op subsumed : -> InsertStateResult [ctor] .
@@ -254,7 +243,7 @@ mod HEURISTIC-NARROWING is
     eq checkNarrowingResult(M, < T, I, Q, N, D >, VOS, SOLN, 
         {T', TY', CO, RULE_LABEL, S1, S2, Q'}) 
     = < T', 
-        getTerm(metaReduce(M, metaAnd(applySubstitution(M, I, S1), metaWrapInvariant(T')))),
+        getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])),
         Q', 
         score(T', D + 1), 
         D + 1 > ;; getChildrenInternal(M, < T, I, Q, N, D >, VOS, SOLN + 1) .
@@ -301,7 +290,7 @@ mod HEURISTIC-NARROWING is
     eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
 
     eq metaHeuristicNarrowingSearch(M, T, T', VOS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, insert(< T, metaWrapInitialInvariant(T), '@, score(T, 0), 0 >, empty), empty) .
+    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, insert(< T, 'initialCond[T], '@, score(T, 0), 0 >, empty), empty) .
 
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR)
     = checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, isSolution(M, TI, T'))

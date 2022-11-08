@@ -245,11 +245,11 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    op invariant : State -> Bool .
-    eq invariant(SK:[State]) = true .
+    op inv : State -> Bool .
+    eq inv(SK:[State]) = true .
 
-    op initialInvariant : State -> Bool .
-    eq initialInvariant({N, CONF}) 
+    op initialCond : State -> Bool .
+    eq initialCond({N, CONF}) 
     = noDuplicateInNeighbor(getNeighborSet(CONF)) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .
