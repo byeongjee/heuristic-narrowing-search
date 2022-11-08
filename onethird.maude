@@ -1,4 +1,4 @@
-load nat2.maude
+load fvp-nat.maude
 load heuristic-narrowing.maude
 load sorts.maude
 
@@ -33,10 +33,10 @@ endm
 
 
 fmod MESSAGE-CONTENT is
-    protecting NAT2 .
+    protecting FVP-NAT .
     sort MsgContent . 
 
-    ops trueVote falseVote : Nat2 -> MsgContent [ctor] .
+    ops trueVote falseVote : Nat -> MsgContent [ctor] .
 endfm
 
 
@@ -52,25 +52,25 @@ endm
 
 mod GLOBAL is
     protecting CONFIGURATION .
-    protecting NAT2 .
+    protecting FVP-NAT .
 
     sort State .
 
-    op {_,_} : Nat2 Configuration -> State [ctor] .
+    op {_,_} : Nat Configuration -> State [ctor] .
 endm
 
 
 mod ONETHIRDRULE is
     including GLOBAL .
-    protecting NAT2 .
     protecting VALUE .
     protecting MULTICAST .
-    protecting BOOL2 .
     protecting BOOL .
+    protecting FVP-NAT .
+    protecting FVP-BOOL .
 
     vars O O' : Oid . vars CONF : Configuration . var MSG : Msg . var C : Cid .
     vars NEIGHBORS OIDS : OidSet . 
-    var R N N' VT VF VA : Nat2 .
+    var R N N' VT VF VA : Nat .
     vars V : Value .
 
     rl [loss] : 
@@ -128,12 +128,12 @@ mod ONETHIRDRULE is
     } [narrowing] .
 
 
-    op decideTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op decideFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op updateTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op updateFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op decideTrue : FvpBool Nat Object Configuration -> State [ctor] .
+    op decideFalse : FvpBool Nat Object Configuration -> State [ctor] .
+    op updateTrue : FvpBool Nat Object Configuration -> State [ctor] .
+    op updateFalse : FvpBool Nat Object Configuration -> State [ctor] .
 
-    op _<=_ : Nat2 Nat2 -> Bool2 .
+    op _<=_ : Nat Nat -> FvpBool .
     eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :
@@ -270,19 +270,19 @@ mod ONETHIRDRULE is
     op noDuplicate : OidSet -> Bool [memo] .
     eq noDuplicate(O ; O ; OIDS) = false .
 
-    op isThresholdValid : OidSet Nat2 -> Bool [memo] .
+    op isThresholdValid : OidSet Nat -> Bool [memo] .
     eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z:Zero2) = false .
+    eq isThresholdValid(OIDS, Z:Zero) = false .
 
 endm
 
 
 mod ONETHIRDRULE-TEST is
     including ONETHIRDRULE .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING * (sort Nat to Nat', sort Zero to Zero') .
 
     vars O O' : Oid .
-    vars N N' : Nat2 .
+    vars N N' : Nat .
     var INITIAL : InitialObjectSet .
     var CONF : Configuration .
 endm

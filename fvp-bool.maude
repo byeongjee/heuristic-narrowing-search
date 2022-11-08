@@ -1,0 +1,17 @@
+
+set include BOOL off . 
+
+mod FVP-BOOL is
+    sorts FvpBool InitialFvpBool .
+    subsort InitialFvpBool < FvpBool .
+    op false : -> InitialFvpBool [ctor] .
+    op true : -> FvpBool [ctor] .
+
+    op _and_ : FvpBool FvpBool -> FvpBool [assoc comm] .
+    vars A B C : FvpBool .
+
+    eq true and A = A [variant] .
+    eq false and A = false [variant] .
+    eq A and A = A [variant] .
+
+endm

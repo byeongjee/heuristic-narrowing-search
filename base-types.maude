@@ -1,25 +1,11 @@
-
-mod BOOL2 is
-    sorts Bool2 InitialBool2 .
-    subsort InitialBool2 < Bool2 .
-    op false : -> InitialBool2 [ctor] .
-    op true : -> Bool2 [ctor] .
-
-    op _and_ : Bool2 Bool2 -> Bool2 [assoc comm] .
-    vars A B C : Bool2 .
-
-    eq true and A = A [variant] .
-    eq false and A = false [variant] .
-    eq A and A = A [variant] .
-
-endm
+load fvp-bool.maude 
 
 mod VALUE is
-    protecting BOOL2 .
+    protecting FVP-BOOL .
 
     sorts Value NilValue NonNilValue .
     subsort NilValue NonNilValue < Value .
-    subsort Bool2 < NonNilValue .
+    subsort FvpBool < NonNilValue .
 
     op nil : -> NilValue [ctor] .
 endm
@@ -39,24 +25,24 @@ mod NODE is
 endm
 
 mod STATUS is
-    protecting NAT2 .
+    protecting FVP-NAT .
     protecting STEP .
 
     sorts Status InitialStatus .
     subsort InitialStatus < Status .
 
-    op _`,_ : Zero2 InitialStep -> InitialStatus [ctor] . 
-    op _`,_ : Nat2 Step -> Status [ctor] . 
+    op _`,_ : Zero InitialStep -> InitialStatus [ctor] . 
+    op _`,_ : Nat Step -> Status [ctor] . 
 endm
 
 mod VOTE is
-    protecting NAT2 .
+    protecting FVP-NAT .
 
     sorts Vote InitialVote .
     subsort InitialVote < Vote .
 
-    op _`,_`,_ : Zero2 Zero2 Zero2 -> InitialVote [ctor] .
-    op _`,_`,_ : Nat2 Nat2 Nat2 -> Vote [ctor] .
+    op _`,_`,_ : Zero Zero Zero -> InitialVote [ctor] .
+    op _`,_`,_ : Nat Nat Nat -> Vote [ctor] .
 endm
 
 mod OID-SET is
