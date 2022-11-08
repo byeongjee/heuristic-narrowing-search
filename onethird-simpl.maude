@@ -1,18 +1,12 @@
 load nat2.maude
-load bounded-narrowing.maude
+load heuristic-narrowing.maude
 load sorts.maude
 
 set include BOOL off .
 
 
 mod CONFIGURATION is
-    protecting BOOL2 .
-    protecting NAT2 .
-    protecting VALUE .
     protecting NODE .
-    protecting STATUS .
-    protecting VOTE .
-    protecting OID-SET .
     protecting INITIAL-SORTS .
 
     sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
@@ -74,14 +68,15 @@ mod ONETHIRDRULE is
     protecting BOOL2 .
     protecting BOOL .
 
-    vars O O' O'' : Oid . vars CONF REST : Configuration . vars C C' : Cid .
-    var MSG : Msg .  var MC : MsgContent .
+    vars O O' : Oid . vars CONF : Configuration . var MSG : Msg . 
     vars NEIGHBORS OIDS : OidSet .
-    var R : Nat2 .
-    vars N N' REM REM' : Nat2 .
-    vars VT VF VA : Nat2 .
-    vars STEP STEP' : Step .
-    vars V D : Value .
+    var R N N' VT VF VA : Nat2 .
+    vars V : Value .
+
+    rl [loss] : 
+    {N, MSG CONF}
+    =>
+    {N, CONF} [narrowing] .
 
     rl [vote-true] : 
     {N,
@@ -139,11 +134,11 @@ mod ONETHIRDRULE is
 
     op decideTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
     op decideFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op timeoutTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
-    op timeoutFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op updateTrue : Bool2 Nat2 Object Configuration -> State [ctor] .
+    op updateFalse : Bool2 Nat2 Object Configuration -> State [ctor] .
 
-    op leq : Nat2 Nat2 -> Bool2 .
-    eq leq(N, N N') = true [variant] .
+    op _<=_ : Nat2 Nat2 -> Bool2 .
+    eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :
     {N,
@@ -151,7 +146,7 @@ mod ONETHIRDRULE is
         CONF
     }
     =>
-    decideTrue(leq(N, VT),
+    decideTrue(N <= VT,
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
@@ -175,7 +170,7 @@ mod ONETHIRDRULE is
         CONF
     }
     =>
-    decideFalse(leq(N, VF),
+    decideFalse(N <= VF,
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
@@ -192,21 +187,21 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    rl [timeoutTrue-1] : 
+    rl [updateTrue-1] : 
     {N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
         CONF
     }
     =>
-    timeoutTrue(
-        leq(s VT, N) and leq(N, VA) and leq(VF, VT),
+    updateTrue(
+        (s VT <= N) and (N <= VA) and (VF <= VT),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
-    rl [timeoutTrue-2] : 
-    timeoutTrue(
+    rl [updateTrue-2] : 
+    updateTrue(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
@@ -218,21 +213,21 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    rl [timeoutFalse-1] : 
+    rl [updateFalse-1] : 
     {N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
         CONF
     }
     =>
-    timeoutFalse(
-        leq(s VF, N) and leq(N, VA) and leq(s VT, VF),
+    updateFalse(
+        (s VF <= N) and (N <= VA) and (s VT <= VF),
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
     ) [narrowing] .
 
-    rl [timeoutFalse-2] : 
-    timeoutFalse(
+    rl [updateFalse-2] : 
+    updateFalse(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
@@ -244,10 +239,10 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    op invariant : State -> Bool .
-    eq invariant(SK:[State]) = true .
-    op invariant : State -> Bool .
-    eq initialInvariant(SK:[State]) = true .
+    op inv : State -> Bool .
+    eq inv(SK:[State]) = true .
+    op initialCond : State -> Bool .
+    eq initialCond(SK:[State]) = true .
 
 endm
 
@@ -256,17 +251,8 @@ mod ONETHIRDRULE-SIMPL-TEST is
     including ONETHIRDRULE .
     protecting HEURISTIC-NARROWING .
 
-    vars O O' O'' O1 O2 O3 O4 : Oid .
-    vars C1 C2 C3 C4 : Cid .
-    vars OIDS ALL : OidSet .
-    vars R R' : Nat2 .
-    vars V V' : Value .
-    vars N N' : Nat2 .
-    vars VT VF VA  : Nat2 .
-    vars VT' VF' VA' : Nat2 .
-    vars NEIGHBORS NEIGHBORS' : OidSet .
+    vars O : Oid .
     var INITIAL : InitialObjectSet .
-    vars STEP STEP' : Step .
     var CONF : Configuration .
 
     ops a b c d : -> Oid .
