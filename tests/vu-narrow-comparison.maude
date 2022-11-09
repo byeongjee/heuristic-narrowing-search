@@ -30,6 +30,16 @@ red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
     CONF}),
     delay filter) .
 
+***(
+rewrites: 7303 in 144ms cpu (144ms real) (50715 rewrites/second)
+result HeuristicNarrowingSearchResult: sol('`{_`,_`}['s.Nat,'__[
+    '%3:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%2:Zero,'finished.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'true.FvpBool],'votes`:_['_`,_`,_['s.Nat,'0.Zero,'s.Nat]]]],'<_:_|_>[
+    '%4:Oid,'Node.Cid,'%5:IU1234S],'multicast_from_to_['trueVote['%2:Zero],
+    '%1:Oid,'%4:Oid]]], 27)
+)
+
 red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-SIMPLE-INITIALCOND, false),
     upTerm({s s, INITIAL}),
@@ -38,6 +48,15 @@ red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
     CONF}),
     delay filter) .
 
+***(
+rewrites: 30416 in 404ms cpu (405ms real) (75287 rewrites/second)
+result HeuristicNarrowingSearchResult: sol('`{_`,_`}['__['s.Nat,'s.Nat],'__[
+    '<_:_|_>['@1:Oid,'Node.Cid,'@3:IU1234S],'<_:_|_>['@1:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['@2:Zero,'finished.Step]],'value`:_['true.FvpBool],
+    'decision`:_['true.FvpBool],'votes`:_['_`,_`,_['__['s.Nat,'s.Nat],'0.Zero,
+    '__['s.Nat,'s.Nat]]]]]]], 109)
+)
+
 red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-SIMPLE-INITIALCOND, false),
     upTerm({s s s, INITIAL}),
@@ -45,7 +64,17 @@ red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     CONF}),
     delay filter) .
-
+***(
+rewrites: 1944096 in 111976ms cpu (111978ms real) (17361 rewrites/second)
+result HeuristicNarrowingSearchResult: sol('`{_`,_`}['__['s.Nat,'s.Nat,'s.Nat],
+    '__['@3:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,'@4:IU1234S],'<_:_|_>[
+    '@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'finished.Step]],
+    'value`:_['true.FvpBool],'decision`:_['true.FvpBool],'votes`:_['_`,_`,_[
+    '__['s.Nat,'s.Nat,'s.Nat],'0.Zero,'__['s.Nat,'s.Nat,'s.Nat]]]]],'<_:_|_>[
+    '@5:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    's.Nat,'0.Zero,'s.Nat]]]]]], 2486)
+)
 
 vu-narrow {delay, filter} [1]
 {s, INITIAL} =>* {s,
@@ -53,14 +82,71 @@ vu-narrow {delay, filter} [1]
     CONF
 } .
 
+***(
+Solution 1
+rewrites: 211 in 240ms cpu (240ms real) (879 rewrites/second)
+state: {s,< @1:Oid : Node | status : (@2:Zero,finished),value : true,decision :
+    true,votes : (s,0,s) > < @3:Oid : Node | @4:IU1234S > multicast trueVote(
+    @2:Zero) from @1:Oid to @3:Oid}
+accumulated substitution:
+INITIAL --> < @1:Oid : Node | status : (@2:Zero,init),value : true,decision :
+    nil,votes : (0,0,0) > < @3:Oid : Node | @4:IU1234S >
+variant unifier:
+CONF --> < %3:Oid : Node | %4:IU1234S > multicast trueVote(%2:Zero) from %1:Oid
+    to %3:Oid
+O --> %1:Oid
+ATTS:U124S --> status : (%2:Zero,finished),value : true,votes : (s,0,s)
+@1:Oid --> %1:Oid
+@2:Zero --> %2:Zero
+@3:Oid --> %3:Oid
+@4:IU1234S --> %4:IU1234S
+)
+
 vu-narrow {delay, filter} [1]
 {s s, INITIAL} =>* {s s,
     < O : Node | decision : true, ATTS:U124S >
     CONF
 } .
 
+***(
+Solution 1
+rewrites: 2491 in 4124ms cpu (4124ms real) (604 rewrites/second)
+state: {s s,< %1:Oid : Node | %3:IU1234S > < %1:Oid : Node | status : (%2:Zero,
+    finished),value : true,decision : true,votes : ((s s),0,s s) >}
+accumulated substitution:
+INITIAL --> < %1:Oid : Node | %3:IU1234S > < %1:Oid : Node | status : (%2:Zero,
+    init),value : true,decision : nil,votes : (0,0,0) >
+variant unifier:
+CONF --> < @1:Oid : Node | @2:IU1234S >
+O --> @1:Oid
+ATTS:U124S --> status : (@3:Zero,finished),value : true,votes : ((s s),0,s s)
+%1:Oid --> @1:Oid
+%3:IU1234S --> @2:IU1234S
+%2:Zero --> @3:Zero
+)
+
 vu-narrow {delay, filter} [1]
 {s s s, INITIAL} =>* {s s s,
     < O : Node | decision : true, ATTS:U124S >
     CONF
 } .
+
+***(
+Solution 1
+rewrites: 2053465 in 8057464ms cpu (8057463ms real) (254 rewrites/second)
+state: {s s s,< %1:Oid : Node | status : (%2:Zero,waiting),value : true,
+    decision : nil,votes : (s,0,s) > < %1:Oid : Node | status : (%2:Zero,
+    finished),value : true,decision : true,votes : ((s s s),0,s s s) >}
+accumulated substitution:
+INITIAL --> < %1:Oid : Node | status : (%2:Zero,init),value : true,decision :
+    nil,votes : (0,0,0) > < %1:Oid : Node | status : (%2:Zero,init),value :
+    true,decision : nil,votes : (0,0,0) >
+variant unifier:
+CONF --> < @1:Oid : Node | status : (@2:Zero,waiting),value : true,decision :
+    nil,votes : (s,0,s) >
+O --> @1:Oid
+ATTS:U124S --> status : (@2:Zero,finished),value : true,votes : ((s s s),0,s s
+    s)
+%1:Oid --> @1:Oid
+%2:Zero --> @2:Zero
+)

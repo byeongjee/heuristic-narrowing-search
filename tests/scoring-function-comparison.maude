@@ -94,14 +94,6 @@ red in ONETHIRRULE-TEST-1 : metaHeuristicNarrowingSearch(
 )
 *** timeout
 
-red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-INITIALCOND, false),
-    upTerm({N, INITIAL}),
-    upTerm({N',
-    < O : Node | decision : true, ATTS:U1245S >
-    < O' : Node | decision : false, ATTS':U1245S >
-    CONF}),
-    delay filter) .
 
 red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
@@ -111,3 +103,52 @@ red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     < O' : Node | decision : false, ATTS':U1245S >
     CONF}),
     delay filter) .
+
+***(
+rewrites: 83555508 in 55658820ms cpu (55658819ms real) (1501 rewrites/second)
+result HeuristicNarrowingSearchResult: sol('`{_`,_`}['__['s.Nat,'s.Nat],'__[
+    '@4:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'finished.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'false.InitialFvpBool],'votes`:_['_`,_`,_['0.Zero,'__['s.Nat,'s.Nat],'__[
+    's.Nat,'s.Nat]]],'neighbors`:_['@3:OidSet]]],'<_:_|_>['@5:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['__['s.Nat,'@2:Zero],'finished.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['true.FvpBool],'votes`:_['_`,_`,_['__['s.Nat,
+    's.Nat],'0.Zero,'__['s.Nat,'s.Nat]]],'neighbors`:_['_;_['@1:Oid,'@6:Oid,
+    '@7:OidSet]]]],'<_:_|_>['@6:Oid,'Node.Cid,'_`,_['status`:_['_`,_['__[
+    's.Nat,'@2:Zero],'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['s.Nat,'0.Zero,'s.Nat]],'neighbors`:_[
+    '_;_['@5:Oid,'@8:OidSet]]]],'multicast_from_to_['falseVote['@2:Zero],
+    '@1:Oid,'@3:OidSet],'multicast_from_to_['falseVote['@2:Zero],'@5:Oid,
+    '@7:OidSet]]], 25420)
+)
+
+red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INITIALCOND, false),
+    upTerm({N, INITIAL}),
+    upTerm({N',
+    < O : Node | decision : true, ATTS:U1245S >
+    < O' : Node | decision : false, ATTS':U1245S >
+    CONF}),
+    delay filter) .
+
+***(
+rewrites: 7018255 in 1107356ms cpu (1107357ms real) (6337 rewrites/second)
+result HeuristicNarrowingSearchResult: sol('`{_`,_`}['__['s.Nat,'s.Nat],'__[
+    '%4:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%2:Zero,'finished.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'false.InitialFvpBool],'votes`:_['_`,_`,_['s.Nat,'__['s.Nat,'s.Nat],'__[
+    's.Nat,'s.Nat,'s.Nat]]],'neighbors`:_['%3:OidSet]]],'<_:_|_>['%5:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['__['s.Nat,'%2:Zero],'finished.Step]],
+    'value`:_['true.FvpBool],'decision`:_['true.FvpBool],'votes`:_['_`,_`,_[
+    '__['s.Nat,'s.Nat],'0.Zero,'__['s.Nat,'s.Nat]]],'neighbors`:_['_;_['%1:Oid,
+    '%6:Oid,'%7:OidSet]]]],'<_:_|_>['%6:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '__['s.Nat,'%2:Zero],'finished.Step]],'value`:_['true.FvpBool],
+    'decision`:_['true.FvpBool],'votes`:_['_`,_`,_['__['s.Nat,'s.Nat],'0.Zero,
+    '__['s.Nat,'s.Nat]]],'neighbors`:_['_;_['%1:Oid,'%5:Oid,'%8:OidSet]]]],
+    'multicast_from_to_['trueVote['%2:Zero],'%6:Oid,'%8:OidSet],
+    'multicast_from_to_['trueVote['__['s.Nat,'%2:Zero]],'%5:Oid,'_;_['%1:Oid,
+    '%7:OidSet]],'multicast_from_to_['trueVote['__['s.Nat,'%2:Zero]],'%6:Oid,
+    '_;_['%1:Oid,'%8:OidSet]],'multicast_from_to_['falseVote['%2:Zero],'%1:Oid,
+    '%3:OidSet],'multicast_from_to_['falseVote['%2:Zero],'%5:Oid,'%7:OidSet]]],
+    6061)
+)
