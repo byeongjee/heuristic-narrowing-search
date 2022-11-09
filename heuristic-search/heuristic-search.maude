@@ -1,0 +1,6 @@
+fmod HEURISTIC-SEARCH is
+    including BOOL .
+
+    sort BaseState .
+    ops inv initialCond : BaseState -> Bool .
+endfm

@@ -1,0 +1,113 @@
+load ../heuristic-search/heuristic-search.maude
+load ../models/onethirdrule.maude
+load ./scoring-functions.maude
+
+mod ONETHIRDRULE-INITIALCOND is
+    protecting ONETHIRDRULE .
+    including HEURISTIC-SEARCH .
+
+    var N : Nat .
+    var CONF : Configuration .
+    var M : Msg .
+    vars O O' : Oid .
+    var C : Cid .
+    vars OIDS NEIGHBORS : OidSet .
+    var Z : Zero .
+
+    eq inv(SK:[State]) = true .
+    eq initialCond({N, CONF}) 
+    = noDuplicateInNeighbor(getNeighborSet(CONF)) 
+    and noDuplicate(getOids(CONF)) 
+    and isThresholdValid(getOids(CONF), N) .
+
+    sort NeighborSet .
+    op _:_ : Oid OidSet -> NeighborSet .
+    op emptyNeighborSet : -> NeighborSet .
+    op _,_ : NeighborSet NeighborSet -> NeighborSet [ctor assoc comm id: emptyNeighborSet] .
+    op getNeighborSet : Configuration -> NeighborSet [memo] .
+    eq getNeighborSet(
+        < O : Node | neighbors : NEIGHBORS, ATTS:U1234S >
+        CONF
+    ) = (O : NEIGHBORS), getNeighborSet(CONF) .
+    eq getNeighborSet(M CONF) = getNeighborSet(CONF) .
+    eq getNeighborSet(none) = emptyNeighborSet .
+
+    op noDuplicateInNeighbor : NeighborSet -> Bool [memo] .
+    eq noDuplicateInNeighbor((O : (O' ; O' ; NEIGHBORS)), NS:[NeighborSet]) = false .
+    eq noDuplicateInNeighbor((O : (O ; NEIGHBORS)), NS:[NeighborSet]) = false .
+
+    op getOids : Configuration -> OidSet [memo] .
+    eq getOids(< O : C | ATTS:U12345S > CONF) = O ; getOids(CONF) .
+    eq getOids(M CONF) =  getOids(CONF) .
+    eq getOids(none) =  none .
+
+    op noDuplicate : OidSet -> Bool [memo] .
+    eq noDuplicate(O ; O ; OIDS) = false .
+
+    op isThresholdValid : OidSet Nat -> Bool [memo] .
+    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+endm
+
+
+mod ONETHIRDRULE-TEST-1 is
+    including ONETHIRDRULE-INITIALCOND .
+    protecting SCORE1 * (sort Nat to Nat', sort Zero to Zero') .
+
+    vars O O' : Oid .
+    vars N N' : Nat .
+    var INITIAL : InitialObjectSet .
+    var CONF : Configuration .
+endm
+
+mod ONETHIRDRULE-TEST-2 is
+    including ONETHIRDRULE-INITIALCOND .
+    protecting SCORE2 * (sort Nat to Nat', sort Zero to Zero') .
+
+    vars O O' : Oid .
+    vars N N' : Nat .
+    var INITIAL : InitialObjectSet .
+    var CONF : Configuration .
+endm
+
+mod ONETHIRDRULE-TEST-3 is
+    including ONETHIRDRULE-INITIALCOND .
+    protecting SCORE3 * (sort Nat to Nat', sort Zero to Zero') .
+
+    vars O O' : Oid .
+    vars N N' : Nat .
+    var INITIAL : InitialObjectSet .
+    var CONF : Configuration .
+endm
+
+*** set print attribute on .
+
+***(
+red in ONETHIRRULE-TEST-1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INITIALCOND, false),
+    upTerm({N, INITIAL}),
+    upTerm({N',
+    < O : Node | decision : true, ATTS:U1245S >
+    < O' : Node | decision : false, ATTS':U1245S >
+    CONF}),
+    delay filter) .
+)
+*** timeout
+
+red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INITIALCOND, false),
+    upTerm({N, INITIAL}),
+    upTerm({N',
+    < O : Node | decision : true, ATTS:U1245S >
+    < O' : Node | decision : false, ATTS':U1245S >
+    CONF}),
+    delay filter) .
+
+red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INITIALCOND, false),
+    upTerm({N, INITIAL}),
+    upTerm({N',
+    < O : Node | decision : true, ATTS:U1245S >
+    < O' : Node | decision : false, ATTS':U1245S >
+    CONF}),
+    delay filter) .

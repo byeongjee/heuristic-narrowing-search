@@ -1,6 +1,6 @@
-load fvp-nat.maude
-load heuristic-narrowing.maude
-load sorts.maude
+load ./sorts/fvp-nat.maude
+load ./sorts/sorts.maude
+load ../heuristic-search/heuristic-search.maude
 
 set include BOOL off .
 
@@ -53,8 +53,10 @@ endm
 mod GLOBAL is
     protecting CONFIGURATION .
     protecting FVP-NAT .
+    including HEURISTIC-SEARCH .
 
     sort State .
+    subsort State < BaseState .
 
     op {_,_} : Nat Configuration -> State [ctor] .
 endm
@@ -235,65 +237,5 @@ mod ONETHIRDRULE is
         CONF
     } [narrowing] .
 
-    op inv : State -> Bool .
-    eq inv(SK:[State]) = true .
-
-    op initialCond : State -> Bool .
-    eq initialCond({N, CONF}) 
-    = noDuplicateInNeighbor(getNeighborSet(CONF)) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
-
-
-
-    sort NeighborSet .
-    op _:_ : Oid OidSet -> NeighborSet .
-    op emptyNeighborSet : -> NeighborSet .
-    op _,_ : NeighborSet NeighborSet -> NeighborSet [ctor assoc comm id: emptyNeighborSet] .
-    op getNeighborSet : Configuration -> NeighborSet [memo] .
-    eq getNeighborSet(
-        < O : Node | neighbors : NEIGHBORS, ATTS:U1234S >
-        CONF
-    ) = (O : NEIGHBORS), getNeighborSet(CONF) .
-    eq getNeighborSet(MSG CONF) = getNeighborSet(CONF) .
-    eq getNeighborSet(none) = emptyNeighborSet .
-
-    op noDuplicateInNeighbor : NeighborSet -> Bool [memo] .
-    eq noDuplicateInNeighbor((O : (O' ; O' ; NEIGHBORS)), NS:[NeighborSet]) = false .
-    eq noDuplicateInNeighbor((O : (O ; NEIGHBORS)), NS:[NeighborSet]) = false .
-
-    op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:U12345S > CONF) = O ; getOids(CONF) .
-    eq getOids(MSG CONF) =  getOids(CONF) .
-    eq getOids(none) =  none .
-
-    op noDuplicate : OidSet -> Bool [memo] .
-    eq noDuplicate(O ; O ; OIDS) = false .
-
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z:Zero) = false .
-
 endm
 
-
-mod ONETHIRDRULE-TEST is
-    including ONETHIRDRULE .
-    protecting HEURISTIC-NARROWING * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
-endm
-
-set print attribute on .
-
-red metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-TEST, false),
-    upTerm({N, INITIAL}),
-    upTerm({N',
-    < O : Node | decision : true, ATTS:U1245S >
-    < O' : Node | decision : false, ATTS':U1245S >
-    CONF}),
-    delay filter) .

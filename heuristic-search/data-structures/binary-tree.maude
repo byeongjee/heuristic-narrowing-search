@@ -34,12 +34,3 @@ fmod BIN-TREE{X :: TRIV} is
    eq postorder(empty) = nil .
    eq postorder(L [E] R) = postorder(L) postorder(R) E .
  endfm
-
-
-***(
-mod TEST is
-    protecting BIN-TREE{Nat} .
-endm
-
-red postorder((empty [1] empty) [2] (empty [3] empty)) .
-)

@@ -1,92 +1,27 @@
-load priority-queue.maude
-
-fmod SCORE is
-  protecting META-LEVEL .
-  protecting INT .
-
-  op score : Term Nat -> Int .
-
-  vars T BT NT OT CT ST : Term .
-  var D : Nat .
-  var NETL : NeTermList .
-
-  eq score(
-        'decideTrue[BT, NT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
-  eq score(
-        'decideFalse[BT, NT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
-  eq score(
-        'updateTrue[BT, NT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
-  eq score(
-        'updateFalse[BT, NT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
-
-  eq score(
-      '`{_`,_`}[T, NETL], D
-  ) = scoreConf(NETL) .
-
-  op scoreConf : NeTermList -> Int .
-
-  eq scoreConf('__[NETL]) = scoreConf(NETL) .
-  eq scoreConf((T, NETL)) 
-  = scoreConf(T) + scoreConf(NETL) .
-
-***(
-    score 1
-)
-
-***(
-    score 2
-)
-
-*** score 3
-  eq scoreConf('<_:_|_>[OT, CT, 
-      '_`,_['status`:_['_`,_[NT, ST]], NETL]
-  ]) 
-  =  100 + 10 * max(2, toNumber(NT)) .
-
-  eq scoreConf('multicast_from_to_[NETL]) 
-  = -1 .
-
-  eq scoreConf(T) = 0 [owise] .
-
-  *** auxiliary functions
-  op toNumber : Term -> Int .
-  eq toNumber('0.Nat2) = 0 .
-  eq toNumber('s.Nat2) = 1 .
-  eq toNumber(T) = 0 [owise] .
-  eq toNumber('__[NETL]) = countS(NETL) .
-
-  op countS : NeTermList -> Int .
-  eq countS('s.Nat2) = 1 .
-  eq countS(T) = 0 [owise] .
-  eq countS((T, NETL)) = countS(T) + countS(NETL) .
-endfm
-
+load ./data-structures/priority-queue.maude
 
 fmod TERM-ITEM is
-    protecting META-LEVEL .
+    protecting SCORE .
     protecting NAT .
     protecting QID .
 
     sort TermItem .
 
-    op <_,_,_,_,_> : Term Term Qid Nat Nat -> TermItem [ctor] .
+    op <_,_,_,_,_> : Term Term Qid Score Nat -> TermItem [ctor] .
 
     vars T T' I I' : Term .
     vars N N' D D' : Nat .
+    vars S S' : Score .
     vars Q Q' : Qid .
 
     op _<_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, N, D > < < T', I', Q', N', D' > = N <= N' .
+    eq < T, I, Q, S, D > < < T', I', Q', S', D' > = le(S, S') .
 
     op _>_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, N, D > > < T', I', Q', N', D' > = N <= N' .
+    eq < T, I, Q, S, D > > < T', I', Q', S', D' > = le(S, S') .
 
     op _<=_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, N, D > <= < T', I', Q', N', D' > = N <= N' .
+    eq < T, I, Q, S, D > <= < T', I', Q', S', D' > = le(S, S') .
 
 endfm
 
@@ -186,8 +121,8 @@ mod HEURISTIC-NARROWING is
     op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
-    vars T T' T'' S I I' : Term .
-    vars N D D' SOLN : Nat .
+    vars T T' T'' I I' : Term .
+    vars N D D' SOLN : Nat . var S : Score .
     var VOS : VariantOptionSet .
     var IDX_T : IndexedTerm .
     vars IDX_TS MOST_GENERAL_SO_FAR MOST_GENERAL_SO_FAR' MOST_GENERAL_SO_FAR'' : IndexedTermSet .
@@ -235,18 +170,18 @@ mod HEURISTIC-NARROWING is
 
     eq getChildren(M, TI, VOS) = getChildrenInternal(M, TI, VOS, 0) .
 
-    eq getChildrenInternal(M, < T, I, Q, N, D >, VOS, SOLN) 
-    = checkNarrowingResult(M, < T, I, Q, N, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
+    eq getChildrenInternal(M, < T, I, Q, S, D >, VOS, SOLN) 
+    = checkNarrowingResult(M, < T, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
 
     eq checkNarrowingResult(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
     eq checkNarrowingResult(M, TI, VOS, SOLN, failureIncomplete) = emptyTermItemSet [print "incomplete narrowing"] .
-    eq checkNarrowingResult(M, < T, I, Q, N, D >, VOS, SOLN, 
+    eq checkNarrowingResult(M, < T, I, Q, S, D >, VOS, SOLN, 
         {T', TY', CO, RULE_LABEL, S1, S2, Q'}) 
     = < T', 
         getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])),
         Q', 
         score(T', D + 1), 
-        D + 1 > ;; getChildrenInternal(M, < T, I, Q, N, D >, VOS, SOLN + 1) .
+        D + 1 > ;; getChildrenInternal(M, < T, I, Q, S, D >, VOS, SOLN + 1) .
 
 
     *** filtered children, new most general so far
@@ -259,18 +194,18 @@ mod HEURISTIC-NARROWING is
 
     eq processChildren(M, emptyTermItemSet, MOST_GENERAL_SO_FAR) = {emptyTermItemSet, MOST_GENERAL_SO_FAR} .
 
-    eq processChildren(M, < T, 'false.Bool, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) 
+    eq processChildren(M, < T, 'false.Bool, Q, S, D > ;; TIS, MOST_GENERAL_SO_FAR) 
     = processChildren(M, TIS, MOST_GENERAL_SO_FAR) .
 
-    eq processChildren(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR) 
-    = processChildrenInternal(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR,
+    eq processChildren(M, < T, I, Q, S, D > ;; TIS, MOST_GENERAL_SO_FAR) 
+    = processChildrenInternal(M, < T, I, Q, S, D > ;; TIS, MOST_GENERAL_SO_FAR,
     insertState(M,  {T, createIndex(T), D}, MOST_GENERAL_SO_FAR)) .
 
-    eq processChildrenInternal(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR, subsumed)
+    eq processChildrenInternal(M, < T, I, Q, S, D > ;; TIS, MOST_GENERAL_SO_FAR, subsumed)
     = processChildren(M, TIS, MOST_GENERAL_SO_FAR) .
 
-    ceq processChildrenInternal(M, < T, I, Q, N, D > ;; TIS, MOST_GENERAL_SO_FAR, MOST_GENERAL_SO_FAR')
-    = {< T, I, Q, N, D > ;; FILTERED, MOST_GENERAL_SO_FAR''}
+    ceq processChildrenInternal(M, < T, I, Q, S, D > ;; TIS, MOST_GENERAL_SO_FAR, MOST_GENERAL_SO_FAR')
+    = {< T, I, Q, S, D > ;; FILTERED, MOST_GENERAL_SO_FAR''}
     if I =/= 'false.Bool 
     /\ {FILTERED, MOST_GENERAL_SO_FAR''} := processChildren(M, TIS, MOST_GENERAL_SO_FAR') .
 
@@ -279,7 +214,7 @@ mod HEURISTIC-NARROWING is
 
     op isSolution : Module TermItem Term -> Bool .
 
-    ceq isSolution(M, < T, I, Q, N, D >, T') = true
+    ceq isSolution(M, < T, I, Q, S, D >, T') = true
     if UP := metaUnify(M, T =? T', Q, 0) 
     /\ getTerm(metaReduce(M, applySubstitution(M, I, getSubstitution(UP)))) =/= 'false.Bool .
 
@@ -298,7 +233,7 @@ mod HEURISTIC-NARROWING is
 
     op checkSolution : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet TermItem Bool -> HeuristicNarrowingSearchResult .
 
-    eq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, < T'', I, Q, N, D >, true)
+    eq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, < T'', I, Q, S, D >, true)
     = sol(T'', termSetSize(MOST_GENERAL_SO_FAR)) .
 
     ceq checkSolution(M, T, T', VOS, QUEUE, MOST_GENERAL_SO_FAR, TI, false)

@@ -1,7 +1,5 @@
-load fvp-nat.maude
-
-load heuristic-narrowing.maude
-load sorts.maude
+load ./sorts/fvp-nat.maude
+load ./sorts/sorts.maude
 
 set include BOOL off .
 
@@ -61,7 +59,7 @@ mod GLOBAL is
 endm
 
 
-mod ONETHIRDRULE is
+mod ONETHIRDRULE-SIMPLE is
     including GLOBAL .
     protecting VALUE .
     protecting MULTICAST .
@@ -244,54 +242,4 @@ mod ONETHIRDRULE is
     eq inv(SK:[State]) = true .
     op initialCond : State -> Bool .
     eq initialCond(SK:[State]) = true .
-
 endm
-
-
-mod ONETHIRDRULE-SIMPL-TEST is
-    including ONETHIRDRULE .
-    protecting HEURISTIC-NARROWING * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O : Oid .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
-endm
-
-
-
-set print attribute on .
-
-
-red  metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-SIMPL-TEST, false),
-    upTerm({s s s, INITIAL}),
-    upTerm({s s s,
-    < O : Node | decision : true, ATTS:U124S >
-    CONF}),
-    delay filter) .
-
-***(
-vu-narrow {delay, filter} [1]
-{s, INITIAL} =>* {s,
-    < O : Node | decision : true, ATTS:U124S >
-    CONF
-} .
-
-vu-narrow {delay, filter} [1]
-{s s, INITIAL} =>* {s s,
-    < O : Node | decision : true, ATTS:U124S >
-    CONF
-} .
-
-vu-narrow {delay, filter} [1]
-{s s s, INITIAL} =>* {s s s,
-    < O : Node | decision : true, ATTS:U124S >
-    CONF
-} .
-
-vu-narrow {delay, filter} [1]
-{s s s s, INITIAL} =>* {s s s s,
-    < O : Node | decision : true, ATTS:U124S >
-    CONF
-} .
-)

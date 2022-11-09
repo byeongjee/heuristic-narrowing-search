@@ -1,0 +1,66 @@
+load ../heuristic-search/heuristic-search.maude
+load ../models/onethirdrule-simple.maude
+load ./scoring-functions.maude
+
+
+mod ONETHIRDRULE-SIMPLE-INITIALCOND is
+    protecting ONETHIRDRULE-SIMPLE .
+    including HEURISTIC-SEARCH .
+
+    eq inv(SK:[State]) = true .
+    eq initialCond(SK:[State]) = true .
+endm
+
+mod ONETHIRDRULE-SIMPLE-TEST is
+    including ONETHIRDRULE-SIMPLE-INITIALCOND .
+    protecting SCORE3 * (sort Nat to Nat', sort Zero to Zero') .
+
+    vars O : Oid .
+    var INITIAL : InitialObjectSet .
+    var CONF : Configuration .
+endm
+
+*** set print attribute on .
+
+red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-SIMPLE-INITIALCOND, false),
+    upTerm({s, INITIAL}),
+    upTerm({s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF}),
+    delay filter) .
+
+red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-SIMPLE-INITIALCOND, false),
+    upTerm({s s, INITIAL}),
+    upTerm({s s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF}),
+    delay filter) .
+
+red in ONETHIRDRULE-SIMPLE-TEST : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-SIMPLE-INITIALCOND, false),
+    upTerm({s s s, INITIAL}),
+    upTerm({s s s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF}),
+    delay filter) .
+
+
+vu-narrow {delay, filter} [1]
+{s, INITIAL} =>* {s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF
+} .
+
+vu-narrow {delay, filter} [1]
+{s s, INITIAL} =>* {s s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF
+} .
+
+vu-narrow {delay, filter} [1]
+{s s s, INITIAL} =>* {s s s,
+    < O : Node | decision : true, ATTS:U124S >
+    CONF
+} .
