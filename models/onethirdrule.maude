@@ -70,13 +70,13 @@ mod ONETHIRDRULE is
     protecting FVP-NAT .
     protecting FVP-BOOL .
 
-    vars O O' : Oid . vars CONF : Configuration . var MSG : Msg . var C : Cid .
+    vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars NEIGHBORS OIDS : OidSet . 
     var R N N' VT VF VA : Nat .
     vars V : Value .
 
     rl [loss] : 
-    {N, MSG CONF}
+    {N, M CONF}
     =>
     {N, CONF} [narrowing] .
 

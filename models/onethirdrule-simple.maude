@@ -238,8 +238,4 @@ mod ONETHIRDRULE-SIMPLE is
         CONF
     } [narrowing] .
 
-    op inv : State -> Bool .
-    eq inv(SK:[State]) = true .
-    op initialCond : State -> Bool .
-    eq initialCond(SK:[State]) = true .
 endm
