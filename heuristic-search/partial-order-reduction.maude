@@ -1,0 +1,17 @@
+fmod PARTIAL-ORDER-REDUCTION is 
+    protecting META-LEVEL .
+
+    sorts Action ActionSet .
+    subsort Action < ActionSet .
+
+    op none : -> Action [ctor] . --- for the initial term item
+
+    --- rule label, substitution
+    op (_,_) : Qid Substitution -> Action [ctor] .
+    op emptyActionSet : -> ActionSet [ctor] .
+    op _;;_ : ActionSet ActionSet -> ActionSet [ctor assoc comm id: emptyActionSet] .
+
+    --- following functions must be implemented by the user
+    op relevantVars : Qid -> Qid .
+    op reduceToAmple : ActionSet -> ActionSet .
+endfm

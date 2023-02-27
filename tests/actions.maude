@@ -1,0 +1,19 @@
+fmod ACTION is
+    extending PARTIAL-ORDER-REDUCTION .
+
+    var L : Qid .
+    eq relevantVars('loss) = 'M:Msg .
+    eq relevantVars('receive-true-vote) = 'O:Oid ; 'O':Oid .
+    eq relevantVars(L) = 'O:Oid [owise] .
+
+    var AS : ActionSet .
+    var S : Substitution .
+
+    eq reduceToAmple(AS) = AS .
+---(
+    eq reduceToAmple(('vote-true, S) ;; AS) = ('vote-true, S) ;; ('vote-false, S) .
+    eq reduceToAmple(('vote-false, S) ;; AS) = ('vote-false, S) ;; ('vote-true, S).
+    eq reduceToAmple(AS) = AS [owise] . --- TODO
+)
+
+endfm

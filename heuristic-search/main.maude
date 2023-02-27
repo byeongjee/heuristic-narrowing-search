@@ -1,29 +1,53 @@
 load ./data-structures/priority-queue.maude
+load ./partial-order-reduction.maude
+
+fmod ACTION-IMPL is
+    including PARTIAL-ORDER-REDUCTION .
+
+    op restrict : Substitution VariableSet -> Substitution .
+
+    var X : Variable .
+    var T : Term .
+    var S : Substitution .
+    var VS : VariableSet .
+    var L : Qid .
+
+    eq restrict(X <- T ; S, X ; VS) = X <- T ; restrict(S, X ; VS) .
+    eq restrict(X <- T ; S, VS) = restrict(S, VS) [owise] .
+    eq restrict(S, none) = S .
+    eq restrict(none, VS) = none .
+
+    op createAction : Qid Substitution -> Action .
+    eq createAction(L, S) = (L, restrict(S, relevantVars(L))) .
+    *** [print "L:" L "\nsubstitution: " S].
+endfm
 
 fmod TERM-ITEM is
     --- sort for items in the priority queue
     protecting SCORE .
     protecting NAT .
     protecting QID .
+    protecting ACTION-IMPL .
 
     sort TermItem .
 
-    op <_,_,_,_,_> : Term Term Qid Score Nat -> TermItem [ctor] .
+    op <_,_,_,_,_,_> : Term Term Action Qid Score Nat -> TermItem [ctor] .
     --- term, constraint, variable prefix, score, depth
 
     vars T T' I I' : Term .
     vars N N' D D' : Nat .
     vars S S' : Score .
     vars Q Q' : Qid .
+    vars A A' : Action .
 
     op _<_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, S, D > < < T', I', Q', S', D' > = le(S, S') .
+    eq < T, I, A, Q, S, D > < < T', I', A', Q', S', D' > = le(S, S') .
 
     op _>_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, S, D > > < T', I', Q', S', D' > = le(S, S') .
+    eq < T, I, A, Q, S, D > > < T', I', A', Q', S', D' > = le(S, S') .
 
     op _<=_ : TermItem TermItem -> Bool .
-    eq < T, I, Q, S, D > <= < T', I', Q', S', D' > = le(S, S') .
+    eq < T, I, A, Q, S, D > <= < T', I', A', Q', S', D' > = le(S, S') .
 
 endfm
 
@@ -172,6 +196,7 @@ mod FOLDING-APPLICATION is
     var Q : Qid .
     var S : Score .
     var D : Nat .
+    var A : Action .
 
     sort FoldingResult .
     op {_,_} : TermItemSet IndexedTermSet -> FoldingResult [ctor] .
@@ -184,21 +209,51 @@ mod FOLDING-APPLICATION is
 
     eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
 
-    eq applyFolding(M, < T, 'false.Bool, Q, S, D > ;; TIS, IDXTS) 
+    eq applyFolding(M, < T, 'false.Bool, A, Q, S, D > ;; TIS, IDXTS) 
     = applyFolding(M, TIS, IDXTS) .
 
-    eq applyFolding(M, < T, I, Q, S, D > ;; TIS, IDXTS) 
-    = applyFoldingInternal(M, < T, I, Q, S, D > ;; TIS, IDXTS,
-    insertState(M,  {T, createIndex(T), D}, IDXTS)) .
+    eq applyFolding(M, < T, I, A, Q, S, D > ;; TIS, IDXTS) 
+    = applyFoldingInternal(M, < T, I, A, Q, S, D > ;; TIS, IDXTS,
+    insertState(M, {T, createIndex(T), D}, IDXTS)) .
 
-    eq applyFoldingInternal(M, < T, I, Q, S, D > ;; TIS, IDXTS, subsumed)
+    eq applyFoldingInternal(M, < T, I, A, Q, S, D > ;; TIS, IDXTS, subsumed)
     = applyFolding(M, TIS, IDXTS) .
 
-    ceq applyFoldingInternal(M, < T, I, Q, S, D > ;; TIS, IDXTS, IDXTS')
-    = {< T, I, Q, S, D > ;; TIS', IDXTS''}
+    ceq applyFoldingInternal(M, < T, I, A, Q, S, D > ;; TIS, IDXTS, IDXTS')
+    = {< T, I, A, Q, S, D > ;; TIS', IDXTS''}
     if I =/= 'false.Bool 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 endm
+
+fmod PARTIAL-ORDER-REDUCTION-IMPL is
+    protecting TERM-ITEM-SET .
+
+
+    vars T I : Term . 
+    var A : Action .
+    var Q : Qid .
+    var S : Score .
+    var D : Nat .
+    var TIS : TermItemSet .
+    vars AS AS' : ActionSet .
+
+    op applyPor : TermItemSet -> TermItemSet .
+    ceq applyPor(TIS) = filterAmple(TIS, AS') 
+    if AS := getActionSet(TIS)
+    /\ AS' := reduceToAmple(AS)
+    ***[print "before: " AS "\nafter: " AS'] .
+    .
+
+    op filterAmple : TermItemSet ActionSet -> TermItemSet .
+    eq filterAmple(< T, I, A, Q, S, D > ;; TIS, A ;; AS) = < T, I, A, Q, S, D > ;; filterAmple(TIS, A ;; AS) .
+    eq filterAmple(< T, I, A, Q, S, D > ;; TIS, AS) = filterAmple(TIS, AS) [owise] .
+    eq filterAmple(emptyTermItemSet, AS) = emptyTermItemSet .
+
+
+    op getActionSet : TermItemSet -> ActionSet .
+    eq getActionSet(emptyTermItemSet) = emptyActionSet .
+    eq getActionSet(< T, I, A, Q, S, D > ;; TIS) = A ;; getActionSet(TIS) .
+endfm
 
 mod GET-CHILDREN is
     protecting META-LEVEL .
@@ -212,6 +267,7 @@ mod GET-CHILDREN is
     var TI : TermItem . 
     var VOS : VariantOptionSet .
     vars T T' I : Term .
+    var A : Action .
     var S : Score .
     vars D SOLN : Nat .
     var TY' : Type . 
@@ -221,19 +277,20 @@ mod GET-CHILDREN is
 
     eq getChildren(M, TI, VOS) = getChildrenUpToNth(M, TI, VOS, 0) .
 
-    eq getChildrenUpToNth(M, < T, I, Q, S, D >, VOS, SOLN) 
-    = getChildrenUpToNthInternal(M, < T, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
+    eq getChildrenUpToNth(M, < T, I, A, Q, S, D >, VOS, SOLN) 
+    = getChildrenUpToNthInternal(M, < T, I, A, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
 
     eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
     eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failureIncomplete) 
     = emptyTermItemSet [print "incomplete narrowing"] .
-    eq getChildrenUpToNthInternal(M, < T, I, Q, S, D >, VOS, SOLN, 
+    eq getChildrenUpToNthInternal(M, < T, I, A, Q, S, D >, VOS, SOLN, 
         {T', TY', CO, L, S1, S2, Q'}) 
     = < T', 
         getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])),
+        createAction(L, S2),
         Q', 
         score(T', D + 1), 
-        D + 1 > ;; getChildrenUpToNth(M, < T, I, Q, S, D >, VOS, SOLN + 1) .
+        D + 1 > ;; getChildrenUpToNth(M, < T, I, A, Q, S, D >, VOS, SOLN + 1) .
 endm
 
 
@@ -244,6 +301,7 @@ mod HEURISTIC-NARROWING is
     protecting LEFTIST-TREES{TermItem} .
     protecting GET-CHILDREN .
     protecting FOLDING-APPLICATION .
+    protecting PARTIAL-ORDER-REDUCTION-IMPL .
 
 
     sort HeuristicNarrowingSearchResult .
@@ -259,6 +317,7 @@ mod HEURISTIC-NARROWING is
     var M : Module .
     vars T T' T'' I I' : Term .
     vars N D D' : Nat . var S : Score .
+    var A : Action .
     var VOS : VariantOptionSet .
     vars IDXTS IDXTS' IDXTS'' : IndexedTermSet .
     vars TI SOL : TermItem .
@@ -270,7 +329,7 @@ mod HEURISTIC-NARROWING is
 
     op isSolution : Module TermItem Term -> Bool .
 
-    ceq isSolution(M, < T, I, Q, S, D >, T') = true
+    ceq isSolution(M, < T, I, A, Q, S, D >, T') = true
     if UP := metaUnify(M, T =? T', Q, 0) 
     /\ getTerm(metaReduce(M, applySubstitution(M, I, getSubstitution(UP)))) =/= 'false.Bool .
 
@@ -283,7 +342,7 @@ mod HEURISTIC-NARROWING is
 
     eq metaHeuristicNarrowingSearch(M, T, T', VOS)
     = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, 
-    insert(< T, 'initialCond[T], '@, score(T, 0), 0 >, empty), 
+    insert(< T, 'initialCond[T], none, '@, score(T, 0), 0 >, empty), 
     empty) .
 
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, IDXTS)
@@ -294,13 +353,14 @@ mod HEURISTIC-NARROWING is
     LTree{TermItem} IndexedTermSet TermItem Bool 
     -> HeuristicNarrowingSearchResult .
 
-    eq checkSolution(M, T, T', VOS, QUEUE, IDXTS, < T'', I, Q, S, D >, true)
+    eq checkSolution(M, T, T', VOS, QUEUE, IDXTS, < T'', I, A, Q, S, D >, true)
     = sol(T'', termSetSize(IDXTS)) .
 
     ceq checkSolution(M, T, T', VOS, QUEUE, IDXTS, TI, false)
     = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , IDXTS') 
     if {FILTERED, IDXTS'} := applyFolding(M, getChildren(M, TI, VOS), IDXTS)
-    /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) [print "TI: " TI] .
+    /\ QUEUE' := insertAll(applyPor(FILTERED), deleteMin(QUEUE)) 
+    [print "TI: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, IDXTS)
     = noSolution(termSetSize(IDXTS)) .

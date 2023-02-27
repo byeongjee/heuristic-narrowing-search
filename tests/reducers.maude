@@ -1,0 +1,52 @@
+load ../heuristic-search/score.maude
+load ../heuristic-search/partial-order-reduction.maude
+
+mod ONETHIRDRULE-POR is
+    including PARTIAL-ORDER-REDUCTION .
+
+    var L : Qid .
+    vars T T' : Term .
+    var S : Substitution .
+    var AS : ActionSet .
+
+    eq relevantVars('loss) = 'M .
+    ceq relevantVars(L) = O ; O' 
+    if L == 'receive-true-vote or L == 'receive-false-vote .
+    eq relevantVars(L) = 'O [owise] .
+
+    --- FIXME: reduceToAmple should be predictable
+
+    --- if there is vote true or vote false rule enabled,
+    --- then we may take it as a singleton ample set
+    ceq reduceToAmple((L, S), AS) = (L, S) if L == 'vote-true or L == 'vote-false .
+
+    ceq reduceToAmple((L, (('O -> T); S)), AS) 
+    = (L, (('O -> T); S)) ; filterByObject(T, AS) 
+    if L == 'receive-true-vote 
+    or L == 'receive-false-vote 
+    or L == 'updateTrue-1
+    or L == 'updateFalse-1 .
+
+    --- msg loss rule 고려 필요
+
+    eq reduceToAmple(AS) = AS [owise] .
+
+    --- filter all actions in ActionSet by the primary object
+    --- we assume all rules to use the variable O for the primary object
+    op filterByObject : Term ActionSet -> ActionSet [ctor] .
+    --- term is either a variable or a constant
+    ceq filterByObject(T, ((L, 'O -> T ; S) ; AS)) 
+    = (L, 'O -> T ; S) ; filterByObject(T, AS) if L =/= 'msg-loss .
+
+    --- TODO: No need to add msg-loss rules for updateTrue/updateFalse cases
+    --- they are required only for receive-true-vote/receive-false-vote cases
+    vars MC FR TO : Term .
+    ceq filterByObject(T, ((L, 'M -> 'multicast_from_to_[MC, FR, TO] ; S) ; AS)) 
+    = (L, 'O -> T ; S) ; filterByObject(T, AS) if L == 'msg-loss /\ T == TO .
+
+    eq filterByObject(T, ((L, 'O -> T ; S) ; AS)) 
+    = filterByObject(T, AS) [owise] .
+
+    eq filterByObject(T, empty) = empty .
+
+endm
