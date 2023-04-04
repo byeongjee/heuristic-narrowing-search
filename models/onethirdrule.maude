@@ -150,17 +150,17 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [decideTrue-2] :
+    eq [decideTrue-2] :
     decideTrue(true,
         N,
         < O : Node | status : (R, waiting), decision : nil, ATTS:U245S >,
         CONF
     ) 
-    =>
+    =
     {N,
         < O : Node | status : (R, finished), decision : true, ATTS:U245S  >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [decideFalse-1] :
     {N,
@@ -174,16 +174,16 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [decideFalse-2] :
+    eq [decideFalse-2] :
     decideFalse(true,
         N,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U245S >,
         CONF)
-    =>
+    =
     {N,
         < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U245S >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [updateTrue-1] : 
     {N,
@@ -198,18 +198,18 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [updateTrue-2] : 
+    eq [updateTrue-2] : 
     updateTrue(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
         CONF
     )
-    =>
+    =
     {N,
         < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0), ATTS:U5S >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [updateFalse-1] : 
     {N,
@@ -224,18 +224,18 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [updateFalse-2] : 
+    eq [updateFalse-2] : 
     updateFalse(
         true,
         N,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
         CONF
     )
-    =>
+    =
     {N,
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0), ATTS:U5S >
         CONF
-    } [narrowing] .
+    } [variant] .
 
 endm
 
