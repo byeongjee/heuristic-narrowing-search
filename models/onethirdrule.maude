@@ -73,6 +73,7 @@ mod ONETHIRDRULE is
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars NEIGHBORS OIDS : OidSet . 
     var R N N' VT VF VA : Nat .
+    var Z : Zero .
     vars V : Value .
 
     rl [loss] : 
@@ -80,27 +81,51 @@ mod ONETHIRDRULE is
     =>
     {N, CONF} [narrowing] .
 
-    rl [vote-true] : 
+    rl [vote-true-new] : 
     {N,
-        < O : Node | status : (R, init), value : true, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
+        < O : Node | status : (0, init), value : true, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
         CONF
     }
     =>
     {N,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s, 0, s), neighbors : NEIGHBORS > 
-        (multicast trueVote(R) from O to NEIGHBORS)
+        < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s, 0, s), neighbors : NEIGHBORS > 
+        (multicast trueVote(0) from O to NEIGHBORS)
         CONF
     } [narrowing] .
 
-    rl [vote-false] : 
+    rl [vote-true-existing] : 
     {N,
-        < O : Node | status : (R, init), value : false, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
+        < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
         CONF
     }
     =>
     {N,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (0, s, s), neighbors : NEIGHBORS > 
-        (multicast falseVote(R) from O to NEIGHBORS)
+        < O : Node | status : (s R, waiting), value : true, decision : nil, votes : (s, 0, s), neighbors : NEIGHBORS > 
+        (multicast trueVote(s R) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-false-new] : 
+    {N,
+        < O : Node | status : (0, init), value : false, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | status : (0, waiting), value : false, decision : nil, votes : (0, s, s), neighbors : NEIGHBORS > 
+        (multicast falseVote(0) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-false-existing] : 
+    {N,
+        < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0), neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | status : (s R, waiting), value : false, decision : nil, votes : (0, s, s), neighbors : NEIGHBORS > 
+        (multicast falseVote(s R) from O to NEIGHBORS)
         CONF
     } [narrowing] .
 
