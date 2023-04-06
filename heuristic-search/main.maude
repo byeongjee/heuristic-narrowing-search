@@ -184,7 +184,7 @@ mod FOLDING-APPLICATION is
 
     *** module, children, most general so far
     op applyFolding : Module TermItemSet IndexedTermSet -> FoldingResult .
-    op applyFoldingInternal : Module TermItemSet IndexedTermSet InsertStateResult -> FoldingResult .
+    op applyFoldingInternal : Module TermItemSet IndexedTermSet TermItem InsertStateResult -> FoldingResult .
 
 
     eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
@@ -193,13 +193,13 @@ mod FOLDING-APPLICATION is
     = applyFolding(M, TIS, IDXTS) .
 
     eq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
-    = applyFoldingInternal(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS,
+    = applyFoldingInternal(M, TIS, IDXTS, < T, L, T0, I, Q, S, D >, 
     insertState(M,  {T, createIndex(T), D}, IDXTS)) .
 
-    eq applyFoldingInternal(M, TI ;; TIS, IDXTS, subsumed)
+    eq applyFoldingInternal(M, TIS, IDXTS, TI, subsumed)
     = applyFolding(M, TIS, IDXTS) .
 
-    ceq applyFoldingInternal(M, TI ;; TIS, IDXTS, IDXTS')
+    ceq applyFoldingInternal(M, TIS, IDXTS, TI, IDXTS')
     = {TI ;; TIS', IDXTS''}
     if {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 endm
