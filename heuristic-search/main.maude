@@ -110,7 +110,7 @@ mod SUBSUMPTION-CHECK is
     protecting META-LEVEL .
     protecting INDEXED-TERM-SET .
     op _isSubsumedBy_under_ : IndexedTerm IndexedTermSet Module -> Bool  .
-    op _isSubsumedBy_under_ : Term Term Module -> Bool  .
+    op _isSubsumedBy_under_ : Term Term Module -> Bool  [memo] .
 
     var M : Module .
     vars T T' : Term . var IDX : Index . vars D D' : Nat .
