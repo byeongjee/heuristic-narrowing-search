@@ -171,6 +171,7 @@ mod FOLDING-APPLICATION is
 
     var M : Module .
     var IDXT : IndexedTerm . vars IDXTS IDXTS' IDXTS'' : IndexedTermSet .
+    var TI : TermItem .
     vars TIS TIS' : TermItemSet .
     vars T T0 I : Term .
     vars L Q : Qid .
@@ -195,13 +196,12 @@ mod FOLDING-APPLICATION is
     = applyFoldingInternal(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS,
     insertState(M,  {T, createIndex(T), D}, IDXTS)) .
 
-    eq applyFoldingInternal(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS, subsumed)
+    eq applyFoldingInternal(M, TI ;; TIS, IDXTS, subsumed)
     = applyFolding(M, TIS, IDXTS) .
 
-    ceq applyFoldingInternal(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS, IDXTS')
-    = {< T, L, T0, I, Q, S, D > ;; TIS', IDXTS''}
-    if I =/= 'false.Bool 
-    /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
+    ceq applyFoldingInternal(M, TI ;; TIS, IDXTS, IDXTS')
+    = {TI ;; TIS', IDXTS''}
+    if {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 endm
 
 mod GET-CHILDREN is
@@ -215,7 +215,7 @@ mod GET-CHILDREN is
     var M : Module .
     var TI : TermItem . 
     var VOS : VariantOptionSet .
-    vars T T' T0 I : Term .
+    vars T T' T0 I I' : Term .
     var S : Score .
     vars D SOLN : Nat .
     var TY' : Type . 
@@ -231,15 +231,19 @@ mod GET-CHILDREN is
     eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
     eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failureIncomplete) 
     = emptyTermItemSet [print "incomplete narrowing"] .
-    eq getChildrenUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
+    ceq getChildrenUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
         {T', TY', CO, L', S1, S2, Q'}) 
-    = < T', 
+    = (if I' =/= 'false.Bool 
+      then < T', 
         L',
         applySubstitution(M, T, S1),
-        getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])),
+        I',
         Q', 
         score(T', D + 1), 
-        D + 1 > ;; getChildrenUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) .
+        D + 1 > 
+      else emptyTermItemSet 
+      fi) ;; getChildrenUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+    if I' := getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])) .
 endm
 
 mod INVISIBLE-TRANSITION is
