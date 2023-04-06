@@ -272,10 +272,10 @@ mod INVISIBLE-TRANSITION is
 
     eq removeSubsumed(M, emptyTermItemSet) = emptyTermItemSet . 
     eq removeSubsumed(M, TI) = TI .
-    eq removeSubsumed(M, < T, L, T0, I, Q, S, D > ;; < T', L', T0', I', Q', S', D' > ;; TIS) = 
-    if T0 isSubsumedBy T0' under M 
-    then removeSubsumed(M, < T', L', T0', I', Q', S', D' > ;; TIS)
-    else < T, L, T0, I, Q, S, D > ;; removeSubsumed(M, < T', L', T0', I', Q', S', D' > ;; TIS) fi .
+    ceq removeSubsumed(M, < T, L, T0, I, Q, S, D > ;; < T', L', T0', I', Q', S', D' > ;; TIS) = 
+    removeSubsumed(M, < T', L', T0', I', Q', S', D' > ;; TIS)
+    if T0 isSubsumedBy T0' under M .
+    eq removeSubsumed(M, TIS) = TIS [owise] .
 endm 
 
 mod HEURISTIC-NARROWING is
@@ -290,7 +290,7 @@ mod HEURISTIC-NARROWING is
 
     sort HeuristicNarrowingSearchResult .
     op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : Term Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
 
     *** module, initial term, goal term, variant option set 
     op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
@@ -337,7 +337,7 @@ mod HEURISTIC-NARROWING is
     -> HeuristicNarrowingSearchResult .
 
     eq checkSolution(M, T, T', VOS, QUEUE, IDXTS, < T'', L, T0, I, Q, S, D >, true)
-    = sol(T'', termSetSize(IDXTS)) .
+    = sol(T'', S, D, termSetSize(IDXTS)) .
 
     ceq checkSolution(M, T, T', VOS, QUEUE, IDXTS, TI, false)
     = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , IDXTS') 
