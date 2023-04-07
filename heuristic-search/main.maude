@@ -39,9 +39,9 @@ fmod INDEXED-TERM-SET is
     sort IndexedTerm . *** Nat is depth for debugging purpose
     op `{_`,_`,_`} : Term Index Nat -> IndexedTerm .
 
-    vars T NT T' T'' : Term .
+    vars T T' T'' NT OT  : Term .
     vars NETL NETL' : NeTermList .
-    var N : Nat .
+    vars Q F : Qid .
 
     op createIndex : Term -> Index .
     op createNumMsgsAndObjs : Qid NeTermList -> Index .
@@ -58,17 +58,14 @@ fmod INDEXED-TERM-SET is
     eq getNumObjs((T,  NETL')) = getNumObjs(T) + getNumObjs(NETL') .
 
     op getConfig : Term -> NeTermList .
-    eq getConfig('decideTrue[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('decideFalse[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateTrue[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateFalse[T, NT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('`{_`,_`}[NT, T]) = getConfig(T) .
+    eq getConfig('decideTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('decideFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('`{_`,_`,_`}[NT, OT, T]) = getConfig(T) .
     eq getConfig('__[NETL]) = NETL .
 
-    var Q : Qid .
-
-    eq getTopSymbol(Q[NETL]) = Q .
-
+    eq getTopSymbol(F[NETL]) = F .
 
     sort IndexedTermSet .  
     subsort IndexedTerm < IndexedTermSet .
@@ -110,7 +107,7 @@ mod SUBSUMPTION-CHECK is
     protecting META-LEVEL .
     protecting INDEXED-TERM-SET .
     op _isSubsumedBy_under_ : IndexedTerm IndexedTermSet Module -> Bool  .
-    op _isSubsumedBy_under_ : Term Term Module -> Bool  [memo] .
+    op _isSubsumedBy_under_ : Term Term Module -> Bool .
 
     var M : Module .
     vars T T' : Term . var IDX : Index . vars D D' : Nat .
@@ -186,7 +183,6 @@ mod FOLDING-APPLICATION is
     op applyFolding : Module TermItemSet IndexedTermSet -> FoldingResult .
     op applyFoldingInternal : Module TermItemSet IndexedTermSet TermItem InsertStateResult -> FoldingResult .
 
-
     eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
 
     eq applyFolding(M, < T, L, T0, 'false.Bool, Q, S, D > ;; TIS, IDXTS) 
@@ -249,24 +245,46 @@ endm
 mod INVISIBLE-TRANSITION is
     protecting TERM-ITEM-SET .
     protecting SUBSUMPTION-CHECK .
+    protecting RENAME .
 
     var M : Module . 
     vars T T' T0 T0' I I' : Term .
-    vars L L' Q Q' : Qid . 
+    vars L L' Q Q' F : Qid . 
     var LS : QidSet . 
     vars S S' : Score .
     vars D D' : Nat .
-    var TI : TermItem . vars TIS MATCHED NMATCHED : TermItemSet .
+    vars TI TI' : TermItem . vars TIS MATCHED NMATCHED : TermItemSet .
+    var N : Nat .
+    var IDXTI : IndexedTermItem .
+    var IDXTIS : IndexedTermItemSet .
+    var IDX : Index .
 
     sort SplitResult .
     op {_,_} : TermItemSet TermItemSet -> SplitResult [ctor] .
 
     op reduce : Module QidSet TermItemSet -> TermItemSet .
     op splitReducible : Module QidSet TermItemSet -> SplitResult .
-    op removeSubsumed : Module TermItemSet -> TermItemSet .
+    op removeSubsumed : Module IndexedTermItemSet -> TermItemSet .
 
-    ceq reduce(M, LS, TIS) = NMATCHED ;; removeSubsumed(M, MATCHED)
-    if {MATCHED, NMATCHED} := splitReducible(M, LS, TIS) .
+    sorts IndexedTermItem IndexedTermItemSet .
+    subsort IndexedTermItem < IndexedTermItemSet .
+
+    op emptyIndexedTermItemSet : -> IndexedTermItemSet .
+    op {_,_,_} : Index Term TermItem -> IndexedTermItem [ctor] .
+    op _;;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: emptyIndexedTermItemSet] .
+
+    op createIndex : TermItemSet Nat -> IndexedTermItemSet .
+    eq createIndex(emptyTermItemSet, N) = emptyIndexedTermItemSet .
+    eq createIndex(< T, L, T0, I, Q, S, D > ;; TIS, N) = 
+    {createIndex(T0), rename(T0, N), < T, L, T0, I, Q, S, D >} ;; createIndex(TIS, N + 1) .
+
+    op toTermItemSet : IndexedTermItemSet -> TermItemSet .
+    eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
+    eq toTermItemSet({IDX, T0, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
+
+    ceq reduce(M, LS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
+    if {MATCHED, NMATCHED} := splitReducible(M, LS, TIS) 
+    /\ IDXTIS := createIndex(MATCHED, 0) .
 
     eq splitReducible(M, LS, emptyTermItemSet) = {emptyTermItemSet, emptyTermItemSet} .
     ceq splitReducible(M, LS, < T, L, T0, I, Q, S, D > ;; TIS) 
@@ -274,12 +292,10 @@ mod INVISIBLE-TRANSITION is
       else {MATCHED, < T, L, T0, I, Q, S, D > ;; NMATCHED} fi
     if {MATCHED, NMATCHED} := splitReducible(M, LS, TIS) .
 
-    eq removeSubsumed(M, emptyTermItemSet) = emptyTermItemSet . 
-    eq removeSubsumed(M, TI) = TI .
-    ceq removeSubsumed(M, < T, L, T0, I, Q, S, D > ;; < T', L', T0', I', Q', S', D' > ;; TIS) = 
-    removeSubsumed(M, < T', L', T0', I', Q', S', D' > ;; TIS)
+    ceq removeSubsumed(M, {IDX, T0, TI}  ;; {IDX, T0', TI'} ;; IDXTIS) 
+    = removeSubsumed(M, {IDX, T0', TI'} ;; IDXTIS)
     if T0 isSubsumedBy T0' under M .
-    eq removeSubsumed(M, TIS) = TIS [owise] .
+    eq removeSubsumed(M, IDXTIS) = toTermItemSet(IDXTIS) [owise] .
 endm 
 
 mod HEURISTIC-NARROWING is
@@ -347,10 +363,11 @@ mod HEURISTIC-NARROWING is
     = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , IDXTS') 
     if {FILTERED, IDXTS'} := applyFolding(M, 
         reduce(M, 
-         ('vote-true-existing ; 'vote-false-existing ; 'receive-true-vote ; 'receive-false-vote), 
+        ('vote-true ; 'vote-false ; 'receive-true-vote ; 'receive-false-vote),
         getChildren(M, TI, VOS)), 
         IDXTS)
-    /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) [print "TI: " TI] .
+    /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) 
+    [print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, IDXTS)
     = noSolution(termSetSize(IDXTS)) .

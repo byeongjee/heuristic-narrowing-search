@@ -23,27 +23,27 @@ mod SCORE-BASE is
     subsort Int < Score .
 
     vars N N' : Int .
-    vars T BT NT OT CT ST : Term .
+    vars T BT NT OIDT OT CT ST : Term .
     var D : Nat .
     var NETL : NeTermList .
 
     eq le(N, N') = N <= N' .
 
     eq score(
-            'decideTrue[BT, NT, OT, CT], D
+            'decideTrue[BT, NT, OIDT, OT, CT], D
         ) = scoreConf((OT, CT)) .
     eq score(
-            'decideFalse[BT, NT, OT, CT], D
+            'decideFalse[BT, NT, OIDT, OT, CT], D
         ) = scoreConf((OT, CT)) .
     eq score(
-            'updateTrue[BT, NT, OT, CT], D
+            'updateTrue[BT, NT, OIDT, OT, CT], D
         ) = scoreConf((OT, CT)) .
     eq score(
-            'updateFalse[BT, NT, OT, CT], D
+            'updateFalse[BT, NT, OIDT, OT, CT], D
         ) = scoreConf((OT, CT)) .
 
     eq score(
-        '`{_`,_`}[T, NETL], D
+        '`{_`,_`,_`}[T, OIDT, NETL], D
     ) = scoreConf(NETL) .
 
     op scoreConf : NeTermList -> Score .
