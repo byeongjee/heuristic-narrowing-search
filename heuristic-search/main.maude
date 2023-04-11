@@ -1,4 +1,5 @@
 load ./data-structures/priority-queue.maude
+load ./rule-instance.maude
 
 fmod TERM-ITEM is
     --- sort for items in the priority queue
@@ -246,6 +247,7 @@ mod INVISIBLE-TRANSITION is
     protecting TERM-ITEM-SET .
     protecting SUBSUMPTION-CHECK .
     protecting RENAME .
+    protecting RULE-INSTANCE .
 
     var M : Module . 
     vars T T' T0 T0' I I' : Term .
@@ -258,12 +260,13 @@ mod INVISIBLE-TRANSITION is
     var IDXTI : IndexedTermItem .
     var IDXTIS : IndexedTermItemSet .
     var IDX : Index .
+    var RIS : RuleInstanceSet .
 
     sort SplitResult .
     op {_,_} : TermItemSet TermItemSet -> SplitResult [ctor] .
 
-    op reduce : Module QidSet TermItemSet -> TermItemSet .
-    op splitReducible : Module QidSet TermItemSet -> SplitResult .
+    op reduce : Module RuleInstanceSet TermItemSet -> TermItemSet .
+    op splitReducible : Module RuleInstanceSet TermItemSet -> SplitResult .
     op removeSubsumed : Module IndexedTermItemSet -> TermItemSet .
 
     sorts IndexedTermItem IndexedTermItemSet .
@@ -282,15 +285,15 @@ mod INVISIBLE-TRANSITION is
     eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
     eq toTermItemSet({IDX, T0, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
 
-    ceq reduce(M, LS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
-    if {MATCHED, NMATCHED} := splitReducible(M, LS, TIS) 
+    ceq reduce(M, RIS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
+    if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) 
     /\ IDXTIS := createIndex(MATCHED, 0) .
 
-    eq splitReducible(M, LS, emptyTermItemSet) = {emptyTermItemSet, emptyTermItemSet} .
-    ceq splitReducible(M, LS, < T, L, T0, I, Q, S, D > ;; TIS) 
-    = if L in LS then {< T, L, T0, I, Q, S, D > ;; MATCHED, NMATCHED}
+    eq splitReducible(M, RIS, emptyTermItemSet) = {emptyTermItemSet, emptyTermItemSet} .
+    ceq splitReducible(M, RIS, < T, L, T0, I, Q, S, D > ;; TIS) 
+    = if isRuleInstance(M, RIS, L, T0) then {< T, L, T0, I, Q, S, D > ;; MATCHED, NMATCHED}
       else {MATCHED, < T, L, T0, I, Q, S, D > ;; NMATCHED} fi
-    if {MATCHED, NMATCHED} := splitReducible(M, LS, TIS) .
+    if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) .
 
     ceq removeSubsumed(M, {IDX, T0, TI}  ;; {IDX, T0', TI'} ;; IDXTIS) 
     = removeSubsumed(M, {IDX, T0', TI'} ;; IDXTIS)
@@ -306,17 +309,18 @@ mod HEURISTIC-NARROWING is
     protecting GET-CHILDREN .
     protecting FOLDING-APPLICATION .
     protecting INVISIBLE-TRANSITION .
+    protecting RULE-INSTANCE .
 
 
     sort HeuristicNarrowingSearchResult .
     op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
     op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
 
-    *** module, initial term, goal term, variant option set 
-    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
+    *** module, initial term, goal term, rule instance set, variant option set 
+    op metaHeuristicNarrowingSearch : Module Term Term RuleInstanceSet VariantOptionSet -> HeuristicNarrowingSearchResult .
 
     *** module, initial term, goal term, variant option set, pending, most general so far
-    op metaHeuristicNarrowingSearchInternal : Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
+    op metaHeuristicNarrowingSearchInternal : Module Term Term RuleInstanceSet VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
     vars T T' T'' T0 I I' : Term .
@@ -326,7 +330,7 @@ mod HEURISTIC-NARROWING is
     vars TI SOL : TermItem .
     vars TIS FILTERED CHILDREN : TermItemSet .
     vars L Q : Qid .
-
+    var RIS : RuleInstanceSet .
 
     var UP : UnificationPair .
 
@@ -343,33 +347,31 @@ mod HEURISTIC-NARROWING is
     eq insertAll(emptyTermItemSet, QUEUE) = QUEUE .
     eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
 
-    eq metaHeuristicNarrowingSearch(M, T, T', VOS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, 
+    eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, 
     insert(< T, 'none, T, 'initialCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
     empty) .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, IDXTS)
-    = checkSolution(M, T, T', VOS, QUEUE, IDXTS, TI, isSolution(M, TI, T'))
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE, IDXTS)
+    = checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, TI, isSolution(M, TI, T'))
     if TI := findMin(QUEUE) .
 
-    op checkSolution : Module Term Term VariantOptionSet 
+    op checkSolution : Module Term Term RuleInstanceSet VariantOptionSet 
     LTree{TermItem} IndexedTermSet TermItem Bool 
     -> HeuristicNarrowingSearchResult .
 
-    eq checkSolution(M, T, T', VOS, QUEUE, IDXTS, < T'', L, T0, I, Q, S, D >, true)
+    eq checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, < T'', L, T0, I, Q, S, D >, true)
     = sol(T'', S, D, termSetSize(IDXTS)) .
 
-    ceq checkSolution(M, T, T', VOS, QUEUE, IDXTS, TI, false)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , IDXTS') 
+    ceq checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, TI, false)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE' , IDXTS') 
     if {FILTERED, IDXTS'} := applyFolding(M, 
-        reduce(M, 
-        ('vote-true ; 'vote-false ; 'receive-true-vote ; 'receive-false-vote),
-        getChildren(M, TI, VOS)), 
+        reduce(M, RIS, getChildren(M, TI, VOS)), 
         IDXTS)
     /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) 
     [print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, IDXTS)
+    eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, empty, IDXTS)
     = noSolution(termSetSize(IDXTS)) .
 
 endm

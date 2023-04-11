@@ -1,4 +1,5 @@
 load ../heuristic-search/heuristic-search.maude
+load ../heuristic-search/rule-instance.maude
 load ../models/onethirdrule.maude
 load ./scoring-functions.maude
 
@@ -76,6 +77,10 @@ red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
@@ -85,6 +90,10 @@ red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
@@ -94,4 +103,8 @@ red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
