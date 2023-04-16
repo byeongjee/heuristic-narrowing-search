@@ -2,7 +2,7 @@ load ../heuristic-search/score.maude
 load ../heuristic-search/main.maude
 
 mod SCORE1 is
-    including HEURISTIC-NARROWING .
+    including SCORE .
     protecting INT .
 
     subsort Int < Score .
@@ -17,7 +17,7 @@ endm
 
 *** for score2 and score3
 mod SCORE-BASE is
-    including HEURISTIC-NARROWING .
+    including SCORE .
     protecting INT .
 
     subsort Int < Score .

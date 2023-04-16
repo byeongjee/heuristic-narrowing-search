@@ -22,7 +22,7 @@ mod ONETHIRDRULE-INITIALCOND is
     and isThresholdValid(getOids(CONF), N) .
 
     op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:U12345S > CONF) = O ; getOids(CONF) .
+    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
     eq getOids(M CONF) =  getOids(CONF) .
     eq getOids(none) =  none .
 
@@ -68,7 +68,7 @@ mod ONETHIRDRULE-TEST-3 is
     var CONF : Configuration .
 endm
 
-set print attribute on .
+do clear memo .
 
 red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
@@ -77,11 +77,10 @@ red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    (['vote-true, any] ; 
-    ['vote-false, any] ; 
-    ['receive-true-vote, any] ; 
-    ['receive-false-vote, any]),
+    none,
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
@@ -90,11 +89,10 @@ red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    (['vote-true, any] ; 
-    ['vote-false, any] ; 
-    ['receive-true-vote, any] ; 
-    ['receive-false-vote, any]),
+    none,
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
@@ -103,8 +101,5 @@ red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    (['vote-true, any] ; 
-    ['vote-false, any] ; 
-    ['receive-true-vote, any] ; 
-    ['receive-false-vote, any]),
+    none,
     delay filter) .

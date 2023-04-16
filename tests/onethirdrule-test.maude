@@ -1,12 +1,11 @@
 load ../heuristic-search/invariant.maude
 load ../heuristic-search/rule-instance.maude
-load ../models/vu-narrow-comparison.maude
+load ../models/onethirdrule.maude
 load ./scoring-functions.maude
 
-mod ONETHIRDRULE-VU-NARROW-INVARIANT is
-    protecting ONETHIRDRULE-VU-NARROW .
+mod ONETHIRDRULE-INVARIANT is
+    protecting ONETHIRDRULE .
     including INVARIANT .
-
 
     var N : Nat .
     var CONF : Configuration .
@@ -17,9 +16,7 @@ mod ONETHIRDRULE-VU-NARROW-INVARIANT is
     var Z : Zero .
 
     eq inv(SK:[State]) = true .
-    eq initialCond(SK:[State]) = true .
-
-    eq invariant({N, OIDS, CONF}) 
+    eq initialCond({N, OIDS, CONF}) 
     = noDuplicate(OIDS) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .
@@ -41,15 +38,19 @@ endm
 mod ONETHIRDRULE-INDEX is
     including HEURISTIC-NARROWING .
 
-    op index : Qid Qid Nat Nat -> Index [ctor] .
+    op index : Qid Nat Nat -> Index [ctor] .
 
     vars T T' T'' NT OT  : Term .
     vars NETL NETL' : NeTermList .
-    vars Q F F' : Qid .
+    vars Q F : Qid .
 
-    ceq createIndex(F[F'[NETL]])
-    = index(F, F', getNumMsgs(NETL'), getNumObjs(NETL')) 
-    if NETL' := getConfig(F[F'[NETL]]).
+    eq createIndex(T) = createNumMsgsAndObjs(getTopSymbol(T), getConfig(T)) .
+
+    op createNumMsgsAndObjs : Qid NeTermList -> Index .
+    eq createNumMsgsAndObjs(Q, NETL) = index(Q, getNumMsgs(NETL), getNumObjs(NETL)) .
+
+    op getTopSymbol : Term -> Qid .
+    eq getTopSymbol(F[NETL]) = F .
 
     ops getNumMsgs getNumObjs : NeTermList -> Nat .
     eq getNumMsgs('multicast_from_to_[NETL]) = 1 .
@@ -93,10 +94,6 @@ mod SCORE-BASE is
     var NETL : NeTermList .
 
     eq le(N, N') = N <= N' .
-
-    *** FIXME
-    eq score('ready[T], D) = score(T, D) .
-    eq score('check[BT, T], D) = score(T, D) .
 
     eq score(
             'decideTrue[BT, NT, OIDT, OT, CT], D
@@ -169,7 +166,7 @@ endm
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
+    protecting ONETHIRDRULE-INVARIANT .
     protecting SCORE1 * (sort Nat to Nat', sort Zero to Zero') .
 
     vars O O' : Oid .
@@ -180,7 +177,7 @@ mod ONETHIRDRULE-TEST-SCORE1 is
 endm
 
 mod ONETHIRDRULE-TEST-SCORE2 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
+    protecting ONETHIRDRULE-INVARIANT .
     protecting SCORE2 * (sort Nat to Nat', sort Zero to Zero') .
 
     vars O O' : Oid .
@@ -191,7 +188,7 @@ mod ONETHIRDRULE-TEST-SCORE2 is
 endm
 
 mod ONETHIRDRULE-TEST-SCORE3 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
+    protecting ONETHIRDRULE-INVARIANT .
     protecting SCORE3 * (sort Nat to Nat', sort Zero to Zero') .
 
     vars O O' : Oid .
@@ -203,120 +200,41 @@ endm
 
 set print attribute on .
 
-*** score 3
-
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-***(
-red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    upTerm({N, OIDS, INITIAL}),
+    upTerm({N', OIDS',
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-*** score 2
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
+    CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    upTerm({N, OIDS, INITIAL}),
+    upTerm({N', OIDS',
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-
-*** score 1
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
+    CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    upTerm({N, OIDS, INITIAL}),
+    upTerm({N', OIDS',
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
-    none,
+    CONF}),
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
-)

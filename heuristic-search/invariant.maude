@@ -1,4 +1,4 @@
-fmod HEURISTIC-SEARCH is
+fmod INVARIANT is
     including BOOL .
 
     sort BaseState .

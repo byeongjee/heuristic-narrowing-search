@@ -1,0 +1,7 @@
+fmod INDEX is
+    protecting META-LEVEL .
+
+    sort Index .
+
+    op createIndex : Term -> Index .
+endfm

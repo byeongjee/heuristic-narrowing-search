@@ -211,7 +211,10 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upTerm(ready({s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
@@ -220,7 +223,10 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
@@ -229,10 +235,12 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
-***(
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({N, OIDS, INITIAL})),
@@ -240,7 +248,10 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 *** score 2
@@ -250,7 +261,10 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upTerm(ready({s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
@@ -259,7 +273,10 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
@@ -268,7 +285,10 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
@@ -278,7 +298,10 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 
@@ -289,7 +312,10 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upTerm(ready({s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
@@ -298,7 +324,10 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
@@ -307,7 +336,10 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upTerm(ready({s s s, OIDS',
     < O : Node | decision : true, ATTS:U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
@@ -317,6 +349,8 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     < O : Node | decision : true, ATTS:U124S >
     < O' : Node | decision : false, ATTS':U124S >
     CONF})),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
-)
