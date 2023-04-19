@@ -1,11 +1,11 @@
-load ../heuristic-search/heuristic-search.maude
+load ../heuristic-search/invariant.maude
 load ../heuristic-search/rule-instance.maude
 load ../models/onethirdrule.maude
 load ./scoring-functions.maude
 
 mod ONETHIRDRULE-INITIALCOND is
     protecting ONETHIRDRULE .
-    including HEURISTIC-SEARCH .
+    including INVARIANT .
 
     var N : Nat .
     var CONF : Configuration .

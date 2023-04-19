@@ -1,10 +1,10 @@
 load ../heuristic-search/invariant.maude
 load ../heuristic-search/rule-instance.maude
-load ../models/onethirdrule.maude
+load ../models/onethirdrule-nondeterministic.maude
 load ./scoring-functions.maude
 
 mod ONETHIRDRULE-INITIALCOND is
-    protecting ONETHIRDRULE .
+    protecting ONETHIRDRULE-NONDETERMINSTIC .
     including INVARIANT .
 
     var N : Nat .
@@ -68,31 +68,48 @@ mod ONETHIRDRULE-TEST-3 is
     var CONF : Configuration .
 endm
 
+do clear memo .
 set print attribute on .
 
 red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
     upTerm({N, OIDS, INITIAL}),
     upTerm({N', OIDS',
-    < O : Node | status : (s s, init), ATTS:U234S >
+    < O : Node | decision : true, ATTS:U124S >
+    < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
     upTerm({N, OIDS, INITIAL}),
     upTerm({N', OIDS',
-    < O : Node | status : (s s, init), ATTS:U234S >
+    < O : Node | decision : true, ATTS:U124S >
+    < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INITIALCOND, false),
     upTerm({N, OIDS, INITIAL}),
     upTerm({N', OIDS',
-    < O : Node | status : (s s, init), ATTS:U234S >
+    < O : Node | decision : true, ATTS:U124S >
+    < O' : Node | decision : false, ATTS':U124S >
     CONF}),
-    none,
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
     delay filter) .
