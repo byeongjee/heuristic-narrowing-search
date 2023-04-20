@@ -201,9 +201,9 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     var CONF : Configuration .
 endm
 
-set print attribute on .
 
 *** score 3
+do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
@@ -217,6 +217,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({s s, OIDS, INITIAL})),
@@ -228,6 +230,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
@@ -241,6 +245,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({N, OIDS, INITIAL})),
@@ -253,6 +259,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 *** score 2
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
@@ -267,6 +275,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({s s, OIDS, INITIAL})),
@@ -279,6 +289,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({s s s, OIDS, INITIAL})),
@@ -290,6 +302,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
@@ -305,6 +319,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     delay filter) .
 
 
+do clear memo .
+
 *** score 1
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
@@ -318,6 +334,8 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({s s, OIDS, INITIAL})),
@@ -330,6 +348,8 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     ['receive-false-vote, any]),
     delay filter) .
 
+do clear memo .
+
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
     upTerm(ready({s s s, OIDS, INITIAL})),
@@ -341,6 +361,8 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
     delay filter) .
+
+do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
