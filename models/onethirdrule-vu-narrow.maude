@@ -1,7 +1,6 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/invariant.maude
-load ../tests/scoring-functions.maude
 
 set include BOOL off .
 

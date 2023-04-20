@@ -1,105 +1,55 @@
-load ../heuristic-search/invariant.maude
-load ../heuristic-search/rule-instance.maude
-load ../models/onethirdrule.maude
-load ./scoring-functions.maude
+load ../heuristic-search/main.maude
+load ./model-extensions/onethirdrule-index.maude
+load ./model-extensions/onethirdrule-scoring-functions.maude
+load ./model-extensions/onethirdrule-invariant.maude
 
-mod ONETHIRDRULE-INITIALCOND is
-    protecting ONETHIRDRULE .
-    including INVARIANT .
 
-    var N : Nat .
-    var CONF : Configuration .
-    var M : Msg .
-    vars O O' : Oid .
-    var C : Cid .
-    vars OIDS NEIGHBORS : OidSet .
-    var Z : Zero .
+mod ONETHIRDRULE-TEST-SCORE1 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting SCORE1 .
+    protecting HEURISTIC-NARROWING .
+endm
 
-    eq inv(SK:[State]) = true .
-    eq initialCond({N, OIDS, CONF}) 
-    = noDuplicate(OIDS) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
+mod ONETHIRDRULE-TEST-SCORE2 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting SCORE2 .
+    protecting HEURISTIC-NARROWING .
+endm
 
-    op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
-    eq getOids(M CONF) =  getOids(CONF) .
-    eq getOids(none) =  none .
-
-    op noDuplicate : OidSet -> Bool [memo] .
-    eq noDuplicate(O ; O ; OIDS) = false .
-
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
+mod ONETHIRDRULE-TEST-SCORE3 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting SCORE3 .
+    protecting HEURISTIC-NARROWING .
 endm
 
 
-mod ONETHIRDRULE-TEST-1 is
-    including ONETHIRDRULE-INITIALCOND .
-    protecting SCORE1 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
-endm
-
-mod ONETHIRDRULE-TEST-2 is
-    including ONETHIRDRULE-INITIALCOND .
-    protecting SCORE2 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
-endm
-
-mod ONETHIRDRULE-TEST-3 is
-    including ONETHIRDRULE-INITIALCOND .
-    protecting SCORE3 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
-endm
-
-do clear memo .
-
-red in ONETHIRDRULE-TEST-3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-INITIALCOND, false),
-    upTerm({N, OIDS, INITIAL}),
-    upTerm({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF}),
+red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-INITIALCOND, false),
-    upTerm({N, OIDS, INITIAL}),
-    upTerm({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF}),
+red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-INITIALCOND, false),
-    upTerm({N, OIDS, INITIAL}),
-    upTerm({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF}),
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
     none,
     delay filter) .

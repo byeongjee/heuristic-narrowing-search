@@ -1,0 +1,35 @@
+load ../../heuristic-search/index.maude
+
+fmod ONETHIRDRULE-INDEX is
+    including INDEX .
+
+    op index : Qid Nat Nat -> Index [ctor] .
+
+    vars T T' T'' NT OT  : Term .
+    vars NETL NETL' : NeTermList .
+    vars Q F : Qid .
+
+    eq createIndex(T) = createNumMsgsAndObjs(getTopSymbol(T), getConfig(T)) .
+
+    op createNumMsgsAndObjs : Qid NeTermList -> Index .
+    eq createNumMsgsAndObjs(Q, NETL) = index(Q, getNumMsgs(NETL), getNumObjs(NETL)) .
+
+    op getTopSymbol : Term -> Qid .
+    eq getTopSymbol(F[NETL]) = F .
+
+    ops getNumMsgs getNumObjs : NeTermList -> Nat .
+    eq getNumMsgs('multicast_from_to_[NETL]) = 1 .
+    eq getNumMsgs(T) = 0 [owise] .
+    eq getNumMsgs((T,  NETL')) = getNumMsgs(T) + getNumMsgs(NETL') .
+    eq getNumObjs('<_:_|_>[NETL]) = 1 .
+    eq getNumObjs(T) = 0 [owise] .
+    eq getNumObjs((T,  NETL')) = getNumObjs(T) + getNumObjs(NETL') .
+
+    op getConfig : Term -> NeTermList .
+    eq getConfig('decideTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('decideFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('updateFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
+    eq getConfig('`{_`,_`,_`}[NT, OT, T]) = getConfig(T) .
+    eq getConfig('__[NETL]) = NETL .
+endfm

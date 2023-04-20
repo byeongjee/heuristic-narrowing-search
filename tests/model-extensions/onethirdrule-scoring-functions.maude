@@ -1,7 +1,8 @@
-load ../heuristic-search/main.maude
+load ../../heuristic-search/score.maude
 
-mod SCORE1 is
-    including HEURISTIC-NARROWING .
+
+fmod ONETHIRDRULE-SCORE1 is
+    including SCORE .
     protecting INT .
 
     subsort Int < Score .
@@ -12,11 +13,10 @@ mod SCORE1 is
     eq le(N, N') = N <= N' .
 
     eq score(T, D) = D .
-endm
+endfm
 
-*** for score2 and score3
-mod SCORE-BASE is
-    including HEURISTIC-NARROWING .
+fmod ONETHIRDRULE-SCORE-BASE is
+    including SCORE .
     protecting INT .
 
     subsort Int < Score .
@@ -65,10 +65,10 @@ mod SCORE-BASE is
     eq countS('s.Nat) = 1 .
     eq countS(T) = 0 [owise] .
     eq countS((T, NETL)) = countS(T) + countS(NETL) .
-endm
+endfm
 
-mod SCORE2 is
-    including SCORE-BASE .
+fmod ONETHIRDRULE-SCORE2 is
+    including ONETHIRDRULE-SCORE-BASE .
 
     vars NT OT CT ST : Term .
     var NETL : NeTermList .
@@ -80,10 +80,10 @@ mod SCORE2 is
 
     eq scoreConf('multicast_from_to_[NETL]) 
     = 0 .
-endm
+endfm
 
-mod SCORE3 is
-    including SCORE-BASE .
+fmod ONETHIRDRULE-SCORE3 is
+    including ONETHIRDRULE-SCORE-BASE .
 
     vars NT OT CT ST : Term .
     var NETL : NeTermList .
@@ -95,4 +95,4 @@ mod SCORE3 is
 
     eq scoreConf('multicast_from_to_[NETL]) 
     = -1 .
-endm
+endfm

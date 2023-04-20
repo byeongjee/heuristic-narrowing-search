@@ -1,343 +1,156 @@
-load ../heuristic-search/invariant.maude
-load ../heuristic-search/rule-instance.maude
-load ../models/vu-narrow-comparison.maude
-load ./scoring-functions.maude
-
-mod ONETHIRDRULE-VU-NARROW-INVARIANT is
-    protecting ONETHIRDRULE-VU-NARROW .
-    including INVARIANT .
-
-
-    var N : Nat .
-    var CONF : Configuration .
-    var M : Msg .
-    vars O O' : Oid .
-    var C : Cid .
-    vars OIDS NEIGHBORS : OidSet .
-    var Z : Zero .
-
-    eq inv(SK:[State]) = true .
-    eq initialCond(SK:[State]) = true .
-
-    eq invariant({N, OIDS, CONF}) 
-    = noDuplicate(OIDS) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
-
-    op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
-    eq getOids(M CONF) =  getOids(CONF) .
-    eq getOids(none) =  none .
-
-    op noDuplicate : OidSet -> Bool [memo] .
-    eq noDuplicate(O ; O ; OIDS) = false .
-
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
-
-endm
-
-mod ONETHIRDRULE-INDEX is
-    including HEURISTIC-NARROWING .
-
-    op index : Qid Qid Nat Nat -> Index [ctor] .
-
-    vars T T' T'' NT OT  : Term .
-    vars NETL NETL' : NeTermList .
-    vars Q F F' : Qid .
-
-    ceq createIndex(F[F'[NETL]])
-    = index(F, F', getNumMsgs(NETL'), getNumObjs(NETL')) 
-    if NETL' := getConfig(F[F'[NETL]]).
-
-    ops getNumMsgs getNumObjs : NeTermList -> Nat .
-    eq getNumMsgs('multicast_from_to_[NETL]) = 1 .
-    eq getNumMsgs(T) = 0 [owise] .
-    eq getNumMsgs((T,  NETL')) = getNumMsgs(T) + getNumMsgs(NETL') .
-    eq getNumObjs('<_:_|_>[NETL]) = 1 .
-    eq getNumObjs(T) = 0 [owise] .
-    eq getNumObjs((T,  NETL')) = getNumObjs(T) + getNumObjs(NETL') .
-
-    op getConfig : Term -> NeTermList .
-    eq getConfig('decideTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('decideFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('`{_`,_`,_`}[NT, OT, T]) = getConfig(T) .
-    eq getConfig('__[NETL]) = NETL .
-endm
-
-mod SCORE1 is
-    including ONETHIRDRULE-INDEX .
-
-    subsort Int < Score .
-
-    vars N N' D : Int .
-    vars T : Term .
-
-    eq le(N, N') = N <= N' .
-
-    eq score(T, D) = D .
-endm
-
-*** for score2 and score3
-mod SCORE-BASE is
-    including ONETHIRDRULE-INDEX .
-
-    subsort Int < Score .
-
-    vars N N' : Int .
-    vars T BT NT OIDT OT CT ST : Term .
-    var D : Nat .
-    var NETL : NeTermList .
-
-    eq le(N, N') = N <= N' .
-
-    *** FIXME
-    eq score('ready[T], D) = score(T, D) .
-    eq score('check[BT, T], D) = score(T, D) .
-
-    eq score(
-            'decideTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
-    eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
-
-    eq score(
-        '`{_`,_`,_`}[T, OIDT, NETL], D
-    ) = scoreConf(NETL) .
-
-    op scoreConf : NeTermList -> Score .
-
-    eq scoreConf('__[NETL]) = scoreConf(NETL) .
-    eq scoreConf((T, NETL)) 
-    = scoreConf(T) + scoreConf(NETL) .
-
-
-    eq scoreConf(T) = 0 [owise] .
-
-    *** auxiliary functions
-    op toNumber : Term -> Int .
-    eq toNumber('0.Nat) = 0 .
-    eq toNumber('s.Nat) = 1 .
-    eq toNumber(T) = 0 [owise] .
-    eq toNumber('__[NETL]) = countS(NETL) .
-
-    op countS : NeTermList -> Int .
-    eq countS('s.Nat) = 1 .
-    eq countS(T) = 0 [owise] .
-    eq countS((T, NETL)) = countS(T) + countS(NETL) .
-endm
-
-mod SCORE2 is
-    including SCORE-BASE .
-
-    vars NT OT CT ST : Term .
-    var NETL : NeTermList .
-
-    eq scoreConf('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    =  1 . 
-
-    eq scoreConf('multicast_from_to_[NETL]) 
-    = 0 .
-endm
-
-mod SCORE3 is
-    including SCORE-BASE .
-
-    vars NT OT CT ST : Term .
-    var NETL : NeTermList .
-
-    eq scoreConf('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    =  100 + 10 * max(2, toNumber(NT)) .
-
-    eq scoreConf('multicast_from_to_[NETL]) 
-    = -1 .
-endm
+load ../heuristic-search/main.maude
+load ./model-extensions/onethirdrule-vu-narrow-index.maude
+load ./model-extensions/onethirdrule-vu-narrow-scoring-functions.maude
+load ./model-extensions/onethirdrule-vu-narrow-invariant.maude
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
-    protecting SCORE1 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
+    protecting ONETHIRDRULE-VU-NARROW-INDEX .
+    protecting ONETHIRDRULE-VU-NARROW-SCORE1 .
+    protecting HEURISTIC-NARROWING .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE2 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
-    protecting SCORE2 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
+    protecting ONETHIRDRULE-VU-NARROW-INDEX .
+    protecting ONETHIRDRULE-VU-NARROW-SCORE2 .
+    protecting HEURISTIC-NARROWING .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE3 is
-    protecting ONETHIRDRULE-VU-NARROW-INVARIANT .
-    protecting SCORE3 * (sort Nat to Nat', sort Zero to Zero') .
-
-    vars O O' : Oid .
-    vars N N' : Nat .
-    vars OIDS OIDS' : OidSet .
-    var INITIAL : InitialObjectSet .
-    var CONF : Configuration .
+    protecting ONETHIRDRULE-VU-NARROW-INDEX .
+    protecting ONETHIRDRULE-VU-NARROW-SCORE3 .
+    protecting HEURISTIC-NARROWING .
 endm
 
-
-*** score 3
-
-do clear memo .
-
-red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-do clear memo .
+*** TODO: Add more tests for each scoring function
+*** s ss sss decisio
+***    upTerm(ready({s s s, OIDS',
+***    < O : Node | decision : true, ATTS:U124S >
+***    CONF})),
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['s.Nat,'OIDS':OidSet,'__['CONF:Configuration,
+    '<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
-*** score 2
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-do clear memo .
-
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['s.Nat,'OIDS':OidSet,'__['CONF:Configuration,
+    '<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
-    none,
-    delay filter) .
-
-
-do clear memo .
-
-*** score 1
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s, OIDS, INITIAL})),
-    upTerm(ready({s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s, OIDS, INITIAL})),
-    upTerm(ready({s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({s s s, OIDS, INITIAL})),
-    upTerm(ready({s s s, OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    CONF})),
+red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]]],
     none,
     delay filter) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT, false),
-    upTerm(ready({N, OIDS, INITIAL})),
-    upTerm(ready({N', OIDS',
-    < O : Node | decision : true, ATTS:U124S >
-    < O' : Node | decision : false, ATTS':U124S >
-    CONF})),
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['s.Nat,'OIDS':OidSet,'__['CONF:Configuration,
+    '<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]]]]],
+    none,
+    delay filter) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
+    none,
+    delay filter) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['s.Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['__['s.Nat,'s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]]],
+    none,
+    delay filter) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),
+    'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
+    'ready['`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]]],
     none,
     delay filter) .
