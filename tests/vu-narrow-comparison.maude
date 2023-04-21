@@ -1,0 +1,25 @@
+load ../models/onethirdrule-vu-narrow.maude
+
+vu-narrow [1] 
+ready({s, OIDS:OidSet, 
+    INITIAL:InitialObjectSet})
+=>* 
+ready({s, OIDS':OidSet, 
+    < O:Oid : Node | decision : true, ATTS:U124S > 
+    CONF:Configuration}) .
+
+vu-narrow [1] 
+ready({s s, OIDS:OidSet, 
+    INITIAL:InitialObjectSet})
+=>* 
+ready({s s, OIDS':OidSet, 
+    < O:Oid : Node | decision : true, ATTS:U124S > 
+    CONF:Configuration}) .
+
+vu-narrow [1] 
+ready({s s s, OIDS:OidSet, 
+    INITIAL:InitialObjectSet})
+=>* 
+ready({s s s, OIDS':OidSet, 
+    < O:Oid : Node | decision : true, ATTS:U124S > 
+    CONF:Configuration}) .
