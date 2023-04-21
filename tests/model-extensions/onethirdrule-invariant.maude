@@ -35,7 +35,8 @@ mod ONETHIRDRULE-INVARIANT-HALF is
 
 endm
 
-mod ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF is
+
+mod ONETHIRDRULE-INVARIANT is
     protecting ONETHIRDRULE .
     including INVARIANT .
 
@@ -49,9 +50,7 @@ mod ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF is
 
     eq inv(SK:[State]) = true .
     eq initialCond({N, OIDS, CONF}) 
-    = noDuplicate(OIDS) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
+    = noDuplicate(OIDS) and noDuplicate(getOids(CONF)) .
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
@@ -60,9 +59,4 @@ mod ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF is
 
     op noDuplicate : OidSet -> Bool [memo] .
     eq noDuplicate(O ; O ; OIDS) = false .
-
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
-
 endm

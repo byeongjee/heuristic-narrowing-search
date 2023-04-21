@@ -5,25 +5,25 @@ load ./model-extensions/onethirdrule-invariant.maude
 
 mod ONETHIRDRULE-TEST-SCORE1 is
     protecting ONETHIRDRULE-INDEX .
-    protecting SCORE1 .
+    protecting ONETHIRDRULE-SCORE1 .
     protecting HEURISTIC-NARROWING .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE2 is
     protecting ONETHIRDRULE-INDEX .
-    protecting SCORE2 .
+    protecting ONETHIRDRULE-SCORE2 .
     protecting HEURISTIC-NARROWING .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE3 is
     protecting ONETHIRDRULE-INDEX .
-    protecting SCORE3 .
+    protecting ONETHIRDRULE-SCORE3 .
     protecting HEURISTIC-NARROWING .
 endm
 
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF, false),
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
@@ -34,7 +34,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF, false),
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
@@ -45,7 +45,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NONDETERMINISTIC-INVARIANT-HALF, false),
+    upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
