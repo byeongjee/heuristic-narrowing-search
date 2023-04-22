@@ -50,12 +50,12 @@ fmod INDEXED-TERM-SET is
     op _`,_ : IndexedTermSet IndexedTermSet -> IndexedTermSet [ctor assoc comm id: empty] .
 
     *** for debugging purpose
-    op termSetSize : IndexedTermSet -> Nat .
+    op length : IndexedTermSet -> Nat .
     var IDXT : IndexedTerm .
     var IDXTS : IndexedTermSet .
-    eq termSetSize(IDXT) = 1 .
-    eq termSetSize(IDXT, IDXTS) = 1 + termSetSize(IDXTS) .
-    eq termSetSize(empty) = 0 .
+    eq length(IDXT) = 1 .
+    eq length(IDXT, IDXTS) = 1 + length(IDXTS) .
+    eq length(empty) = 0 .
 endfm
 
 fmod TERM-ITEM-SET is 
@@ -181,9 +181,9 @@ mod GET-CHILDREN is
     protecting META-LEVEL .
     protecting TERM-ITEM-SET .
 
-    op getChildren : Module TermItem VariantOptionSet -> TermItemSet [memo] .
-    op getChildrenUpToNth : Module TermItem VariantOptionSet Nat -> TermItemSet .
-    op getChildrenUpToNthInternal : Module TermItem VariantOptionSet Nat NarrowingApplyResult? -> TermItemSet .
+    op getChildStates : Module TermItem VariantOptionSet -> TermItemSet [memo] .
+    op getChildStatesUpToNth : Module TermItem VariantOptionSet Nat -> TermItemSet .
+    op getChildStatesUpToNthInternal : Module TermItem VariantOptionSet Nat NarrowingApplyResult? -> TermItemSet .
 
     var M : Module .
     var TI : TermItem . 
@@ -196,15 +196,15 @@ mod GET-CHILDREN is
     vars L L' Q Q' F : Qid . 
     vars S1 S2 : Substitution .
 
-    eq getChildren(M, TI, VOS) = getChildrenUpToNth(M, TI, VOS, 0) .
+    eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
 
-    eq getChildrenUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
-    = getChildrenUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
+    eq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
+    = getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
 
-    eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
-    eq getChildrenUpToNthInternal(M, TI, VOS, SOLN, failureIncomplete) 
+    eq getChildStatesUpToNthInternal(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
+    eq getChildStatesUpToNthInternal(M, TI, VOS, SOLN, failureIncomplete) 
     = emptyTermItemSet [print "incomplete narrowing"] .
-    ceq getChildrenUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
+    ceq getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
         {T', TY', CO, L', S1, S2, Q'}) 
     = (if I' =/= 'false.Bool 
       then < T', 
@@ -215,7 +215,7 @@ mod GET-CHILDREN is
         score(T', D + 1), 
         D + 1 > 
       else emptyTermItemSet 
-      fi) ;; getChildrenUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+      fi) ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
     if I' := getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])) .
 endm
 
@@ -241,7 +241,7 @@ mod INVISIBLE-TRANSITION is
     sort SplitResult .
     op {_,_} : TermItemSet TermItemSet -> SplitResult [ctor] .
 
-    op reduce : Module RuleInstanceSet TermItemSet -> TermItemSet .
+    op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
     op splitReducible : Module RuleInstanceSet TermItemSet -> SplitResult .
     op removeSubsumed : Module IndexedTermItemSet -> TermItemSet .
 
@@ -261,7 +261,7 @@ mod INVISIBLE-TRANSITION is
     eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
     eq toTermItemSet({IDX, T0, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
 
-    ceq reduce(M, RIS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
+    ceq applyInvisibleTransitionReduction(M, RIS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
     if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) 
     /\ IDXTIS := createIndex(MATCHED, 0) .
 
@@ -288,17 +288,6 @@ mod HEURISTIC-NARROWING is
     protecting INVISIBLE-TRANSITION .
     protecting RULE-INSTANCE .
 
-
-    sort HeuristicNarrowingSearchResult .
-    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
-
-    *** module, initial term, goal term, rule instance set, variant option set 
-    op metaHeuristicNarrowingSearch : Module Term Term RuleInstanceSet VariantOptionSet -> HeuristicNarrowingSearchResult .
-
-    *** module, initial term, goal term, variant option set, pending, most general so far
-    op metaHeuristicNarrowingSearchInternal : Module Term Term RuleInstanceSet VariantOptionSet LTree{TermItem} IndexedTermSet -> HeuristicNarrowingSearchResult .
-
     var M : Module .
     vars T T' T'' T0 I I' : Term .
     vars N D D' : Nat . var S : Score .
@@ -308,8 +297,26 @@ mod HEURISTIC-NARROWING is
     vars TIS FILTERED CHILDREN : TermItemSet .
     vars L Q : Qid .
     var RIS : RuleInstanceSet .
-
     var UP : UnificationPair .
+    vars QUEUE QUEUE' : LTree{TermItem} .
+
+    sort HeuristicNarrowingSearchResult .
+    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op createSol : TermItem IndexedTermSet -> HeuristicNarrowingSearchResult .
+    eq createSol(< T, L, T0, I, Q, S, D >, IDXTS) = sol(T, S, D, length(IDXTS)) .
+
+
+    *** module, initial term, goal term, rule instance set, variant option set 
+    op metaHeuristicNarrowingSearch : 
+    Module Term Term RuleInstanceSet VariantOptionSet 
+    -> HeuristicNarrowingSearchResult .
+
+    *** module, initial term, goal term, variant option set, pending, most general so far
+    op metaHeuristicNarrowingSearchInternal : 
+    Module Term Term RuleInstanceSet VariantOptionSet LTree{TermItem} IndexedTermSet 
+    -> HeuristicNarrowingSearchResult .
+
 
     op isSolution : Module TermItem Term -> Bool .
 
@@ -319,7 +326,6 @@ mod HEURISTIC-NARROWING is
 
     eq isSolution(M, TI, T') = false [owise] .
 
-    vars QUEUE QUEUE' : LTree{TermItem} .
     op insertAll : TermItemSet LTree{TermItem} -> LTree{TermItem} .
     eq insertAll(emptyTermItemSet, QUEUE) = QUEUE .
     eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
@@ -330,25 +336,21 @@ mod HEURISTIC-NARROWING is
     empty) .
 
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE, IDXTS)
-    = checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, TI, isSolution(M, TI, T'))
-    if TI := findMin(QUEUE) .
+    = createSol(TI, IDXTS) 
+    if TI := findMin(QUEUE)
+    /\ isSolution(M, TI, T') .
 
-    op checkSolution : Module Term Term RuleInstanceSet VariantOptionSet 
-    LTree{TermItem} IndexedTermSet TermItem Bool 
-    -> HeuristicNarrowingSearchResult .
-
-    eq checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, < T'', L, T0, I, Q, S, D >, true)
-    = sol(T'', S, D, termSetSize(IDXTS)) .
-
-    ceq checkSolution(M, T, T', RIS, VOS, QUEUE, IDXTS, TI, false)
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE, IDXTS)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE' , IDXTS') 
-    if {FILTERED, IDXTS'} := applyFolding(M, 
-        reduce(M, RIS, getChildren(M, TI, VOS)), 
+    if TI := findMin(QUEUE)
+    /\ CHILDREN := getChildStates(M, TI, VOS)
+    /\ {FILTERED, IDXTS'} := applyFolding(M, 
+        applyInvisibleTransitionReduction(M, RIS, CHILDREN), 
         IDXTS)
     /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) 
-    [print "current term item: " TI] .
+    [owise print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, empty, IDXTS)
-    = noSolution(termSetSize(IDXTS)) .
+    = noSolution(length(IDXTS)) .
 
 endm
