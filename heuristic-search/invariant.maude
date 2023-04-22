@@ -1,6 +1,8 @@
+load ./state.maude
+
 fmod INVARIANT is
     including BOOL .
+    including STATE .
 
-    sort BaseState .
-    ops inv initialCond : BaseState -> Bool .
+    ops inv initialCond : State -> Bool .
 endfm

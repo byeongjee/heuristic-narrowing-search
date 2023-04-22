@@ -1,0 +1,766 @@
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	    Maude 3.2.1 built: Feb 21 2022 18:24:38
+	     Copyright 1997-2022 SRI International
+		   Sun Apr 23 23:47:42 2023
+==========================================
+reduce in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(upModule(
+    'ONETHIRDRULE-INVARIANT-HALF, false), '`{_`,_`,_`}['N:Nat,'OIDS:OidSet,
+    'INITIAL:InitialObjectSet], '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,
+    'decision`:_['true.FvpBool]]],'<_:_|_>['O':Oid,'Node.Cid,'_`,_[
+    'ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]], none, delay filter) .
+depth: < '`{_`,_`,_`}['N:Nat,'OIDS:OidSet,'INITIAL:InitialObjectSet],'none,
+    '`{_`,_`,_`}['N:Nat,'OIDS:OidSet,'INITIAL:InitialObjectSet],'initialCond[
+    '`{_`,_`,_`}['N:Nat,'OIDS:OidSet,'INITIAL:InitialObjectSet]],'@,0,0 >
+depth: < '`{_`,_`,_`}['%8:Nat,'_;_['%1:Oid,'%2:OidSet],'__[
+    '%3:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%5:Zero],'%6:Zero,'__['s.Nat,
+    '%7:Zero]]]]],'multicast_from_to_['trueVote['%4:Zero],'%1:Oid,
+    '%2:OidSet]]],'vote-true,'`{_`,_`,_`}['%8:Nat,'_;_['%1:Oid,'%2:OidSet],'__[
+    '%3:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'init.InitialStep]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'%6:Zero,'%7:Zero]]]]]],'_and_[
+    'noDuplicate['_;_['%1:Oid,'%2:OidSet]],'noDuplicate['_;_['%1:Oid,'getOids[
+    '%3:InitialObjectSet]]],'isThresholdValid['_;_['%1:Oid,'getOids[
+    '%3:InitialObjectSet]],'%8:Nat]],'%,1,1 >
+depth: < '`{_`,_`,_`}['%8:Nat,'_;_['%1:Oid,'%2:OidSet],'__[
+    '%3:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,
+    '%7:Zero]]]]],'multicast_from_to_['falseVote['%4:Zero],'%1:Oid,
+    '%2:OidSet]]],'vote-false,'`{_`,_`,_`}['%8:Nat,'_;_['%1:Oid,'%2:OidSet],
+    '__['%3:InitialObjectSet,'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'init.InitialStep]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'%6:Zero,'%7:Zero]]]]]],'_and_[
+    'noDuplicate['_;_['%1:Oid,'%2:OidSet]],'noDuplicate['_;_['%1:Oid,'getOids[
+    '%3:InitialObjectSet]]],'isThresholdValid['_;_['%1:Oid,'getOids[
+    '%3:InitialObjectSet]],'%8:Nat]],'%,1,1 >
+depth: < '`{_`,_`,_`}['%7:Nat,'_;_['%1:Oid,'%2:OidSet],'__['<_:_|_>['%1:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%3:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%4:Zero],'%5:Zero,'__['s.Nat,'%6:Zero]]]]],'multicast_from_to_['trueVote[
+    '%3:Zero],'%1:Oid,'%2:OidSet]]],'vote-true,'`{_`,_`,_`}['%7:Nat,'_;_[
+    '%1:Oid,'%2:OidSet],'<_:_|_>['%1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%3:Zero,'init.InitialStep]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%4:Zero,'%5:Zero,'%6:Zero]]]]],'_and_[
+    'noDuplicate['%1:Oid],'noDuplicate['_;_['%1:Oid,'%2:OidSet]],
+    'isThresholdValid['%1:Oid,'%7:Nat]],'%,1,1 >
+depth: < '`{_`,_`,_`}['%7:Nat,'_;_['%1:Oid,'%2:OidSet],'__['<_:_|_>['%1:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%3:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%4:Zero,'__['s.Nat,'%5:Zero],'__['s.Nat,'%6:Zero]]]]],'multicast_from_to_[
+    'falseVote['%3:Zero],'%1:Oid,'%2:OidSet]]],'vote-false,'`{_`,_`,_`}[
+    '%7:Nat,'_;_['%1:Oid,'%2:OidSet],'<_:_|_>['%1:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%3:Zero,'init.InitialStep]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%4:Zero,'%5:Zero,'%6:Zero]]]]],'_and_['noDuplicate['%1:Oid],'noDuplicate[
+    '_;_['%1:Oid,'%2:OidSet]],'isThresholdValid['%1:Oid,'%7:Nat]],'%,1,1 >
+depth: < 'updateTrue['_and_['_<=_['@1:Nat,'__['s.Nat,'@7:Zero]],'_<=_['__[
+    's.Nat,'@5:Zero],'@1:Nat],'_<=_['__['s.Nat,'@6:Zero],'@5:Zero]],'@1:Nat,
+    '_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@4:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,
+    '@3:OidSet]],'updateTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '__['<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate['_;_['@2:Oid,
+    '@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < 'decideTrue['_<=_['@1:Nat,'@5:Zero],'@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,'@7:Zero]]]]],
+    'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,'@3:OidSet]],
+    'decideTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>[
+    '@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,'@7:Zero]]]]],
+    'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,'@3:OidSet]]],'_and_[
+    'noDuplicate['@2:Oid],'noDuplicate['_;_['@2:Oid,'@3:OidSet]],
+    'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < 'decideFalse['_<=_['@1:Nat,'__['s.Nat,'@6:Zero]],'@1:Nat,'_;_['@2:Oid,
+    '@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,
+    '@3:OidSet]],'decideFalse-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '__['<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['falseVote['@4:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate['_;_['@2:Oid,
+    '@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@5:Zero,'__['s.Nat,'@6:Zero],'__['s.Nat,'@7:Zero]]]]]],'loss,'`{_`,_`,_`}[
+    '@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>['@2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['@4:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['@5:Zero,'__['s.Nat,
+    '@6:Zero],'__['s.Nat,'@7:Zero]]]]],'multicast_from_to_['falseVote[
+    '@4:Zero],'@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate[
+    '_;_['@2:Oid,'@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < 'updateTrue['_and_['_<=_['@1:Nat,'__['s.Nat,'@8:Zero]],'_<=_['__[
+    's.Nat,'@6:Zero],'@1:Nat],'_<=_['__['s.Nat,'@7:Zero],'@6:Zero]],'@1:Nat,
+    '_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,
+    '@8:Zero]]]]],'__['@4:InitialObjectSet,'multicast_from_to_['falseVote[
+    '@5:Zero],'@2:Oid,'@3:OidSet]]],'updateTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_[
+    '@2:Oid,'@3:OidSet],'__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['@5:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,'@8:Zero]]]]],'multicast_from_to_[
+    'falseVote['@5:Zero],'@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['_;_[
+    '@2:Oid,'@3:OidSet]],'noDuplicate['_;_['@2:Oid,'getOids[
+    '@4:InitialObjectSet]]],'isThresholdValid['_;_['@2:Oid,'getOids[
+    '@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'updateTrue['_and_['_<=_['@1:Nat,'__['s.Nat,'@7:Zero]],'_<=_['@6:Zero,
+    '__['s.Nat,'@5:Zero]],'_<=_['__['s.Nat,'s.Nat,'@5:Zero],'@1:Nat]],'@1:Nat,
+    '_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@4:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@5:Zero],'@6:Zero,'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['trueVote['@4:Zero],'@2:Oid,'@3:OidSet]],
+    'updateTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>[
+    '@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@5:Zero],'@6:Zero,'__['s.Nat,'@7:Zero]]]]],'multicast_from_to_[
+    'trueVote['@4:Zero],'@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['@2:Oid],
+    'noDuplicate['_;_['@2:Oid,'@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],
+    '@,2,2 >
+depth: < 'decideTrue['_<=_['@1:Nat,'@6:Zero],'@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@5:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,'@8:Zero]]]]],'__[
+    '@4:InitialObjectSet,'multicast_from_to_['falseVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'decideTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,
+    '@8:Zero]]]]],'multicast_from_to_['falseVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],'noDuplicate[
+    '_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],'isThresholdValid['_;_[
+    '@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'decideFalse['_<=_['@1:Nat,'__['s.Nat,'@7:Zero]],'@1:Nat,'_;_['@2:Oid,
+    '@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@5:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,
+    '@8:Zero]]]]],'__['@4:InitialObjectSet,'multicast_from_to_['falseVote[
+    '@5:Zero],'@2:Oid,'@3:OidSet]]],'decideFalse-1,'`{_`,_`,_`}['@1:Nat,'_;_[
+    '@2:Oid,'@3:OidSet],'__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['@5:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,'@8:Zero]]]]],'multicast_from_to_[
+    'falseVote['@5:Zero],'@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['_;_[
+    '@2:Oid,'@3:OidSet]],'noDuplicate['_;_['@2:Oid,'getOids[
+    '@4:InitialObjectSet]]],'isThresholdValid['_;_['@2:Oid,'getOids[
+    '@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'decideTrue['_<=_['@1:Nat,'__['s.Nat,'@5:Zero]],'@1:Nat,'_;_['@2:Oid,
+    '@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'@5:Zero],'@6:Zero,'__['s.Nat,'@7:Zero]]]]],
+    'multicast_from_to_['trueVote['@4:Zero],'@2:Oid,'@3:OidSet]],'decideTrue-1,
+    '`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>['@2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '@5:Zero],'@6:Zero,'__['s.Nat,'@7:Zero]]]]],'multicast_from_to_['trueVote[
+    '@4:Zero],'@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate[
+    '_;_['@2:Oid,'@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < 'decideFalse['_<=_['@1:Nat,'@6:Zero],'@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@5:Zero],'@6:Zero,'__['s.Nat,'@7:Zero]]]]],'multicast_from_to_[
+    'trueVote['@4:Zero],'@2:Oid,'@3:OidSet]],'decideFalse-1,'`{_`,_`,_`}[
+    '@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>['@2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['@4:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@5:Zero],
+    '@6:Zero,'__['s.Nat,'@7:Zero]]]]],'multicast_from_to_['trueVote['@4:Zero],
+    '@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate['_;_[
+    '@2:Oid,'@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__[
+    '@13:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@3:Zero,'__['s.Nat,'@4:Zero],'__['s.Nat,
+    '@5:Zero]]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@9:Zero,'__['s.Nat,'@10:Zero],'__[
+    's.Nat,'@11:Zero]]]]],'multicast_from_to_['falseVote['@2:Zero],'@1:Oid,
+    '_;_['@7:Oid,'@12:OidSet]],'multicast_from_to_['falseVote['@8:Zero],
+    '@7:Oid,'_;_['@1:Oid,'@12:OidSet]]]],'vote-false,'`{_`,_`,_`}['@6:Nat,'_;_[
+    '@1:Oid,'@7:Oid,'@12:OidSet],'__['@13:InitialObjectSet,'<_:_|_>['@1:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'init.InitialStep]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@3:Zero,'@4:Zero,'@5:Zero]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['@8:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['@9:Zero,'__['s.Nat,
+    '@10:Zero],'__['s.Nat,'@11:Zero]]]]],'multicast_from_to_['falseVote[
+    '@8:Zero],'@7:Oid,'_;_['@1:Oid,'@12:OidSet]]]],'_and_['noDuplicate['_;_[
+    '@1:Oid,'@7:Oid,'@12:OidSet]],'noDuplicate['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]]],'isThresholdValid['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]],'@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['@4:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '@5:Zero],'@6:Zero,'__['s.Nat,'@7:Zero]]]]]],'loss,'`{_`,_`,_`}['@1:Nat,
+    '_;_['@2:Oid,'@3:OidSet],'__['<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['@4:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@5:Zero],'@6:Zero,'__['s.Nat,
+    '@7:Zero]]]]],'multicast_from_to_['trueVote['@4:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['@2:Oid],'noDuplicate['_;_['@2:Oid,
+    '@3:OidSet]],'isThresholdValid['@2:Oid,'@1:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__['<_:_|_>[
+    '@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@3:Zero,'__['s.Nat,'@4:Zero],'__['s.Nat,'@5:Zero]]]]],'<_:_|_>[
+    '@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@9:Zero,'__['s.Nat,'@10:Zero],'__['s.Nat,'@11:Zero]]]]],
+    'multicast_from_to_['falseVote['@2:Zero],'@1:Oid,'_;_['@7:Oid,
+    '@12:OidSet]],'multicast_from_to_['falseVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]]]],'vote-false,'`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,
+    '@7:Oid,'@12:OidSet],'__['<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'init.InitialStep]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@3:Zero,'@4:Zero,'@5:Zero]]]],'<_:_|_>[
+    '@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@9:Zero,'__['s.Nat,'@10:Zero],'__['s.Nat,'@11:Zero]]]]],
+    'multicast_from_to_['falseVote['@8:Zero],'@7:Oid,'_;_['@1:Oid,
+    '@12:OidSet]]]],'_and_['noDuplicate['_;_['@1:Oid,'@7:Oid]],'noDuplicate[
+    '_;_['@1:Oid,'@7:Oid,'@12:OidSet]],'isThresholdValid['_;_['@1:Oid,'@7:Oid],
+    '@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__[
+    '@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,
+    '@8:Zero]]]]]]],'loss,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__[
+    '@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@6:Zero,'__['s.Nat,'@7:Zero],'__['s.Nat,
+    '@8:Zero]]]]],'multicast_from_to_['falseVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],'noDuplicate[
+    '_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],'isThresholdValid['_;_[
+    '@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'updateTrue['_and_['_<=_['@1:Nat,'__['s.Nat,'@8:Zero]],'_<=_['@7:Zero,
+    '__['s.Nat,'@6:Zero]],'_<=_['__['s.Nat,'s.Nat,'@6:Zero],'@1:Nat]],'@1:Nat,
+    '_;_['@2:Oid,'@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,
+    '@8:Zero]]]]],'__['@4:InitialObjectSet,'multicast_from_to_['trueVote[
+    '@5:Zero],'@2:Oid,'@3:OidSet]]],'updateTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_[
+    '@2:Oid,'@3:OidSet],'__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],
+    '@7:Zero,'__['s.Nat,'@8:Zero]]]]],'multicast_from_to_['trueVote['@5:Zero],
+    '@2:Oid,'@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],
+    'noDuplicate['_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],
+    'isThresholdValid['_;_['@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],
+    '@,2,2 >
+depth: < 'decideTrue['_<=_['@1:Nat,'__['s.Nat,'@6:Zero]],'@1:Nat,'_;_['@2:Oid,
+    '@3:OidSet],'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@5:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,'@8:Zero]]]]],
+    '__['@4:InitialObjectSet,'multicast_from_to_['trueVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'decideTrue-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,
+    '@8:Zero]]]]],'multicast_from_to_['trueVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],'noDuplicate[
+    '_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],'isThresholdValid['_;_[
+    '@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'decideFalse['_<=_['@1:Nat,'@7:Zero],'@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@5:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,'@8:Zero]]]]],'__[
+    '@4:InitialObjectSet,'multicast_from_to_['trueVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'decideFalse-1,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],
+    '__['@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,
+    '@8:Zero]]]]],'multicast_from_to_['trueVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],'noDuplicate[
+    '_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],'isThresholdValid['_;_[
+    '@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__[
+    '@13:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@3:Zero],'@4:Zero,'__['s.Nat,
+    '@5:Zero]]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'@9:Zero],'@10:Zero,'__['s.Nat,
+    '@11:Zero]]]]],'multicast_from_to_['trueVote['@2:Zero],'@1:Oid,'_;_[
+    '@7:Oid,'@12:OidSet]],'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]]]],'vote-true,'`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,
+    '@7:Oid,'@12:OidSet],'__['@13:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['@2:Zero,'init.InitialStep]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['@3:Zero,
+    '@4:Zero,'@5:Zero]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@8:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@9:Zero],'@10:Zero,'__[
+    's.Nat,'@11:Zero]]]]],'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]]]],'_and_['noDuplicate['_;_['@1:Oid,'@7:Oid,
+    '@12:OidSet]],'noDuplicate['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]]],'isThresholdValid['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]],'@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__[
+    '@13:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@3:Zero,'__['s.Nat,'@4:Zero],'__['s.Nat,
+    '@5:Zero]]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'@9:Zero],'@10:Zero,'__['s.Nat,
+    '@11:Zero]]]]],'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]],'multicast_from_to_['falseVote['@2:Zero],'@1:Oid,
+    '_;_['@7:Oid,'@12:OidSet]]]],'vote-false,'`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,
+    '@7:Oid,'@12:OidSet],'__['@13:InitialObjectSet,'<_:_|_>['@1:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['@2:Zero,'init.InitialStep]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@3:Zero,'@4:Zero,'@5:Zero]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['@8:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@9:Zero],'@10:Zero,'__[
+    's.Nat,'@11:Zero]]]]],'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]]]],'_and_['noDuplicate['_;_['@1:Oid,'@7:Oid,
+    '@12:OidSet]],'noDuplicate['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]]],'isThresholdValid['_;_['@1:Oid,'@7:Oid,'getOids[
+    '@13:InitialObjectSet]],'@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__['<_:_|_>[
+    '@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@3:Zero],'@4:Zero,'__['s.Nat,'@5:Zero]]]]],'<_:_|_>['@7:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '@9:Zero],'@10:Zero,'__['s.Nat,'@11:Zero]]]]],'multicast_from_to_[
+    'trueVote['@2:Zero],'@1:Oid,'_;_['@7:Oid,'@12:OidSet]],'multicast_from_to_[
+    'trueVote['@8:Zero],'@7:Oid,'_;_['@1:Oid,'@12:OidSet]]]],'vote-true,
+    '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__['<_:_|_>[
+    '@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'init.InitialStep]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '@3:Zero,'@4:Zero,'@5:Zero]]]],'<_:_|_>['@7:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['@8:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@9:Zero],'@10:Zero,'__[
+    's.Nat,'@11:Zero]]]]],'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_[
+    '@1:Oid,'@12:OidSet]]]],'_and_['noDuplicate['_;_['@1:Oid,'@7:Oid]],
+    'noDuplicate['_;_['@1:Oid,'@7:Oid,'@12:OidSet]],'isThresholdValid['_;_[
+    '@1:Oid,'@7:Oid],'@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,'@12:OidSet],'__['<_:_|_>[
+    '@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@2:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['@3:Zero,'__['s.Nat,'@4:Zero],'__['s.Nat,'@5:Zero]]]]],'<_:_|_>[
+    '@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@9:Zero],'@10:Zero,'__['s.Nat,'@11:Zero]]]]],
+    'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_['@1:Oid,'@12:OidSet]],
+    'multicast_from_to_['falseVote['@2:Zero],'@1:Oid,'_;_['@7:Oid,
+    '@12:OidSet]]]],'vote-false,'`{_`,_`,_`}['@6:Nat,'_;_['@1:Oid,'@7:Oid,
+    '@12:OidSet],'__['<_:_|_>['@1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@2:Zero,'init.InitialStep]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['@3:Zero,'@4:Zero,'@5:Zero]]]],'<_:_|_>[
+    '@7:Oid,'Node.Cid,'_`,_['status`:_['_`,_['@8:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'@9:Zero],'@10:Zero,'__['s.Nat,'@11:Zero]]]]],
+    'multicast_from_to_['trueVote['@8:Zero],'@7:Oid,'_;_['@1:Oid,
+    '@12:OidSet]]]],'_and_['noDuplicate['_;_['@1:Oid,'@7:Oid]],'noDuplicate[
+    '_;_['@1:Oid,'@7:Oid,'@12:OidSet]],'isThresholdValid['_;_['@1:Oid,'@7:Oid],
+    '@6:Nat]],'@,2,2 >
+depth: < '`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__[
+    '@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,
+    '@8:Zero]]]]]]],'loss,'`{_`,_`,_`}['@1:Nat,'_;_['@2:Oid,'@3:OidSet],'__[
+    '@4:InitialObjectSet,'<_:_|_>['@2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '@5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'@6:Zero],'@7:Zero,'__['s.Nat,
+    '@8:Zero]]]]],'multicast_from_to_['trueVote['@5:Zero],'@2:Oid,
+    '@3:OidSet]]],'_and_['noDuplicate['_;_['@2:Oid,'@3:OidSet]],'noDuplicate[
+    '_;_['@2:Oid,'getOids['@4:InitialObjectSet]]],'isThresholdValid['_;_[
+    '@2:Oid,'getOids['@4:InitialObjectSet]],'@1:Nat]],'@,2,2 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%8:Zero]],'_<=_['%7:Zero,
+    '__['s.Nat,'%6:Zero]],'_<=_['__['s.Nat,'s.Nat,'%6:Zero],'%1:Nat]],'%1:Nat,
+    '_;_['%2:Oid,'%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],'%7:Zero,'__['s.Nat,
+    '%8:Zero]]]]],'%4:InitialObjectSet],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,
+    '_;_['%2:Oid,'%3:OidSet],'__['%4:InitialObjectSet,'<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%6:Zero],'%7:Zero,'__['s.Nat,'%8:Zero]]]]]]],'_and_['noDuplicate['_;_[
+    '%2:Oid,'%3:OidSet]],'noDuplicate['_;_['%2:Oid,'getOids[
+    '%4:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,'getOids[
+    '%4:InitialObjectSet]],'%1:Nat]],'%,3,3 >
+depth: < 'decideTrue['_<=_['%1:Nat,'__['s.Nat,'%6:Zero]],'%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],'%7:Zero,'__['s.Nat,'%8:Zero]]]]],
+    '%4:InitialObjectSet],'decideTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'__['%4:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],
+    '%7:Zero,'__['s.Nat,'%8:Zero]]]]]]],'_and_['noDuplicate['_;_['%2:Oid,
+    '%3:OidSet]],'noDuplicate['_;_['%2:Oid,'getOids['%4:InitialObjectSet]]],
+    'isThresholdValid['_;_['%2:Oid,'getOids['%4:InitialObjectSet]],'%1:Nat]],
+    '%,3,3 >
+depth: < 'decideFalse['_<=_['%1:Nat,'%7:Zero],'%1:Nat,'_;_['%2:Oid,'%3:OidSet],
+    '<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'%6:Zero],'%7:Zero,'__['s.Nat,'%8:Zero]]]]],
+    '%4:InitialObjectSet],'decideFalse-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'__['%4:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],
+    '%7:Zero,'__['s.Nat,'%8:Zero]]]]]]],'_and_['noDuplicate['_;_['%2:Oid,
+    '%3:OidSet]],'noDuplicate['_;_['%2:Oid,'getOids['%4:InitialObjectSet]]],
+    'isThresholdValid['_;_['%2:Oid,'getOids['%4:InitialObjectSet]],'%1:Nat]],
+    '%,3,3 >
+depth: < '`{_`,_`,_`}['__['s.Nat,'#1:Zero],'_;_['#2:Oid,'#3:OidSet],'__[
+    '<_:_|_>['#2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['#4:Zero,
+    'finished.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'false.InitialFvpBool],'votes`:_['_`,_`,_['#5:Zero,'__['s.Nat,'#1:Zero],
+    '__['s.Nat,'#6:Zero]]]]],'multicast_from_to_['falseVote['#4:Zero],'#2:Oid,
+    '#3:OidSet]]],'decideFalse-2,'decideFalse['_<=_['__['s.Nat,'#1:Zero],'__[
+    's.Nat,'#1:Zero]],'__['s.Nat,'#1:Zero],'_;_['#2:Oid,'#3:OidSet],'<_:_|_>[
+    '#2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['#4:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['#5:Zero,'__['s.Nat,'#1:Zero],'__['s.Nat,'#6:Zero]]]]],
+    'multicast_from_to_['falseVote['#4:Zero],'#2:Oid,'#3:OidSet]],'_and_[
+    'noDuplicate['#2:Oid],'noDuplicate['_;_['#2:Oid,'#3:OidSet]],
+    'isThresholdValid['#2:Oid,'__['s.Nat,'#1:Zero]]],'#,3,3 >
+depth: < '`{_`,_`,_`}['s.Nat,'_;_['#1:Oid,'#2:OidSet],'__['<_:_|_>['#1:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['#3:Zero,'finished.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['false.InitialFvpBool],'votes`:_[
+    '_`,_`,_['#4:Zero,'__['s.Nat,'#5:Zero],'__['s.Nat,'#6:Zero]]]]],
+    'multicast_from_to_['falseVote['#3:Zero],'#1:Oid,'#2:OidSet]]],
+    'decideFalse-2,'decideFalse['_<=_['s.Nat,'__['s.Nat,'#5:Zero]],'s.Nat,'_;_[
+    '#1:Oid,'#2:OidSet],'<_:_|_>['#1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '#3:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['#4:Zero,'__['s.Nat,'#5:Zero],'__['s.Nat,
+    '#6:Zero]]]]],'multicast_from_to_['falseVote['#3:Zero],'#1:Oid,
+    '#2:OidSet]],'_and_['noDuplicate['#1:Oid],'noDuplicate['_;_['#1:Oid,
+    '#2:OidSet]],'isThresholdValid['#1:Oid,'s.Nat]],'#,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%7:Zero]],'_<=_['%6:Zero,
+    '__['s.Nat,'%5:Zero]],'_<=_['__['s.Nat,'s.Nat,'%5:Zero],'%1:Nat]],'%1:Nat,
+    '_;_['%2:Oid,'%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%5:Zero],'%6:Zero,'__['s.Nat,
+    '%7:Zero]]]]],'none.None],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'%5:Zero],'%6:Zero,'__['s.Nat,'%7:Zero]]]]]],
+    '_and_['noDuplicate['%2:Oid],'noDuplicate['_;_['%2:Oid,'%3:OidSet]],
+    'isThresholdValid['%2:Oid,'%1:Nat]],'%,3,3 >
+depth: < '`{_`,_`,_`}['__['s.Nat,'#1:Zero],'_;_['#2:Oid,'#3:OidSet],'__[
+    '#7:InitialObjectSet,'<_:_|_>['#2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '#4:Zero,'finished.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'true.FvpBool],'votes`:_['_`,_`,_['__['s.Nat,'#1:Zero],'#5:Zero,'__['s.Nat,
+    '#6:Zero]]]]],'multicast_from_to_['trueVote['#4:Zero],'#2:Oid,
+    '#3:OidSet]]],'decideTrue-2,'decideTrue['_<=_['__['s.Nat,'#1:Zero],'__[
+    's.Nat,'#1:Zero]],'__['s.Nat,'#1:Zero],'_;_['#2:Oid,'#3:OidSet],'<_:_|_>[
+    '#2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['#4:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'#1:Zero],'#5:Zero,'__['s.Nat,'#6:Zero]]]]],'__[
+    '#7:InitialObjectSet,'multicast_from_to_['trueVote['#4:Zero],'#2:Oid,
+    '#3:OidSet]]],'_and_['noDuplicate['_;_['#2:Oid,'#3:OidSet]],'noDuplicate[
+    '_;_['#2:Oid,'getOids['#7:InitialObjectSet]]],'isThresholdValid['_;_[
+    '#2:Oid,'getOids['#7:InitialObjectSet]],'__['s.Nat,'#1:Zero]]],'#,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%7:Zero]],'_<=_['__[
+    's.Nat,'%5:Zero],'%1:Nat],'_<=_['__['s.Nat,'%6:Zero],'%5:Zero]],'%1:Nat,
+    '_;_['%2:Oid,'%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%4:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,
+    '%7:Zero]]]]],'none.None],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,
+    '%7:Zero]]]]]],'_and_['noDuplicate['%2:Oid],'noDuplicate['_;_['%2:Oid,
+    '%3:OidSet]],'isThresholdValid['%2:Oid,'%1:Nat]],'%,3,3 >
+depth: < 'decideTrue['_<=_['%1:Nat,'%5:Zero],'%1:Nat,'_;_['%2:Oid,'%3:OidSet],
+    '<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,'%7:Zero]]]]],
+    'none.None],'decideTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:OidSet],
+    '<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,'%7:Zero]]]]]],'_and_[
+    'noDuplicate['%2:Oid],'noDuplicate['_;_['%2:Oid,'%3:OidSet]],
+    'isThresholdValid['%2:Oid,'%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%9:Zero]],'_<=_['__[
+    's.Nat,'%7:Zero],'%1:Nat],'_<=_['__['s.Nat,'%8:Zero],'%7:Zero]],'%1:Nat,
+    '_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,
+    '%8:Zero],'__['s.Nat,'%9:Zero]]]]],'__['%5:InitialObjectSet,'<_:_|_>[
+    '%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'%11:Zero],'%12:Zero,'__['s.Nat,'%13:Zero]]]]],
+    'multicast_from_to_['trueVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],
+    'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,
+    '%4:OidSet]]]],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,
+    '%8:Zero],'__['s.Nat,'%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%11:Zero],
+    '%12:Zero,'__['s.Nat,'%13:Zero]]]]],'multicast_from_to_['trueVote[
+    '%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'_and_[
+    'noDuplicate['_;_['%2:Oid,'%3:Oid,'%4:OidSet]],'noDuplicate['_;_['%2:Oid,
+    '%3:Oid,'getOids['%5:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,
+    '%3:Oid,'getOids['%5:InitialObjectSet]],'%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%12:Zero]],'_<=_[
+    '%11:Zero,'__['s.Nat,'%10:Zero]],'_<=_['__['s.Nat,'s.Nat,'%10:Zero],
+    '%1:Nat]],'%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%10:Zero],'%11:Zero,'__['s.Nat,'%12:Zero]]]]],'__['<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%6:Zero],'%7:Zero,'__['s.Nat,'%8:Zero]]]]],'multicast_from_to_['trueVote[
+    '%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_['trueVote[
+    '%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'updateTrue-1,'`{_`,_`,_`}[
+    '%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__['<_:_|_>['%2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],
+    '%7:Zero,'__['s.Nat,'%8:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%10:Zero],
+    '%11:Zero,'__['s.Nat,'%12:Zero]]]]],'multicast_from_to_['trueVote[
+    '%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_['trueVote[
+    '%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'_and_['noDuplicate['_;_[
+    '%2:Oid,'%3:Oid]],'noDuplicate['_;_['%2:Oid,'%3:Oid,'%4:OidSet]],
+    'isThresholdValid['_;_['%2:Oid,'%3:Oid],'%1:Nat]],'%,3,3 >
+depth: < 'decideFalse['_<=_['%1:Nat,'__['s.Nat,'%6:Zero]],'%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,
+    '%7:Zero]]]]],'none.None],'decideFalse-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,
+    '%3:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%4:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%5:Zero,'__['s.Nat,'%6:Zero],'__['s.Nat,
+    '%7:Zero]]]]]],'_and_['noDuplicate['%2:Oid],'noDuplicate['_;_['%2:Oid,
+    '%3:OidSet]],'isThresholdValid['%2:Oid,'%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%13:Zero]],'_<=_['__[
+    's.Nat,'%11:Zero],'%1:Nat],'_<=_['__['s.Nat,'%12:Zero],'%11:Zero]],'%1:Nat,
+    '_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%11:Zero,'__['s.Nat,'%12:Zero],'__['s.Nat,'%13:Zero]]]]],'__[
+    '%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,
+    '%9:Zero]]]]],'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_[
+    '%3:Oid,'%4:OidSet]],'multicast_from_to_['falseVote['%10:Zero],'%3:Oid,
+    '_;_['%2:Oid,'%4:OidSet]]]],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_[
+    '%2:Oid,'%3:Oid,'%4:OidSet],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,'%9:Zero]]]]],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%11:Zero,'__['s.Nat,'%12:Zero],'__['s.Nat,'%13:Zero]]]]],
+    'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],
+    'multicast_from_to_['falseVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,
+    '%4:OidSet]]]],'_and_['noDuplicate['_;_['%2:Oid,'%3:Oid,'%4:OidSet]],
+    'noDuplicate['_;_['%2:Oid,'%3:Oid,'getOids['%5:InitialObjectSet]]],
+    'isThresholdValid['_;_['%2:Oid,'%3:Oid,'getOids['%5:InitialObjectSet]],
+    '%1:Nat]],'%,3,3 >
+depth: < 'decideTrue['_<=_['%1:Nat,'%11:Zero],'%1:Nat,'_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%11:Zero,'__['s.Nat,'%12:Zero],'__[
+    's.Nat,'%13:Zero]]]]],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,'%9:Zero]]]]],'multicast_from_to_[
+    'falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'decideTrue-1,
+    '`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__[
+    '%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,
+    '%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,
+    'waiting.Step]],'value`:_['false.InitialFvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['%11:Zero,'__['s.Nat,'%12:Zero],'__[
+    's.Nat,'%13:Zero]]]]],'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,
+    '_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_['falseVote['%10:Zero],
+    '%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'_and_['noDuplicate['_;_['%2:Oid,
+    '%3:Oid,'%4:OidSet]],'noDuplicate['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]],'%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%8:Zero]],'_<=_['__[
+    's.Nat,'%6:Zero],'%1:Nat],'_<=_['__['s.Nat,'%7:Zero],'%6:Zero]],'%1:Nat,
+    '_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%6:Zero,'__['s.Nat,
+    '%7:Zero],'__['s.Nat,'%8:Zero]]]]],'__['<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%10:Zero],
+    '%11:Zero,'__['s.Nat,'%12:Zero]]]]],'multicast_from_to_['trueVote[
+    '%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_['falseVote[
+    '%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'updateTrue-1,'`{_`,_`,_`}[
+    '%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__['<_:_|_>['%2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%6:Zero,'__['s.Nat,'%7:Zero],'__['s.Nat,'%8:Zero]]]]],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%10:Zero],'%11:Zero,'__['s.Nat,'%12:Zero]]]]],'multicast_from_to_[
+    'trueVote['%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'_and_[
+    'noDuplicate['_;_['%2:Oid,'%3:Oid]],'noDuplicate['_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet]],'isThresholdValid['_;_['%2:Oid,'%3:Oid],'%1:Nat]],'%,3,3 >
+depth: < 'decideTrue['_<=_['%1:Nat,'__['s.Nat,'%10:Zero]],'%1:Nat,'_;_['%2:Oid,
+    '%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%9:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%10:Zero],'%11:Zero,'__[
+    's.Nat,'%12:Zero]]]]],'__['<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['%5:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],'%7:Zero,'__['s.Nat,
+    '%8:Zero]]]]],'multicast_from_to_['trueVote['%5:Zero],'%2:Oid,'_;_['%3:Oid,
+    '%4:OidSet]],'multicast_from_to_['trueVote['%9:Zero],'%3:Oid,'_;_['%2:Oid,
+    '%4:OidSet]]]],'decideTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet],'__['<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'%6:Zero],'%7:Zero,'__['s.Nat,'%8:Zero]]]]],
+    '<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%9:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'%10:Zero],'%11:Zero,'__['s.Nat,'%12:Zero]]]]],
+    'multicast_from_to_['trueVote['%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],
+    'multicast_from_to_['trueVote['%9:Zero],'%3:Oid,'_;_['%2:Oid,
+    '%4:OidSet]]]],'_and_['noDuplicate['_;_['%2:Oid,'%3:Oid]],'noDuplicate[
+    '_;_['%2:Oid,'%3:Oid,'%4:OidSet]],'isThresholdValid['_;_['%2:Oid,'%3:Oid],
+    '%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%13:Zero]],'_<=_[
+    '%12:Zero,'__['s.Nat,'%11:Zero]],'_<=_['__['s.Nat,'s.Nat,'%11:Zero],
+    '%1:Nat]],'%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%11:Zero],'%12:Zero,'__['s.Nat,'%13:Zero]]]]],'__['%5:InitialObjectSet,
+    '<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,'%9:Zero]]]]],
+    'multicast_from_to_['trueVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],
+    'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,
+    '%4:OidSet]]]],'updateTrue-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,
+    '%8:Zero],'__['s.Nat,'%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%11:Zero],
+    '%12:Zero,'__['s.Nat,'%13:Zero]]]]],'multicast_from_to_['trueVote[
+    '%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'_and_[
+    'noDuplicate['_;_['%2:Oid,'%3:Oid,'%4:OidSet]],'noDuplicate['_;_['%2:Oid,
+    '%3:Oid,'getOids['%5:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,
+    '%3:Oid,'getOids['%5:InitialObjectSet]],'%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%12:Zero]],'_<=_[
+    '%11:Zero,'__['s.Nat,'%10:Zero]],'_<=_['__['s.Nat,'s.Nat,'%10:Zero],
+    '%1:Nat]],'%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%10:Zero],'%11:Zero,'__['s.Nat,'%12:Zero]]]]],'__['<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%6:Zero,'__['s.Nat,'%7:Zero],'__['s.Nat,'%8:Zero]]]]],'multicast_from_to_[
+    'trueVote['%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'updateTrue-1,
+    '`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__['<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%5:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%6:Zero,'__['s.Nat,'%7:Zero],'__['s.Nat,'%8:Zero]]]]],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%9:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%10:Zero],'%11:Zero,'__['s.Nat,'%12:Zero]]]]],'multicast_from_to_[
+    'trueVote['%9:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]],'multicast_from_to_[
+    'falseVote['%5:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]]]],'_and_[
+    'noDuplicate['_;_['%2:Oid,'%3:Oid]],'noDuplicate['_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet]],'isThresholdValid['_;_['%2:Oid,'%3:Oid],'%1:Nat]],'%,3,3 >
+depth: < 'decideFalse['_<=_['%1:Nat,'__['s.Nat,'%12:Zero]],'%1:Nat,'_;_[
+    '%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_[
+    '_`,_['%10:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%11:Zero,'__['s.Nat,
+    '%12:Zero],'__['s.Nat,'%13:Zero]]]]],'__['%5:InitialObjectSet,'<_:_|_>[
+    '%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],
+    'value`:_['false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_[
+    '_`,_`,_['%7:Zero,'__['s.Nat,'%8:Zero],'__['s.Nat,'%9:Zero]]]]],
+    'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],
+    'multicast_from_to_['falseVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,
+    '%4:OidSet]]]],'decideFalse-1,'`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_['false.InitialFvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['%7:Zero,'__['s.Nat,
+    '%8:Zero],'__['s.Nat,'%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_[
+    'status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_[
+    'false.InitialFvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '%11:Zero,'__['s.Nat,'%12:Zero],'__['s.Nat,'%13:Zero]]]]],
+    'multicast_from_to_['falseVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],
+    'multicast_from_to_['falseVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,
+    '%4:OidSet]]]],'_and_['noDuplicate['_;_['%2:Oid,'%3:Oid,'%4:OidSet]],
+    'noDuplicate['_;_['%2:Oid,'%3:Oid,'getOids['%5:InitialObjectSet]]],
+    'isThresholdValid['_;_['%2:Oid,'%3:Oid,'getOids['%5:InitialObjectSet]],
+    '%1:Nat]],'%,3,3 >
+depth: < 'updateTrue['_and_['_<=_['%1:Nat,'__['s.Nat,'%13:Zero]],'_<=_[
+    '%12:Zero,'__['s.Nat,'%11:Zero]],'_<=_['__['s.Nat,'s.Nat,'%11:Zero],
+    '%1:Nat]],'%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%11:Zero],'%12:Zero,'__['s.Nat,'%13:Zero]]]]],'__['%5:InitialObjectSet,
+    '<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],
+    'value`:_['true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_[
+    '__['s.Nat,'%7:Zero],'%8:Zero,'__['s.Nat,'%9:Zero]]]]],'multicast_from_to_[
+    'trueVote['%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_[
+    'trueVote['%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'updateTrue-1,
+    '`{_`,_`,_`}['%1:Nat,'_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__[
+    '%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%6:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%7:Zero],'%8:Zero,'__['s.Nat,
+    '%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_['%10:Zero,
+    'waiting.Step]],'value`:_['true.FvpBool],'decision`:_['nil.NilValue],
+    'votes`:_['_`,_`,_['__['s.Nat,'%11:Zero],'%12:Zero,'__['s.Nat,
+    '%13:Zero]]]]],'multicast_from_to_['trueVote['%6:Zero],'%2:Oid,'_;_[
+    '%3:Oid,'%4:OidSet]],'multicast_from_to_['trueVote['%10:Zero],'%3:Oid,'_;_[
+    '%2:Oid,'%4:OidSet]]]],'_and_['noDuplicate['_;_['%2:Oid,'%3:Oid,
+    '%4:OidSet]],'noDuplicate['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]],'%1:Nat]],'%,3,3 >
+depth: < '`{_`,_`,_`}['s.Nat,'_;_['#1:Oid,'#2:OidSet],'__['#7:InitialObjectSet,
+    '<_:_|_>['#1:Oid,'Node.Cid,'_`,_['status`:_['_`,_['#3:Zero,
+    'finished.Step]],'value`:_['true.FvpBool],'decision`:_['true.FvpBool],
+    'votes`:_['_`,_`,_['__['s.Nat,'#4:Zero],'#5:Zero,'__['s.Nat,'#6:Zero]]]]],
+    'multicast_from_to_['trueVote['#3:Zero],'#1:Oid,'#2:OidSet]]],
+    'decideTrue-2,'decideTrue['_<=_['s.Nat,'__['s.Nat,'#4:Zero]],'s.Nat,'_;_[
+    '#1:Oid,'#2:OidSet],'<_:_|_>['#1:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '#3:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'#4:Zero],'#5:Zero,'__['s.Nat,
+    '#6:Zero]]]]],'__['#7:InitialObjectSet,'multicast_from_to_['trueVote[
+    '#3:Zero],'#1:Oid,'#2:OidSet]]],'_and_['noDuplicate['_;_['#1:Oid,
+    '#2:OidSet]],'noDuplicate['_;_['#1:Oid,'getOids['#7:InitialObjectSet]]],
+    'isThresholdValid['_;_['#1:Oid,'getOids['#7:InitialObjectSet]],'s.Nat]],'#,
+    3,3 >
+depth: < 'decideTrue['_<=_['%1:Nat,'__['s.Nat,'%11:Zero]],'%1:Nat,'_;_['%2:Oid,
+    '%3:Oid,'%4:OidSet],'<_:_|_>['%3:Oid,'Node.Cid,'_`,_['status`:_['_`,_[
+    '%10:Zero,'waiting.Step]],'value`:_['true.FvpBool],'decision`:_[
+    'nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%11:Zero],'%12:Zero,'__[
+    's.Nat,'%13:Zero]]]]],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%7:Zero],
+    '%8:Zero,'__['s.Nat,'%9:Zero]]]]],'multicast_from_to_['trueVote['%6:Zero],
+    '%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_['trueVote['%10:Zero],
+    '%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'decideTrue-1,'`{_`,_`,_`}['%1:Nat,
+    '_;_['%2:Oid,'%3:Oid,'%4:OidSet],'__['%5:InitialObjectSet,'<_:_|_>['%2:Oid,
+    'Node.Cid,'_`,_['status`:_['_`,_['%6:Zero,'waiting.Step]],'value`:_[
+    'true.FvpBool],'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,
+    '%7:Zero],'%8:Zero,'__['s.Nat,'%9:Zero]]]]],'<_:_|_>['%3:Oid,'Node.Cid,
+    '_`,_['status`:_['_`,_['%10:Zero,'waiting.Step]],'value`:_['true.FvpBool],
+    'decision`:_['nil.NilValue],'votes`:_['_`,_`,_['__['s.Nat,'%11:Zero],
+    '%12:Zero,'__['s.Nat,'%13:Zero]]]]],'multicast_from_to_['trueVote[
+    '%6:Zero],'%2:Oid,'_;_['%3:Oid,'%4:OidSet]],'multicast_from_to_['trueVote[
+    '%10:Zero],'%3:Oid,'_;_['%2:Oid,'%4:OidSet]]]],'_and_['noDuplicate['_;_[
+    '%2:Oid,'%3:Oid,'%4:OidSet]],'noDuplicate['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]]],'isThresholdValid['_;_['%2:Oid,'%3:Oid,'getOids[
+    '%5:InitialObjectSet]],'%1:Nat]],'%,3,3 >

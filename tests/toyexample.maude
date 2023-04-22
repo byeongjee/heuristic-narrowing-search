@@ -1,0 +1,69 @@
+load ../heuristic-search/index.maude
+load ../heuristic-search/invariant.maude
+load ../heuristic-search/main.maude
+load ../heuristic-search/score.maude
+load ../heuristic-search/state.maude
+
+mod EXAMPLE-SYSTEM is
+    protecting NAT .
+    including STATE .
+
+    ops f g : Nat -> State .
+
+    var X : Nat .
+
+    rl [l1] : f(s(X)) => f(X) [narrowing] .
+    rl [l2] : g(s(X)) => g(X) [narrowing] .
+    rl [l3] : f(s(X)) => g(X) [narrowing] .
+endm
+
+mod EXAMPLE-SYSTEM-WITH-INV is
+    protecting EXAMPLE-SYSTEM .
+    including INVARIANT .
+
+    var N : Nat .
+
+    eq initialCond(f(N)) = isEven(N) .
+
+    op isEven : Nat -> Bool .
+
+    eq isEven(0) = true .
+    eq isEven(s(N)) = not isEven(N) .
+
+    eq inv(g(0)) = true .
+    eq inv(g(s(N))) = false .
+    eq inv(f(N)) = true .
+endm
+
+fmod EXAMPLE-SYSTEM-SCORE is
+    including SCORE .
+    protecting NAT .
+
+    subsort Nat < Score .
+
+    vars N N' : Nat .
+
+    eq le(N, N') = N <= N' .
+
+    var F : Qid .
+    var T : Term .
+    var D : Nat .
+
+    eq score(F[T], D) = 1 + score(T, D) .
+    eq score(T, D) = 1 [owise] .
+endfm
+
+mod MAIN is
+    protecting HEURISTIC-NARROWING .
+    protecting EXAMPLE-SYSTEM-SCORE .
+    protecting DEFAULT-INDEX .
+endm
+
+set print attribute on .
+
+red in MAIN : metaHeuristicNarrowingSearch(
+    upModule('EXAMPLE-SYSTEM-WITH-INV, false),
+    'f['X:Nat],
+    'g['0.Nat],
+    ['l1, 'f['s_['s_['X:Nat]]]],
+    delay filter) .

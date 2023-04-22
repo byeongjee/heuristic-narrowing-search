@@ -18,7 +18,7 @@ endm
 
 mod ONETHIRDRULE-TEST-SCORE3 is
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIDRULE-SCORE3 .
+    protecting ONETHIRDRULE-SCORE3 .
     protecting HEURISTIC-NARROWING .
 endm
 

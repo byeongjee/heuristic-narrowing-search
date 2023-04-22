@@ -1,6 +1,6 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
-load ../heuristic-search/invariant.maude
+load ../heuristic-search/state.maude
 
 set include BOOL off .
 
@@ -53,12 +53,10 @@ endm
 mod GLOBAL is
     protecting CONFIGURATION .
     protecting FVP-NAT .
-    including INVARIANT .
+    including STATE .
 
     sort State .
     sort InternalState .
-
-    subsort State < BaseState .
 
     op {_,_,_} : Nat OidSet Configuration -> InternalState [ctor] .
     op check : [Bool] InternalState -> State [ctor] .

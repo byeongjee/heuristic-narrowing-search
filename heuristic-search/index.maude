@@ -5,3 +5,15 @@ fmod INDEX is
 
     op createIndex : Term -> Index .
 endfm
+
+fmod DEFAULT-INDEX is
+    including INDEX .
+
+    subsort Qid < Index .
+
+    var F : Qid . *** function symbol
+    var NETL : NeTermList . *** list of arguments
+
+    eq createIndex(F[NETL]) = F .
+    eq createIndex(F) = F . *** constant
+endfm

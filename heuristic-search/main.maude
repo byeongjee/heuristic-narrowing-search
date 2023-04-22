@@ -30,6 +30,9 @@ fmod TERM-ITEM is
     op _<=_ : TermItem TermItem -> Bool .
     eq < T, L, T0, I, Q, S, D > <= < T', L', T0', I', Q', S', D' > = le(S, S') .
 
+    op depth : TermItem -> Nat .
+    eq depth(< T, L, T0, I, Q, S, D >) = D .
+ 
 endfm
 
 fmod INDEXED-TERM-SET is
@@ -39,7 +42,7 @@ fmod INDEXED-TERM-SET is
     protecting META-LEVEL .
 
     sort IndexedTerm . *** Nat is depth for debugging purpose
-    op `{_`,_`,_`} : Term Index Nat -> IndexedTerm .
+    op `{_`,_`,_`,_`} : Term Term Index Nat -> IndexedTerm .
 
     op createIndex : Term -> Index .
 
@@ -81,19 +84,22 @@ view TermItem from TOSET<= to TERM-ITEM is
 endv
 
 mod SUBSUMPTION-CHECK is
-    protecting META-LEVEL .
     protecting INDEXED-TERM-SET .
+
     op _isSubsumedBy_under_ : IndexedTerm IndexedTermSet Module -> Bool  .
     op _isSubsumedBy_under_ : Term Term Module -> Bool .
 
     var M : Module .
-    vars T T' : Term . var IDX : Index . vars D D' : Nat .
+    vars T T' I I' : Term . var IDX : Index . vars D D' : Nat .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
+    var S : Substitution .
 
     eq T isSubsumedBy T' under M = metaMatch(M, T', T, nil, 0) =/= noMatch .
 
-    eq {T, IDX, D} isSubsumedBy ({T', IDX, D'}, IDXTS) under M
-    = (metaMatch(M, T', T, nil, 0) =/= noMatch) or-else (({T, IDX, D}) isSubsumedBy IDXTS under M) .
+    ceq ({T, I, IDX, D}) isSubsumedBy ({T', I', IDX, D'}, IDXTS) under M 
+    = true
+    if metaMatch(M, T', T, nil, 0) =/= noMatch .
+
     eq IDXT isSubsumedBy IDXTS under M = false [owise] .
 endm
 
@@ -102,12 +108,12 @@ mod RENAME is
     protecting INDEXED-TERM-SET . 
     protecting CONVERSION .
 
-    var T : Term . var IDX : Index . var D : Nat .
+    vars T I : Term . var IDX : Index . var D : Nat .
     var V : Variable . var C : Constant .
     var F : Qid . var NETL : NeTermList .
 
     op rename : IndexedTerm -> IndexedTerm .
-    eq rename({T, IDX, D}) = {rename(T, D), IDX, D} .
+    eq rename({T, I, IDX, D}) = {rename(T, D), I, IDX, D} .
 
     op rename : NeTermList Nat -> NeTermList .
     eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
@@ -129,13 +135,13 @@ mod FOLDING-STATE-INSERTION is
 
     var M : Module .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
-    var T : Term . var IDX : Index . var D : Nat .
+    vars T I : Term . var IDX : Index . var D : Nat .
 
     eq insertState(M, IDXT, IDXTS)
     = insertStateInternal(IDXT, IDXTS, IDXT isSubsumedBy IDXTS under M) .
 
     eq insertStateInternal(IDXT, IDXTS, true) = subsumed .
-    eq insertStateInternal({T, IDX, D}, IDXTS, false) = rename({T, IDX, D}), IDXTS .
+    eq insertStateInternal({T, I, IDX, D}, IDXTS, false) = rename({T, I, IDX, D}), IDXTS .
 
 endm
 
@@ -167,7 +173,7 @@ mod FOLDING-APPLICATION is
 
     eq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
     = applyFoldingInternal(M, TIS, IDXTS, < T, L, T0, I, Q, S, D >, 
-    insertState(M,  {T, createIndex(T), D}, IDXTS)) .
+    insertState(M, {T, I, createIndex(T), D}, IDXTS)) .
 
     eq applyFoldingInternal(M, TIS, IDXTS, TI, subsumed)
     = applyFolding(M, TIS, IDXTS) .
@@ -206,17 +212,22 @@ mod GET-CHILDREN is
     = emptyTermItemSet [print "incomplete narrowing"] .
     ceq getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
         {T', TY', CO, L', S1, S2, Q'}) 
-    = (if I' =/= 'false.Bool 
-      then < T', 
+    = < T', 
         L',
         applySubstitution(M, T, S1),
         I',
         Q', 
         score(T', D + 1), 
         D + 1 > 
-      else emptyTermItemSet 
-      fi) ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
-    if I' := getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])) .
+      ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+    if getTerm(metaReduce(M, 'inv[T'])) =/= 'false.Bool
+    /\ I' := getTerm(metaReduce(M, applySubstitution(M, I, S1)))
+    /\ I' =/= 'false.Bool .
+
+    eq getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
+        {T', TY', CO, L', S1, S2, Q'}) 
+    =  getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+    [owise] .
 endm
 
 mod INVISIBLE-TRANSITION is
@@ -326,9 +337,9 @@ mod HEURISTIC-NARROWING is
 
     eq isSolution(M, TI, T') = false [owise] .
 
-    op insertAll : TermItemSet LTree{TermItem} -> LTree{TermItem} .
-    eq insertAll(emptyTermItemSet, QUEUE) = QUEUE .
-    eq insertAll(TI ;; TIS, QUEUE) = insertAll(TIS, insert(TI, QUEUE)) .
+    op insert : TermItemSet LTree{TermItem} -> LTree{TermItem} .
+    eq insert(emptyTermItemSet, QUEUE) = QUEUE .
+    eq insert(TI ;; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
     eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, 
@@ -347,7 +358,8 @@ mod HEURISTIC-NARROWING is
     /\ {FILTERED, IDXTS'} := applyFolding(M, 
         applyInvisibleTransitionReduction(M, RIS, CHILDREN), 
         IDXTS)
-    /\ QUEUE' := insertAll(FILTERED, deleteMin(QUEUE)) 
+    /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
+    /\ D := depth(TI)
     [owise print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, empty, IDXTS)

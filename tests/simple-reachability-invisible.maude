@@ -1,0 +1,53 @@
+load ../heuristic-search/main.maude
+load ./model-extensions/onethirdrule-index.maude
+load ./model-extensions/onethirdrule-scoring-functions.maude
+load ./model-extensions/onethirdrule-invariant.maude
+
+
+mod ONETHIRDRULE-TEST-SCORE1 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE1 .
+    protecting HEURISTIC-NARROWING .
+endm
+
+
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    '`{_`,_`,_`}['s:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['s.Nat, 'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]],
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
+    delay filter) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    '`{_`,_`,_`}['__['s.Nat,'s.Nat], 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['__['s.Nat,'s.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]],
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
+    delay filter) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVARIANT, false),
+    '`{_`,_`,_`}['__['s.Nat,'s.Nat, 's.Nat], 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['__['s.Nat,'s.Nat, 's.Nat],'OIDS':OidSet,'__[
+    'CONF:Configuration,'<_:_|_>['O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_[
+    'true.FvpBool]]]]],
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
+    delay filter) .

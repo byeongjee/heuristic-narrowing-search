@@ -15,11 +15,11 @@ mod ONETHIRDRULE-INVARIANT-HALF is
     vars OIDS NEIGHBORS : OidSet .
     var Z : Zero .
 
-    eq inv(SK:[State]) = true .
-    eq initialCond({N, OIDS, CONF}) 
+    eq inv({N, OIDS, CONF}) 
     = noDuplicate(OIDS) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .
+    eq initialCond(SK:[State]) = true .
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
@@ -48,9 +48,9 @@ mod ONETHIRDRULE-INVARIANT is
     vars OIDS NEIGHBORS : OidSet .
     var Z : Zero .
 
-    eq inv(SK:[State]) = true .
-    eq initialCond({N, OIDS, CONF}) 
+    eq inv({N, OIDS, CONF})
     = noDuplicate(OIDS) and noDuplicate(getOids(CONF)) .
+    eq initialCond(SK:[State]) = true .
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
