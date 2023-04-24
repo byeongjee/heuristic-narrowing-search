@@ -23,16 +23,8 @@ mod EXAMPLE-SYSTEM-WITH-INV is
 
     var N : Nat .
 
-    eq initialCond(f(N)) = isEven(N) .
-
-    op isEven : Nat -> Bool .
-
-    eq isEven(0) = true .
-    eq isEven(s(N)) = not isEven(N) .
-
-    eq inv(g(0)) = true .
-    eq inv(g(s(N))) = false .
-    eq inv(f(N)) = true .
+    eq inv(g(s(s(N)))) = true .
+    eq inv(f(s(s(N)))) = true .
 endm
 
 fmod EXAMPLE-SYSTEM-SCORE is
@@ -59,11 +51,9 @@ mod MAIN is
     protecting DEFAULT-INDEX .
 endm
 
-set print attribute on .
-
 red in MAIN : metaHeuristicNarrowingSearch(
     upModule('EXAMPLE-SYSTEM-WITH-INV, false),
     'f['X:Nat],
-    'g['0.Nat],
-    ['l1, 'f['s_['s_['X:Nat]]]],
+    'g['Y:Nat],
+    ['l1, 'f['s_['s_['Z:Nat]]]],
     delay filter) .
