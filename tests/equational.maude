@@ -27,8 +27,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
     none,
     delay filter) .
 
@@ -38,8 +38,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
     none,
     delay filter) .
 
@@ -49,7 +49,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-INVARIANT-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.FvpBool]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialFvpBool]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
     none,
     delay filter) .

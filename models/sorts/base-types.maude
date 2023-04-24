@@ -5,7 +5,7 @@ mod VALUE is
 
     sorts Value NilValue NonNilValue .
     subsort NilValue NonNilValue < Value .
-    subsort FvpBool < NonNilValue .
+    subsort Bool' < NonNilValue .
 
     op nil : -> NilValue [ctor] .
 endm

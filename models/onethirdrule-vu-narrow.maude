@@ -166,12 +166,12 @@ mod ONETHIRDRULE-VU-NARROW is
     }) [narrowing metadata "invisible"] .
 
 
-    op decideTrue : FvpBool Nat OidSet Object Configuration -> InternalState [ctor] .
-    op decideFalse : FvpBool Nat OidSet Object Configuration -> InternalState [ctor] .
-    op updateTrue : FvpBool Nat OidSet Object Configuration -> InternalState [ctor] .
-    op updateFalse : FvpBool Nat OidSet Object Configuration -> InternalState [ctor] .
+    op decideTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
+    op decideFalse : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
+    op updateTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
+    op updateFalse : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
 
-    op _<=_ : Nat Nat -> FvpBool .
+    op _<=_ : Nat Nat -> Bool' .
     eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :

@@ -2,13 +2,13 @@
 set include BOOL off . 
 
 mod FVP-BOOL is
-    sorts FvpBool InitialFvpBool .
-    subsort InitialFvpBool < FvpBool .
-    op false : -> InitialFvpBool [ctor] .
-    op true : -> FvpBool [ctor] .
+    sorts Bool' InitialBool' .
+    subsort InitialBool' < Bool' .
+    op false : -> InitialBool' [ctor] .
+    op true : -> Bool' [ctor] .
 
-    op _and_ : FvpBool FvpBool -> FvpBool [assoc comm] .
-    vars A B C : FvpBool .
+    op _and_ : Bool' Bool' -> Bool' [assoc comm] .
+    vars A B C : Bool' .
 
     eq true and A = A [variant] .
     eq false and A = false [variant] .
