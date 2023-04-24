@@ -5,7 +5,7 @@ load ./model-extensions/onethirdrule-invariant.maude
 
 mod ONETHIRDRULE-TEST-SCORE1 is
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIDRULE-SCORE1 .
+    protecting ONETHIRDRULE-SCORE1 .
     protecting HEURISTIC-NARROWING .
 endm
 
