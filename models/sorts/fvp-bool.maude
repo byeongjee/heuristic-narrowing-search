@@ -2,10 +2,8 @@
 set include BOOL off . 
 
 mod FVP-BOOL is
-    sorts Bool' InitialBool' .
-    subsort InitialBool' < Bool' .
-    op false : -> InitialBool' [ctor] .
-    op true : -> Bool' [ctor] .
+    sort Bool' .
+    ops false true : -> Bool' [ctor] .
 
     op _and_ : Bool' Bool' -> Bool' [assoc comm] .
     vars A B C : Bool' .

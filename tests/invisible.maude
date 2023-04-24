@@ -27,7 +27,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
     (['vote-true, any] ; 
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
@@ -41,7 +41,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
     (['vote-true, any] ; 
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
@@ -55,7 +55,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.InitialBool']]]]],
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
     (['vote-true, any] ; 
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
