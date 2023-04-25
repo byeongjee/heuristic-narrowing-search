@@ -59,7 +59,7 @@ mod GLOBAL is
 endm
 
 
-mod ONETHIRDRULE-NONDETERMINSTIC is
+mod ONETHIRDRULE-NONDETERMINISTIC is
     including GLOBAL .
     protecting VALUE .
     protecting MULTICAST .
