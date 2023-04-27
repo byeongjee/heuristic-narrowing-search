@@ -1,7 +1,7 @@
-load ../../heuristic-search/invariant.maude
 load ../../models/onethirdrule-vu-narrow.maude
+load ../../heuristic-search/invariant.maude
 
-mod ONETHIRDRULE-VU-NARROW-INVARIANT-HALF is
+mod ONETHIRDRULE-VU-NARROW-WITH-INV is
     protecting ONETHIRDRULE-VU-NARROW .
     including INVARIANT .
 

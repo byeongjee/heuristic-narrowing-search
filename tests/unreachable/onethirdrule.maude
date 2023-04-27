@@ -1,0 +1,40 @@
+load ../../heuristic-search/main.maude
+load ../model-extensions/onethirdrule-index.maude
+load ../model-extensions/onethirdrule-scoring-functions.maude
+load ../model-extensions/onethirdrule-invariant.maude
+
+
+mod ONETHIRDRULE-TEST-SCORE1 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE1 .
+    protecting HEURISTIC-NARROWING .
+endm
+
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-WITH-INV, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
+    'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
+    none, delay filter, 5) .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVISIBLE-WITH-INV, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
+    'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
+    none, delay filter, 5) .
+
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-INVISIBLE-WITH-INV, false),
+    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
+    'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
+    (['vote-true, any] ; 
+    ['vote-false, any] ; 
+    ['receive-true-vote, any] ; 
+    ['receive-false-vote, any]),
+    delay filter, 5) .

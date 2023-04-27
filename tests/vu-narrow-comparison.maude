@@ -1,7 +1,6 @@
 load ./model-extensions/onethirdrule-vu-narrow-invariant.maude
 
-vu-narrow [1] 
-ready({s, OIDS:OidSet, 
+vu-narrow [1] ready({s, OIDS:OidSet, 
     INITIAL:InitialObjectSet})
 =>* 
 ready({s, OIDS':OidSet, 

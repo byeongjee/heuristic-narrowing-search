@@ -6,8 +6,6 @@ load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
 
-set include BOOL off .
-
 
 mod CONFIGURATION is
     protecting NODE .
@@ -58,6 +56,7 @@ mod GLOBAL is
     protecting CONFIGURATION .
     protecting FVP-NAT .
     including STATE .
+    protecting BOOL .
 
     sort InternalState .
 
@@ -68,6 +67,7 @@ endm
 
 mod INV is
     protecting GLOBAL .
+    protecting BOOL .
 
     op invariant : InternalState -> Bool .
     var IS : InternalState .

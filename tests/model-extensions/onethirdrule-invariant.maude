@@ -1,5 +1,5 @@
-
 load ../../models/onethirdrule.maude
+load ../../models/onethirdrule-vu-narrow.maude
 load ../../models/onethirdrule-no-message-loss.maude
 load ../../models/onethirdrule-no-value-ordering.maude
 load ../../models/onethirdrule-invisible.maude
@@ -38,36 +38,6 @@ mod ONETHIRDRULE-WITH-INV is
     eq isThresholdValid(OIDS, Z) = false .
 endm
 
-mod ONETHIRDRULE-WITH-INV is
-    protecting ONETHIRDRULE .
-    including INVARIANT .
-
-    var N : Nat .
-    var CONF : Configuration .
-    var M : Msg .
-    vars O O' : Oid .
-    var C : Cid .
-    vars OIDS NEIGHBORS : OidSet .
-    var Z : Zero .
-
-    eq inv({N, OIDS, CONF}) 
-    = noDuplicate(OIDS) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
-    eq initialCond(SK:[State]) = true .
-
-    op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
-    eq getOids(M CONF) =  getOids(CONF) .
-    eq getOids(none) =  none .
-
-    op noDuplicate : OidSet -> Bool [memo] .
-    eq noDuplicate(O ; O ; OIDS) = false .
-
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
-endm
 
 mod ONETHIRDRULE-INVISIBLE-WITH-INV is
     protecting ONETHIRDRULE-INVISIBLE .
