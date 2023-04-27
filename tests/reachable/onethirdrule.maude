@@ -22,6 +22,7 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     protecting HEURISTIC-NARROWING .
 endm
 
+set print attribute on .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-WITH-INV, false),
@@ -29,8 +30,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -40,8 +40,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -55,7 +54,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
-    delay filter) .
+    delay filter, unlimited) .
 
 do clear memo .
 
@@ -65,8 +64,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -76,8 +74,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -91,7 +88,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
-    delay filter) .
+    delay filter, unlimited) .
 
 do clear memo .
 
@@ -102,8 +99,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -113,8 +109,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]],
-    none,
-    delay filter) .
+    none, delay filter, unlimited) .
 
 do clear memo .
 
@@ -128,5 +123,5 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     ['vote-false, any] ; 
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
-    delay filter) .
+    delay filter, unlimited) .
 )

@@ -188,11 +188,20 @@ mod FOLDING-APPLICATION is
     if {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 endm
 
+fmod DEPTH-BOUND is
+    protecting NAT .
+    sort DepthBound .
+    subsort Nat < DepthBound .
+    op unlimited : -> DepthBound .
+
+endfm
+
 mod GET-CHILDREN is
     protecting META-LEVEL .
     protecting TERM-ITEM-SET .
+    protecting DEPTH-BOUND .
 
-    op getChildStates : Module TermItem VariantOptionSet -> TermItemSet [memo] .
+    op getChildStates : Module TermItem VariantOptionSet DepthBound -> TermItemSet [memo] .
     op getChildStatesUpToNth : Module TermItem VariantOptionSet Nat -> TermItemSet .
     op getChildStatesUpToNthInternal : Module TermItem VariantOptionSet Nat NarrowingApplyResult? -> TermItemSet .
 
@@ -207,7 +216,10 @@ mod GET-CHILDREN is
     vars L L' Q Q' F : Qid . 
     vars S1 S2 : Substitution .
 
-    eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
+    eq getChildStates(M, TI, VOS, unlimited) = getChildStatesUpToNth(M, TI, VOS, 0) .
+    ceq getChildStates(M, TI, VOS, D) = getChildStatesUpToNth(M, TI, VOS, 0) 
+    if getDepth(TI) <= D .
+    eq getChildStates(M, TI, VOS, D) = emptyTermItemSet [owise] .
 
     eq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
     = getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
@@ -310,6 +322,11 @@ mod HEURISTIC-NARROWING is
     protecting INVISIBLE-TRANSITION .
     protecting RULE-INSTANCE .
 
+    sort HeuristicNarrowingSearchResult .
+    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op createSol : TermItem IndexedTermSet -> HeuristicNarrowingSearchResult .
+
     var M : Module .
     vars T T' T'' T0 I I' : Term .
     vars N D D' : Nat . var S : Score .
@@ -321,22 +338,16 @@ mod HEURISTIC-NARROWING is
     var RIS : RuleInstanceSet .
     var UP : UnificationPair .
     vars QUEUE QUEUE' : LTree{TermItem} .
+    var DB : DepthBound .
 
-    sort HeuristicNarrowingSearchResult .
-    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op createSol : TermItem IndexedTermSet -> HeuristicNarrowingSearchResult .
     eq createSol(< T, L, T0, I, Q, S, D >, IDXTS) = sol(T, S, D, length(IDXTS)) .
 
-
-    *** module, initial term, goal term, rule instance set, variant option set 
     op metaHeuristicNarrowingSearch : 
-    Module Term Term RuleInstanceSet VariantOptionSet 
+    Module Term Term RuleInstanceSet VariantOptionSet DepthBound
     -> HeuristicNarrowingSearchResult .
 
-    *** module, initial term, goal term, variant option set, pending, most general so far
     op metaHeuristicNarrowingSearchInternal : 
-    Module Term Term RuleInstanceSet VariantOptionSet LTree{TermItem} IndexedTermSet 
+    Module Term Term RuleInstanceSet VariantOptionSet DepthBound LTree{TermItem} IndexedTermSet 
     -> HeuristicNarrowingSearchResult .
 
 
@@ -352,20 +363,20 @@ mod HEURISTIC-NARROWING is
     eq insert(emptyTermItemSet, QUEUE) = QUEUE .
     eq insert(TI ;; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
-    eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, 
+    eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB,
     insert(< T, 'none, T, 'initialCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
     empty) .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE, IDXTS)
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
     = createSol(TI, IDXTS) 
     if TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE, IDXTS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, QUEUE' , IDXTS') 
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE' , IDXTS') 
     if TI := findMin(QUEUE)
-    /\ CHILDREN := getChildStates(M, TI, VOS)
+    /\ CHILDREN := getChildStates(M, TI, VOS, DB)
     /\ {FILTERED, IDXTS'} := applyFolding(M, 
         applyInvisibleTransitionReduction(M, RIS, CHILDREN), 
         IDXTS)
@@ -373,7 +384,7 @@ mod HEURISTIC-NARROWING is
     /\ D := getDepth(TI)
     [owise print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, empty, IDXTS)
+    eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, empty, IDXTS)
     = noSolution(length(IDXTS)) .
 
 endm
