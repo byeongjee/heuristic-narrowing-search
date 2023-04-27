@@ -3,7 +3,7 @@ load ./onethirdrule-base.maude
 set include BOOL off .
 
 
-mod ONETHIRDRULE is
+mod ONETHIRDRULE-NO-MESSAGE-LOSS-INVISIBLE is
     including ONETHIRDRULE-BASE .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
@@ -11,11 +11,6 @@ mod ONETHIRDRULE is
     var R N N' VT VF VA : Nat .
     var Z : Zero .
     vars V : Value .
-
-    rl [loss] : 
-    {N, OIDS, M CONF}
-    =>
-    {N, OIDS, CONF} [narrowing] .
 
     op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
@@ -85,18 +80,18 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [updateTrue-2] : 
+    eq [updateTrue-2] : 
     updateTrue(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
     )
-    =>
+    =
     {N, OIDS,
         < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [updateFalse-1] : 
     {N, OIDS,
@@ -111,18 +106,18 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [updateFalse-2] : 
+    eq [updateFalse-2] : 
     updateFalse(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
     )
-    =>
+    =
     {N, OIDS,
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [narrowing] .
+    } [variant] .
 
 endm
 

@@ -3,7 +3,7 @@ load ./onethirdrule-base.maude
 set include BOOL off .
 
 
-mod ONETHIRDRULE is
+mod ONETHIRDRULE-NO-MESSAGE-LOSS is
     including ONETHIRDRULE-BASE .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
@@ -11,11 +11,6 @@ mod ONETHIRDRULE is
     var R N N' VT VF VA : Nat .
     var Z : Zero .
     vars V : Value .
-
-    rl [loss] : 
-    {N, OIDS, M CONF}
-    =>
-    {N, OIDS, CONF} [narrowing] .
 
     op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .

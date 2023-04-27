@@ -1,7 +1,3 @@
---- The variant of the onethirdrule that embeds invariants in the model, 
---- which can be tested using the "vu-narrow" command."
---- static invisible transition-based reduction is applied
-
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
@@ -59,31 +55,17 @@ mod GLOBAL is
     protecting FVP-NAT .
     including STATE .
 
-    sort InternalState .
-
-    op {_,_,_} : Nat OidSet Configuration -> InternalState [ctor] .
-    op check : [Bool] InternalState -> State [ctor] .
-    op ready : InternalState -> State [ctor] .
-endm
-
-mod INV is
-    protecting GLOBAL .
-
-    op invariant : InternalState -> Bool .
-    var IS : InternalState .
-    var B : [Bool] .
-    ceq check(B, IS) = ready(IS) if B =/= false .
+    op {_,_,_} : Nat OidSet Configuration -> State [ctor] .
 endm
 
 
-mod ONETHIRDRULE-VU-NARROW is
+mod ONETHIRDRULE is
     including GLOBAL .
     protecting VALUE .
     protecting MULTICAST .
     protecting BOOL .
     protecting FVP-NAT .
     protecting FVP-BOOL .
-    protecting INV .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OIDS OIDS' : OidSet . 
@@ -92,204 +74,167 @@ mod ONETHIRDRULE-VU-NARROW is
     vars V : Value .
 
     rl [loss] : 
-    ready({N, OIDS, M CONF})
+    {N, OIDS, M CONF}
     =>
-    check(invariant({N, OIDS, CONF}),
-        {N, OIDS, CONF}) [narrowing] .
+    {N, OIDS, CONF} [narrowing] .
 
     rl [vote-true] : 
-    ready({N, O ; OIDS,
+    {N, O ; OIDS,
         < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
         CONF
-    })
+    }
     =>
-    check(
-        invariant({N, O ; OIDS,
+    {N, O ; OIDS,
         < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
         (multicast trueVote(R) from O to OIDS)
         CONF
-    }),
-        {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(R) from O to OIDS)
-        CONF
-    }) [narrowing metadata "invisible"] .
+    } [narrowing metadata "invisible"] .
 
 
     rl [vote-false] : 
-    ready({N, O ; OIDS,
+    {N, O ; OIDS,
         < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
         CONF
-    })
+    }
     =>
-    check(
-        invariant({N, O ; OIDS,
+    {N, O ; OIDS,
         < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
         (multicast falseVote(R) from O to OIDS)
         CONF
-    }),
-        {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(R) from O to OIDS)
-        CONF
-    }) [narrowing metadata "invisible"] .
+    } [narrowing metadata "invisible"] .
 
 
     rl [receive-true-vote] :
-    ready({N, OIDS,
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         (multicast trueVote(R) from O' to (O ; OIDS'))
         CONF
-    }) =>
-    check(invariant({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
-        (multicast trueVote(R) from O' to OIDS')  
-        CONF
-    }),
+    } =>
     {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
         (multicast trueVote(R) from O' to OIDS')  
         CONF
-    }) [narrowing metadata "invisible"] .
+    } [narrowing metadata "invisible"] .
 
     rl [receive-false-vote] :
-    ready({N, OIDS,
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         (multicast falseVote(R) from O' to (O ; OIDS'))
         CONF
-    }) =>
-    check(invariant({N, OIDS,
+    } =>
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
         (multicast falseVote(R) from O' to OIDS')  
         CONF
-    }), {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
-        (multicast falseVote(R) from O' to OIDS')  
-        CONF
-    }) [narrowing metadata "invisible"] .
+    } [narrowing metadata "invisible"] .
 
 
-    op decideTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
-    op decideFalse : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
-    op updateTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
-    op updateFalse : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
+    op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
 
     op _<=_ : Nat Nat -> Bool' .
     eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :
-    ready({N, OIDS,
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         CONF
-    })
+    }
     =>
-    check(
-        invariant({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
-        CONF}),
     decideTrue(N <= VT,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
-    ))
-    [narrowing] .
+    ) [narrowing] .
 
-    eq [decideTrue-2] :
+    rl [decideTrue-2] :
     decideTrue(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, ATTS:U24S >,
         CONF
     ) 
-    =
+    =>
     {N, OIDS,
         < O : Node | status : (R, finished), decision : true, ATTS:U24S  >
         CONF
-    } [variant] .
+    } [narrowing] .
 
     rl [decideFalse-1] :
-    ready({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
+    {N, OIDS,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         CONF
-    })
+    }
     =>
-    check(
-        invariant({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
-        CONF})
-        ,decideFalse(N <= VF,
+    decideFalse(N <= VF,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
-    )) [narrowing] .
+    ) [narrowing] .
 
-    eq [decideFalse-2] :
+    rl [decideFalse-2] :
     decideFalse(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U24S >,
         CONF)
-    =
+    =>
     {N, OIDS,
         < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U24S >
         CONF
-    } [variant] .
+    } [narrowing] .
 
     rl [updateTrue-1] : 
-    ready({N, OIDS,
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
         CONF
-    })
+    }
     =>
-    check(
-        invariant({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
-        CONF}),
-        updateTrue(
+    updateTrue(
         (s VT <=  N) and (N <= VA) and (VF <= VT),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
-    )) [narrowing] .
+    ) [narrowing] .
 
-    eq [updateTrue-2] : 
+    rl [updateTrue-2] : 
     updateTrue(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
     )
-    =
+    =>
     {N, OIDS,
         < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [variant] .
+    } [narrowing] .
 
     rl [updateFalse-1] : 
-    ready({N, OIDS,
+    {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >
         CONF
-    })
+    }
     =>
-    check(invariant({N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >
-        CONF}),
     updateFalse(
         (s VF <= N) and (N <= VA) and (s VT <= VF),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
         CONF
-    )) [narrowing] .
+    ) [narrowing] .
 
-    eq [updateFalse-2] : 
+    rl [updateFalse-2] : 
     updateFalse(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
     )
-    =
+    =>
     {N, OIDS,
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [variant] .
+    } [narrowing] .
 
 endm
+

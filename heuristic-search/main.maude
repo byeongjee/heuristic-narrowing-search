@@ -30,9 +30,14 @@ fmod TERM-ITEM is
     op _<=_ : TermItem TermItem -> Bool .
     eq < T, L, T0, I, Q, S, D > <= < T', L', T0', I', Q', S', D' > = le(S, S') .
 
-    op depth : TermItem -> Nat .
-    eq depth(< T, L, T0, I, Q, S, D >) = D .
+    op getDepth : TermItem -> Nat .
+    eq getDepth(< T, L, T0, I, Q, S, D >) = D .
  
+    op getLabel : TermItem -> Qid .
+    eq getLabel(< T, L, T0, I, Q, S, D >) = L .
+
+    op getScore : TermItem -> Score .
+    eq getScore(< T, L, T0, I, Q, S, D >) = S .
 endfm
 
 fmod INDEXED-TERM-SET is
@@ -282,6 +287,12 @@ mod INVISIBLE-TRANSITION is
       else {MATCHED, < T, L, T0, I, Q, S, D > ;; NMATCHED} fi
     if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) .
 
+    op invisibleScore : Qid -> Nat .
+    eq invisibleScore('vote-true) = 0 .
+    eq invisibleScore('vote-false) = 0 .
+    eq invisibleScore('receive-true-vote) = 1 .
+    eq invisibleScore('receive-false-vote) = 1 .
+
     ceq removeSubsumed(M, {IDX, T0, TI}  ;; {IDX, T0', TI'} ;; IDXTIS) 
     = removeSubsumed(M, {IDX, T0', TI'} ;; IDXTIS)
     if TI' <= TI
@@ -359,7 +370,7 @@ mod HEURISTIC-NARROWING is
         applyInvisibleTransitionReduction(M, RIS, CHILDREN), 
         IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
-    /\ D := depth(TI)
+    /\ D := getDepth(TI)
     [owise print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, empty, IDXTS)

@@ -1,4 +1,4 @@
-load ../models/onethirdrule-vu-narrow.maude
+load ./model-extensions/onethirdrule-vu-narrow-invariant.maude
 
 vu-narrow [1] 
 ready({s, OIDS:OidSet, 

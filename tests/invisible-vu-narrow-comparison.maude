@@ -22,11 +22,6 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     protecting HEURISTIC-NARROWING .
 endm
 
-*** TODO: Add more tests for each scoring function
-*** s ss sss decisio
-***    upTerm(ready({s s s, OIDS',
-***    < O : Node | decision : true, ATTS:U124S >
-***    CONF})),
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-VU-NARROW-INVARIANT-HALF, false),

@@ -3,7 +3,9 @@ load ./onethirdrule-base.maude
 set include BOOL off .
 
 
-mod ONETHIRDRULE is
+
+
+mod ONETHIRDRULE-NO-VALUE-ORDERING is
     including ONETHIRDRULE-BASE .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
@@ -37,17 +39,17 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [decideTrue-2] :
+    eq [decideTrue-2] :
     decideTrue(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, ATTS:U24S >,
         CONF
     ) 
-    =>
+    =
     {N, OIDS,
         < O : Node | status : (R, finished), decision : true, ATTS:U24S  >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [decideFalse-1] :
     {N, OIDS,
@@ -61,16 +63,16 @@ mod ONETHIRDRULE is
         CONF
     ) [narrowing] .
 
-    rl [decideFalse-2] :
+    eq [decideFalse-2] :
     decideFalse(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U24S >,
         CONF)
-    =>
+    =
     {N, OIDS,
         < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U24S >
         CONF
-    } [narrowing] .
+    } [variant] .
 
     rl [updateTrue-1] : 
     {N, OIDS,
@@ -79,7 +81,7 @@ mod ONETHIRDRULE is
     }
     =>
     updateTrue(
-        (s VT <=  N) and (N <= VA) and (VF <= VT),
+        (s VT <=  N) and (N <= VA),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
@@ -105,7 +107,7 @@ mod ONETHIRDRULE is
     }
     =>
     updateFalse(
-        (s VF <= N) and (N <= VA) and (s VT <= VF),
+        (s VF <= N) and (N <= VA),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
         CONF

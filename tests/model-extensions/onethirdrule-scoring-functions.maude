@@ -15,6 +15,7 @@ fmod ONETHIRDRULE-SCORE1 is
     eq score(T, D) = D .
 endfm
 
+--- for score2 and score3
 fmod ONETHIRDRULE-SCORE-BASE is
     including SCORE .
     protecting INT .
