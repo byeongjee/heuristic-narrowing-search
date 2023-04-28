@@ -307,8 +307,7 @@ mod INVISIBLE-TRANSITION is
 
     ceq removeSubsumed(M, {IDX, T0, TI}  ;; {IDX, T0', TI'} ;; IDXTIS) 
     = removeSubsumed(M, {IDX, T0', TI'} ;; IDXTIS)
-    if TI' <= TI
-    /\ T0 isSubsumedBy T0' under M .
+    if T0 isSubsumedBy T0' under M .
     eq removeSubsumed(M, IDXTIS) = toTermItemSet(IDXTIS) [owise] .
 endm 
 
