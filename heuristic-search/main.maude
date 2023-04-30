@@ -266,49 +266,33 @@ mod INVISIBLE-TRANSITION is
     var IDX : Index .
     var RIS : RuleInstanceSet .
 
-    sort SplitResult .
-    op {_,_} : TermItemSet TermItemSet -> SplitResult [ctor] .
-
-    op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
-    op splitReducible : Module RuleInstanceSet TermItemSet -> SplitResult .
-    op removeSubsumed : Module IndexedTermItemSet -> TermItemSet .
-
     sorts IndexedTermItem IndexedTermItemSet .
     subsort IndexedTermItem < IndexedTermItemSet .
 
     op emptyIndexedTermItemSet : -> IndexedTermItemSet .
-    op {_,_,_} : Index Term TermItem -> IndexedTermItem [ctor] .
+    op {_,_,_,_} : Index Term Qid TermItem -> IndexedTermItem [ctor] .
     op _;;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: emptyIndexedTermItemSet] .
 
+    op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
+    op removeSubsumed : Module RuleInstanceSet IndexedTermItemSet -> IndexedTermItemSet .
     op createIndex : TermItemSet Nat -> IndexedTermItemSet .
+    op toTermItemSet : IndexedTermItemSet -> TermItemSet .
+
     eq createIndex(emptyTermItemSet, N) = emptyIndexedTermItemSet .
     eq createIndex(< T, L, T0, I, Q, S, D > ;; TIS, N) = 
-    {createIndex(T0), rename(T0, N), < T, L, T0, I, Q, S, D >} ;; createIndex(TIS, N + 1) .
+    {createIndex(T0), rename(T0, N), L, < T, L, T0, I, Q, S, D >} ;; createIndex(TIS, N + 1) .
 
-    op toTermItemSet : IndexedTermItemSet -> TermItemSet .
     eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
-    eq toTermItemSet({IDX, T0, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
+    eq toTermItemSet({IDX, T0, L, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
 
-    ceq applyInvisibleTransitionReduction(M, RIS, TIS) = NMATCHED ;; removeSubsumed(M, IDXTIS) 
-    if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) 
-    /\ IDXTIS := createIndex(MATCHED, 0) .
+    eq applyInvisibleTransitionReduction(M, RIS, TIS) 
+    = toTermItemSet(removeSubsumed(M, RIS, createIndex(TIS, 0))) .
 
-    eq splitReducible(M, RIS, emptyTermItemSet) = {emptyTermItemSet, emptyTermItemSet} .
-    ceq splitReducible(M, RIS, < T, L, T0, I, Q, S, D > ;; TIS) 
-    = if isRuleInstance(M, RIS, L, T0) then {< T, L, T0, I, Q, S, D > ;; MATCHED, NMATCHED}
-      else {MATCHED, < T, L, T0, I, Q, S, D > ;; NMATCHED} fi
-    if {MATCHED, NMATCHED} := splitReducible(M, RIS, TIS) .
-
-    op invisibleScore : Qid -> Nat .
-    eq invisibleScore('vote-true) = 0 .
-    eq invisibleScore('vote-false) = 0 .
-    eq invisibleScore('receive-true-vote) = 1 .
-    eq invisibleScore('receive-false-vote) = 1 .
-
-    ceq removeSubsumed(M, {IDX, T0, TI}  ;; {IDX, T0', TI'} ;; IDXTIS) 
-    = removeSubsumed(M, {IDX, T0', TI'} ;; IDXTIS)
-    if T0 isSubsumedBy T0' under M .
-    eq removeSubsumed(M, IDXTIS) = toTermItemSet(IDXTIS) [owise] .
+    ceq removeSubsumed(M, RIS, {IDX, T0, L, TI}  ;; {IDX, T0', L', TI'} ;; IDXTIS) 
+    = removeSubsumed(M, RIS, {IDX, T0', L', TI'} ;; IDXTIS)
+    if isRuleInstance(M, RIS, L', T0')
+    /\ T0 isSubsumedBy T0' under M .
+    eq removeSubsumed(M, RIS, IDXTIS) = IDXTIS [owise] .
 endm 
 
 mod HEURISTIC-NARROWING is
