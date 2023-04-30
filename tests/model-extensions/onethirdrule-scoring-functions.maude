@@ -31,16 +31,16 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     eq score(
             'decideTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = 0 .
     eq score(
             'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = 0 .
     eq score(
             'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = 0 .
     eq score(
             'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = 0 .
 
     eq score(
         '`{_`,_`,_`}[T, OIDT, NETL], D
