@@ -78,28 +78,52 @@ mod ONETHIRDRULE-BASE is
     =>
     {N, OIDS, CONF} [narrowing] .
 
-    rl [vote-true] : 
+    rl [vote-true-new] : 
     {N, O ; OIDS,
-        < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
+        < O : Node | status : (0, init), value : true, decision : nil, votes : (VT, VF, VA) > 
         CONF
     }
     =>
     {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(R) from O to OIDS)
+        < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(0) from O to OIDS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-true-existing] : 
+    {N, O ; OIDS,
+        < O : Node | status : (s R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    }
+    =>
+    {N, O ; OIDS,
+        < O : Node | status : (s R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(s R) from O to OIDS)
         CONF
     } [narrowing] .
 
 
-    rl [vote-false] : 
+    rl [vote-false-new] : 
     {N, O ; OIDS,
-        < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        < O : Node | status : (0, init), value : false, decision : nil, votes : (VT, VF, VA) > 
         CONF
     }
     =>
     {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(R) from O to OIDS)
+        < O : Node | status : (0, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(0) from O to OIDS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-false-existing] : 
+    {N, O ; OIDS,
+        < O : Node | status : (s R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    }
+    =>
+    {N, O ; OIDS,
+        < O : Node | status : (s R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(s R) from O to OIDS)
         CONF
     } [narrowing] .
 

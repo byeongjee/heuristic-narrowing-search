@@ -97,42 +97,78 @@ mod ONETHIRDRULE-VU-NARROW is
     check(invariant({N, OIDS, CONF}),
         {N, OIDS, CONF}) [narrowing] .
 
-    rl [vote-true] : 
+    rl [vote-true-new] : 
     ready({N, O ; OIDS,
-        < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
+        < O : Node | status : (0, init), value : true, decision : nil, votes : (VT, VF, VA) > 
         CONF
     })
     =>
     check(
         invariant({N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
         (multicast trueVote(R) from O to OIDS)
         CONF
     }),
         {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(R) from O to OIDS)
+        < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(0) from O to OIDS)
         CONF
-    }) [narrowing metadata "invisible"] .
+    }) [narrowing] .
 
-
-    rl [vote-false] : 
+    rl [vote-true-existing] : 
     ready({N, O ; OIDS,
-        < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        < O : Node | status : (s R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
         CONF
     })
     =>
     check(
         invariant({N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(R) from O to OIDS)
+        < O : Node | status : (s R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(s R) from O to OIDS)
         CONF
     }),
         {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(R) from O to OIDS)
+        < O : Node | status : (s R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(s R) from O to OIDS)
         CONF
-    }) [narrowing metadata "invisible"] .
+    }) [narrowing] .
+
+
+    rl [vote-false-new] : 
+    ready({N, O ; OIDS,
+        < O : Node | status : (0, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    })
+    =>
+    check(
+        invariant({N, O ; OIDS,
+        < O : Node | status : (0, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(0) from O to OIDS)
+        CONF
+    }),
+        {N, O ; OIDS,
+        < O : Node | status : (0, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(0) from O to OIDS)
+        CONF
+    }) [narrowing] .
+
+    rl [vote-false-existing] : 
+    ready({N, O ; OIDS,
+        < O : Node | status : (s R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    })
+    =>
+    check(
+        invariant({N, O ; OIDS,
+        < O : Node | status : (s R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(s R) from O to OIDS)
+        CONF
+    }),
+        {N, O ; OIDS,
+        < O : Node | status : (s R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(s R) from O to OIDS)
+        CONF
+    }) [narrowing] .
 
 
     rl [receive-true-vote] :
@@ -150,7 +186,7 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
         (multicast trueVote(R) from O' to OIDS')  
         CONF
-    }) [narrowing metadata "invisible"] .
+    }) [narrowing] .
 
     rl [receive-false-vote] :
     ready({N, OIDS,
@@ -166,7 +202,7 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
         (multicast falseVote(R) from O' to OIDS')  
         CONF
-    }) [narrowing metadata "invisible"] .
+    }) [narrowing] .
 
 
     op decideTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .

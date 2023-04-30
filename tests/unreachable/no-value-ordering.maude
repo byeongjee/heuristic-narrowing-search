@@ -33,8 +33,8 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
     'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
-    (['vote-true, any] ; 
-    ['vote-false, any] ; 
+    (['vote-true-existing, any] ; 
+    ['vote-false-existing, any] ; 
     ['receive-true-vote, any] ; 
     ['receive-false-vote, any]),
     delay filter, 5) .
