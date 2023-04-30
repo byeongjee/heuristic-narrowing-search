@@ -22,7 +22,6 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     protecting HEURISTIC-NARROWING .
 endm
 
-set print attribute on .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-WITH-INV, false),
