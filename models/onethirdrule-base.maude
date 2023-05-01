@@ -73,11 +73,6 @@ mod ONETHIRDRULE-BASE is
     var Z : Zero .
     vars V : Value .
 
-    rl [loss] : 
-    {N, OIDS, M CONF}
-    =>
-    {N, OIDS, CONF} [narrowing] .
-
     rl [vote-true-new] : 
     {N, O ; OIDS,
         < O : Node | status : (0, init), value : true, decision : nil, votes : (VT, VF, VA) > 
