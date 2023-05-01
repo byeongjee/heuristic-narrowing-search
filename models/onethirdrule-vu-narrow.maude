@@ -106,7 +106,7 @@ mod ONETHIRDRULE-VU-NARROW is
     check(
         invariant({N, O ; OIDS,
         < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(R) from O to OIDS)
+        (multicast trueVote(0) from O to OIDS)
         CONF
     }),
         {N, O ; OIDS,
