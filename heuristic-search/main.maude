@@ -47,7 +47,7 @@ fmod INDEXED-TERM-SET is
     protecting META-LEVEL .
 
     sort IndexedTerm . *** Nat is depth for debugging purpose
-    op `{_`,_`,_`,_`} : Term Term Index Nat -> IndexedTerm .
+    op `{_`,_`,_`} : Term Index Nat -> IndexedTerm .
 
     op createIndex : Term -> Index .
 
@@ -101,7 +101,7 @@ mod SUBSUMPTION-CHECK is
 
     eq T isSubsumedBy T' under M = metaMatch(M, T', T, nil, 0) =/= noMatch .
 
-    ceq ({T, I, IDX, D}) isSubsumedBy ({T', I', IDX, D'}, IDXTS) under M 
+    ceq ({T, IDX, D}) isSubsumedBy ({T', IDX, D'}, IDXTS) under M 
     = true
     if metaMatch(M, T', T, nil, 0) =/= noMatch .
 
@@ -118,7 +118,7 @@ mod RENAME is
     var F : Qid . var NETL : NeTermList .
 
     op rename : IndexedTerm -> IndexedTerm .
-    eq rename({T, I, IDX, D}) = {rename(T, D), I, IDX, D} .
+    eq rename({T, IDX, D}) = {rename(T, D), IDX, D} .
 
     op rename : NeTermList Nat -> NeTermList .
     eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
@@ -143,7 +143,7 @@ mod FOLDING-STATE-INSERTION is
 
     ceq insertState(M, IDXT, IDXTS)
     = subsumed if IDXT isSubsumedBy IDXTS under M .
-    eq insertState(M, {T, I, IDX, D}, IDXTS) = rename({T, I, IDX, D}), IDXTS [owise] .
+    eq insertState(M, {T, IDX, D}, IDXTS) = rename({T, IDX, D}), IDXTS [owise] .
 
 endm
 
@@ -171,7 +171,7 @@ mod FOLDING-APPLICATION is
 
     ceq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
     = {< T, L, T0, I, Q, S, D > ;; TIS' , IDXTS'' }
-    if IDXTS' := insertState(M, {T, I, createIndex(T), D}, IDXTS) 
+    if IDXTS' := insertState(M, {T, createIndex(T), D}, IDXTS) 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS').
 
     eq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
