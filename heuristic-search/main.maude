@@ -58,14 +58,14 @@ fmod INDEXED-TERM-SET is
     subsort IndexedTerm < IndexedTermSet .
 
     op empty : -> IndexedTermSet [ctor] .
-    op _`,_ : IndexedTermSet IndexedTermSet -> IndexedTermSet [ctor assoc comm id: empty] .
+    op _;_ : IndexedTermSet IndexedTermSet -> IndexedTermSet [ctor assoc comm id: empty] .
 
     *** for debugging purpose
     op length : IndexedTermSet -> Nat .
     var IDXT : IndexedTerm .
     var IDXTS : IndexedTermSet .
     eq length(IDXT) = 1 .
-    eq length(IDXT, IDXTS) = 1 + length(IDXTS) .
+    eq length(IDXT ; IDXTS) = 1 + length(IDXTS) .
     eq length(empty) = 0 .
 endfm
 
@@ -76,14 +76,14 @@ fmod TERM-ITEM-SET is
     subsort TermItem < TermItemSet .
 
     op empty : -> TermItemSet [ctor] .
-    op _;;_ : TermItemSet TermItemSet -> TermItemSet [ctor assoc comm id: empty] .
+    op _;_ : TermItemSet TermItemSet -> TermItemSet [ctor assoc comm id: empty] .
 
     var T : TermItem .
     var TIS : TermItemSet .
 
     op length : TermItemSet -> Nat .
     eq length(empty) = 0 .
-    eq length(T ;; TIS) = 1 + length(TIS) .
+    eq length(T ; TIS) = 1 + length(TIS) .
 endfm
 
 
@@ -104,7 +104,7 @@ mod SUBSUMPTION-CHECK is
 
     eq T isSubsumedBy T' under M = metaMatch(M, T', T, nil, 0) =/= noMatch .
 
-    ceq ({T, IDX, D}) isSubsumedBy ({T', IDX, D'}, IDXTS) under M 
+    ceq ({T, IDX, D}) isSubsumedBy ({T', IDX, D'} ; IDXTS) under M 
     = true
     if metaMatch(M, T', T, nil, 0) =/= noMatch .
 
@@ -146,7 +146,7 @@ mod FOLDING-STATE-INSERTION is
 
     ceq insertState(M, IDXT, IDXTS)
     = subsumed if IDXT isSubsumedBy IDXTS under M .
-    eq insertState(M, {T, IDX, D}, IDXTS) = rename({T, IDX, D}), IDXTS [owise] .
+    eq insertState(M, {T, IDX, D}, IDXTS) = rename({T, IDX, D}) ; IDXTS [owise] .
 
 endm
 
@@ -172,12 +172,12 @@ mod FOLDING-APPLICATION is
 
     eq applyFolding(M, empty, IDXTS) = {empty, IDXTS} .
 
-    ceq applyFolding(M, < T, L, T0, Q, S, D > ;; TIS, IDXTS) 
-    = {< T, L, T0, Q, S, D > ;; TIS' , IDXTS'' }
+    ceq applyFolding(M, < T, L, T0, Q, S, D > ; TIS, IDXTS) 
+    = {< T, L, T0, Q, S, D > ; TIS' , IDXTS'' }
     if IDXTS' := insertState(M, {T, createIndex(T), D}, IDXTS) 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS').
 
-    eq applyFolding(M, < T, L, T0, Q, S, D > ;; TIS, IDXTS) 
+    eq applyFolding(M, < T, L, T0, Q, S, D > ; TIS, IDXTS) 
     = applyFolding(M, TIS, IDXTS) [owise] .
 endm
 
@@ -211,7 +211,7 @@ mod GET-CHILDREN is
 
     ceq getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN) 
     = < T', L', applySubstitution(M, T, S1), Q', score(T', D + 1), D + 1 > 
-        ;; getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN + 1) 
+        ; getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN + 1) 
     if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
     eq getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN) 
@@ -228,10 +228,10 @@ mod FILTER-INVALID is
     var TI : TermItem . 
     var TIS : TermItemSet .
 
-    ceq filterInvalid(M, TI ;; TIS) = TI ;; filterInvalid(M, TIS)
+    ceq filterInvalid(M, TI ; TIS) = TI ; filterInvalid(M, TIS)
     if getTerm(metaReduce(M, 'inv[getTerm(TI)])) =/= 'false.Bool .
 
-    eq filterInvalid(M, TI ;; TIS) = filterInvalid(M, TIS) [owise] .
+    eq filterInvalid(M, TI ; TIS) = filterInvalid(M, TIS) [owise] .
 
     eq filterInvalid(M, empty) = empty .
 endm
@@ -260,7 +260,7 @@ mod INVISIBLE-TRANSITION is
 
     op emptyIndexedTermItemSet : -> IndexedTermItemSet .
     op {_,_,_,_} : Index Term Qid TermItem -> IndexedTermItem [ctor] .
-    op _;;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: emptyIndexedTermItemSet] .
+    op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: emptyIndexedTermItemSet] .
 
     op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
     op removeSubsumed : Module RuleInstanceSet IndexedTermItemSet -> IndexedTermItemSet .
@@ -268,17 +268,17 @@ mod INVISIBLE-TRANSITION is
     op toTermItemSet : IndexedTermItemSet -> TermItemSet .
 
     eq createIndex(empty, N) = emptyIndexedTermItemSet .
-    eq createIndex(< T, L, T0, Q, S, D > ;; TIS, N) = 
-    {createIndex(T0), rename(T0, N), L, < T, L, T0, Q, S, D >} ;; createIndex(TIS, N + 1) .
+    eq createIndex(< T, L, T0, Q, S, D > ; TIS, N) = 
+    {createIndex(T0), rename(T0, N), L, < T, L, T0, Q, S, D >} ; createIndex(TIS, N + 1) .
 
     eq toTermItemSet(emptyIndexedTermItemSet) = empty .
-    eq toTermItemSet({IDX, T0, L, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
+    eq toTermItemSet({IDX, T0, L, TI} ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
 
     eq applyInvisibleTransitionReduction(M, RIS, TIS) 
     = toTermItemSet(removeSubsumed(M, RIS, createIndex(TIS, 0))) .
 
-    ceq removeSubsumed(M, RIS, {IDX, T0, L, TI}  ;; {IDX, T0', L', TI'} ;; IDXTIS) 
-    = removeSubsumed(M, RIS, {IDX, T0', L', TI'} ;; IDXTIS)
+    ceq removeSubsumed(M, RIS, {IDX, T0, L, TI}  ; {IDX, T0', L', TI'} ; IDXTIS) 
+    = removeSubsumed(M, RIS, {IDX, T0', L', TI'} ; IDXTIS)
     if isRuleInstance(M, RIS, L', T0')
     /\ T0 isSubsumedBy T0' under M .
     eq removeSubsumed(M, RIS, IDXTIS) = IDXTIS [owise] .
@@ -335,7 +335,7 @@ mod HEURISTIC-NARROWING is
 
     op insert : TermItemSet LTree{TermItem} -> LTree{TermItem} .
     eq insert(empty, QUEUE) = QUEUE .
-    eq insert(TI ;; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
+    eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
     eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB,
