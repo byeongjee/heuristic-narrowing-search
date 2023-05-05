@@ -11,7 +11,7 @@ mod SORTS is
 
   op status`:_ : Status -> StatusAttr [ctor] .
   op value`:_ : Value -> ValueAttr [ctor] .
-  op decision`:_ : Value -> DecisionAttr [ctor] .
+  op decision`:_ : Value? -> DecisionAttr [ctor] .
   op votes`:_ : Vote -> VoteAttr [ctor] .
   op neighbors`:_ : OidSet -> NeighborsAttr [ctor] .
 
@@ -224,7 +224,7 @@ mod INITIAL-SORTS is
   subsort InitialVoteAttr < VoteAttr .
 
   op status`:_ : InitialStatus -> InitialStatusAttr [ctor] .
-  op decision`:_ : NilValue -> InitialDecisionAttr [ctor] .
+  op decision`:_ : InitialValue -> InitialDecisionAttr [ctor] .
   op votes`:_ : InitialVote -> InitialVoteAttr [ctor] .
 
   sort IU1S .

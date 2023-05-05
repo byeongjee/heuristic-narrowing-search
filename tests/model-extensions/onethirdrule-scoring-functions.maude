@@ -169,7 +169,7 @@ fmod ONETHIRDRULE-SCORE5 is
     eq scoreConf('<_:_|_>[OT, CT, 
         '_`,_['status`:_['_`,_[NT, ST]], NETL]
     ]) 
-    =  100 + 10 * max(2, toNumber(NT)) .
+    = 1 . 
 
     eq scoreConf('multicast_from_to_[NETL]) 
     = 0 .

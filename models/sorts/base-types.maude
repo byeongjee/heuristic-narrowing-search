@@ -3,11 +3,11 @@ load fvp-bool.maude
 mod VALUE is
     protecting FVP-BOOL .
 
-    sorts Value NilValue NonNilValue .
-    subsort NilValue NonNilValue < Value .
-    subsort Bool' < NonNilValue .
+    sorts Value InitialValue Value? .
+    subsort Bool' < Value < Value? .
+    subsort InitialValue < Value? .
 
-    op nil : -> NilValue [ctor] .
+    op nil : -> InitialValue [ctor] .
 endm
 
 fmod STEP is

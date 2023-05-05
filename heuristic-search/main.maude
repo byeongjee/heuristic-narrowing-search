@@ -136,17 +136,14 @@ mod FOLDING-STATE-INSERTION is
 
     op subsumed : -> InsertStateResult [ctor] .
     op insertState : Module IndexedTerm IndexedTermSet -> InsertStateResult .
-    op insertStateInternal : IndexedTerm IndexedTermSet Bool -> InsertStateResult .
 
     var M : Module .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
     vars T I : Term . var IDX : Index . var D : Nat .
 
-    eq insertState(M, IDXT, IDXTS)
-    = insertStateInternal(IDXT, IDXTS, IDXT isSubsumedBy IDXTS under M) .
-
-    eq insertStateInternal(IDXT, IDXTS, true) = subsumed .
-    eq insertStateInternal({T, I, IDX, D}, IDXTS, false) = rename({T, I, IDX, D}), IDXTS .
+    ceq insertState(M, IDXT, IDXTS)
+    = subsumed if IDXT isSubsumedBy IDXTS under M .
+    eq insertState(M, {T, I, IDX, D}, IDXTS) = rename({T, I, IDX, D}), IDXTS [owise] .
 
 endm
 
@@ -169,23 +166,16 @@ mod FOLDING-APPLICATION is
 
     *** module, children, most general so far
     op applyFolding : Module TermItemSet IndexedTermSet -> FoldingResult .
-    op applyFoldingInternal : Module TermItemSet IndexedTermSet TermItem InsertStateResult -> FoldingResult .
 
     eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
 
-    eq applyFolding(M, < T, L, T0, 'false.Bool, Q, S, D > ;; TIS, IDXTS) 
-    = applyFolding(M, TIS, IDXTS) .
+    ceq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
+    = {< T, L, T0, I, Q, S, D > ;; TIS' , IDXTS'' }
+    if IDXTS' := insertState(M, {T, I, createIndex(T), D}, IDXTS) 
+    /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS').
 
     eq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
-    = applyFoldingInternal(M, TIS, IDXTS, < T, L, T0, I, Q, S, D >, 
-    insertState(M, {T, I, createIndex(T), D}, IDXTS)) .
-
-    eq applyFoldingInternal(M, TIS, IDXTS, TI, subsumed)
-    = applyFolding(M, TIS, IDXTS) .
-
-    ceq applyFoldingInternal(M, TIS, IDXTS, TI, IDXTS')
-    = {TI ;; TIS', IDXTS''}
-    if {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
+    = applyFolding(M, TIS, IDXTS) [owise] .
 endm
 
 fmod DEPTH-BOUND is

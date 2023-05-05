@@ -5,6 +5,5 @@ fmod FVP-NAT is
     subsort Zero < Nat .
     op 0 : -> Zero [ctor] .
     op s : -> Nat [ctor] .
-    ops 1 2 3 : -> Nat .
     op __ : Nat Nat -> Nat [ctor assoc comm id: 0].
 endfm
