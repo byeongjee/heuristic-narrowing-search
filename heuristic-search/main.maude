@@ -75,14 +75,14 @@ fmod TERM-ITEM-SET is
     sort TermItemSet .
     subsort TermItem < TermItemSet .
 
-    op emptyTermItemSet : -> TermItemSet [ctor] .
-    op _;;_ : TermItemSet TermItemSet -> TermItemSet [ctor assoc comm id: emptyTermItemSet] .
+    op empty : -> TermItemSet [ctor] .
+    op _;;_ : TermItemSet TermItemSet -> TermItemSet [ctor assoc comm id: empty] .
 
     var T : TermItem .
     var TIS : TermItemSet .
 
     op length : TermItemSet -> Nat .
-    eq length(emptyTermItemSet) = 0 .
+    eq length(empty) = 0 .
     eq length(T ;; TIS) = 1 + length(TIS) .
 endfm
 
@@ -170,7 +170,7 @@ mod FOLDING-APPLICATION is
     *** module, children, most general so far
     op applyFolding : Module TermItemSet IndexedTermSet -> FoldingResult .
 
-    eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
+    eq applyFolding(M, empty, IDXTS) = {empty, IDXTS} .
 
     ceq applyFolding(M, < T, L, T0, Q, S, D > ;; TIS, IDXTS) 
     = {< T, L, T0, Q, S, D > ;; TIS' , IDXTS'' }
@@ -215,7 +215,7 @@ mod GET-CHILDREN is
     if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
     eq getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN) 
-    = emptyTermItemSet [owise] .
+    = empty [owise] .
 endm
 
 mod FILTER-INVALID is
@@ -233,7 +233,7 @@ mod FILTER-INVALID is
 
     eq filterInvalid(M, TI ;; TIS) = filterInvalid(M, TIS) [owise] .
 
-    eq filterInvalid(M, emptyTermItemSet) = emptyTermItemSet .
+    eq filterInvalid(M, empty) = empty .
 endm
 
 mod INVISIBLE-TRANSITION is
@@ -267,11 +267,11 @@ mod INVISIBLE-TRANSITION is
     op createIndex : TermItemSet Nat -> IndexedTermItemSet .
     op toTermItemSet : IndexedTermItemSet -> TermItemSet .
 
-    eq createIndex(emptyTermItemSet, N) = emptyIndexedTermItemSet .
+    eq createIndex(empty, N) = emptyIndexedTermItemSet .
     eq createIndex(< T, L, T0, Q, S, D > ;; TIS, N) = 
     {createIndex(T0), rename(T0, N), L, < T, L, T0, Q, S, D >} ;; createIndex(TIS, N + 1) .
 
-    eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
+    eq toTermItemSet(emptyIndexedTermItemSet) = empty .
     eq toTermItemSet({IDX, T0, L, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
 
     eq applyInvisibleTransitionReduction(M, RIS, TIS) 
@@ -334,7 +334,7 @@ mod HEURISTIC-NARROWING is
     eq isSolution(M, TI, T') = false [owise] .
 
     op insert : TermItemSet LTree{TermItem} -> LTree{TermItem} .
-    eq insert(emptyTermItemSet, QUEUE) = QUEUE .
+    eq insert(empty, QUEUE) = QUEUE .
     eq insert(TI ;; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
     eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
