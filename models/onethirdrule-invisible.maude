@@ -17,14 +17,6 @@ mod ONETHIRDRULE-INVISIBLE is
     =>
     {N, OIDS, CONF} [narrowing] .
 
-    op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
-
-    op _<=_ : Nat Nat -> Bool' .
-    eq N <= N N' = true [variant] .
-
     rl [decideTrue-1] :
     {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
@@ -79,7 +71,7 @@ mod ONETHIRDRULE-INVISIBLE is
     }
     =>
     updateTrue(
-        (s VT <=  N) and (N <= VA) and (VF <= VT),
+        (VT <  N) and (N <= VA) and (VF <= VT),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
@@ -105,7 +97,7 @@ mod ONETHIRDRULE-INVISIBLE is
     }
     =>
     updateFalse(
-        (s VF <= N) and (N <= VA) and (s VT <= VF),
+        (VF < N) and (N <= VA) and (VT < VF),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
         CONF

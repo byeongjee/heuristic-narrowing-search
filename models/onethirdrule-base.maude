@@ -146,5 +146,15 @@ mod ONETHIRDRULE-BASE is
         (multicast falseVote(R) from O' to OIDS')  
         CONF
     } [narrowing] .
+
+    op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
+    op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
+
+    op _<=_ : Nat Nat -> Bool' .
+    op _<_ : Nat Nat -> Bool' .
+    eq N <= N N' = true [variant] .
+    eq N < N' = s N <= N' [variant] .
 endm
 
