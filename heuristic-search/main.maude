@@ -13,34 +13,34 @@ fmod TERM-ITEM is
 
     sort TermItem .
 
-    op <_,_,_,_,_,_,_> : Term Qid Term Term Qid Score Nat -> TermItem [ctor] .
+    op <_,_,_,_,_,_> : Term Qid Term Qid Score Nat -> TermItem [ctor] .
     --- resulting term, rule label, term, constraint, variable prefix, score, depth
 
-    vars T T' I I' T0 T0' : Term .
+    vars T T' T0 T0' : Term .
     vars N N' D D' : Nat .
     vars S S' : Score .
     vars Q Q' L L' : Qid .
 
     op _<_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > < < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, L, T0, Q, S, D > < < T', L', T0', Q', S', D' > = le(S, S') .
 
     op _>_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > > < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, L, T0, Q, S, D > > < T', L', T0', Q', S', D' > = le(S, S') .
 
     op _<=_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > <= < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, L, T0, Q, S, D > <= < T', L', T0', Q', S', D' > = le(S, S') .
 
     op getTerm : TermItem -> Term .
-    eq getTerm(< T, L, T0, I, Q, S, D >) = T .
+    eq getTerm(< T, L, T0, Q, S, D >) = T .
 
     op getDepth : TermItem -> Nat .
-    eq getDepth(< T, L, T0, I, Q, S, D >) = D .
+    eq getDepth(< T, L, T0, Q, S, D >) = D .
  
     op getLabel : TermItem -> Qid .
-    eq getLabel(< T, L, T0, I, Q, S, D >) = L .
+    eq getLabel(< T, L, T0, Q, S, D >) = L .
 
     op getScore : TermItem -> Score .
-    eq getScore(< T, L, T0, I, Q, S, D >) = S .
+    eq getScore(< T, L, T0, Q, S, D >) = S .
 endfm
 
 fmod INDEXED-TERM-SET is
@@ -98,7 +98,7 @@ mod SUBSUMPTION-CHECK is
     op _isSubsumedBy_under_ : Term Term Module -> Bool .
 
     var M : Module .
-    vars T T' I I' : Term . var IDX : Index . vars D D' : Nat .
+    vars T T' : Term . var IDX : Index . vars D D' : Nat .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
     var S : Substitution .
 
@@ -172,12 +172,12 @@ mod FOLDING-APPLICATION is
 
     eq applyFolding(M, emptyTermItemSet, IDXTS) = {emptyTermItemSet, IDXTS} .
 
-    ceq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
-    = {< T, L, T0, I, Q, S, D > ;; TIS' , IDXTS'' }
+    ceq applyFolding(M, < T, L, T0, Q, S, D > ;; TIS, IDXTS) 
+    = {< T, L, T0, Q, S, D > ;; TIS' , IDXTS'' }
     if IDXTS' := insertState(M, {T, createIndex(T), D}, IDXTS) 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS').
 
-    eq applyFolding(M, < T, L, T0, I, Q, S, D > ;; TIS, IDXTS) 
+    eq applyFolding(M, < T, L, T0, Q, S, D > ;; TIS, IDXTS) 
     = applyFolding(M, TIS, IDXTS) [owise] .
 endm
 
@@ -199,7 +199,7 @@ mod GET-CHILDREN is
     var M : Module .
     var TI : TermItem . 
     var VOS : VariantOptionSet .
-    vars T T' T0 I I' : Term .
+    vars T T' T0 : Term .
     var S : Score .
     vars D SOLN : Nat .
     var TY' : Type . 
@@ -209,12 +209,12 @@ mod GET-CHILDREN is
 
     eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
 
-    ceq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
-    = < T', L', applySubstitution(M, T, S1), I, Q', score(T', D + 1), D + 1 > 
-        ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+    ceq getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN) 
+    = < T', L', applySubstitution(M, T, S1), Q', score(T', D + 1), D + 1 > 
+        ;; getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN + 1) 
     if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
-    eq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
+    eq getChildStatesUpToNth(M, < T, L, T0, Q, S, D >, VOS, SOLN) 
     = emptyTermItemSet [owise] .
 endm
 
@@ -243,7 +243,7 @@ mod INVISIBLE-TRANSITION is
     protecting RULE-INSTANCE .
 
     var M : Module . 
-    vars T T' T0 T0' I I' : Term .
+    vars T T' T0 T0' : Term .
     vars L L' Q Q' F : Qid . 
     var LS : QidSet . 
     vars S S' : Score .
@@ -268,8 +268,8 @@ mod INVISIBLE-TRANSITION is
     op toTermItemSet : IndexedTermItemSet -> TermItemSet .
 
     eq createIndex(emptyTermItemSet, N) = emptyIndexedTermItemSet .
-    eq createIndex(< T, L, T0, I, Q, S, D > ;; TIS, N) = 
-    {createIndex(T0), rename(T0, N), L, < T, L, T0, I, Q, S, D >} ;; createIndex(TIS, N + 1) .
+    eq createIndex(< T, L, T0, Q, S, D > ;; TIS, N) = 
+    {createIndex(T0), rename(T0, N), L, < T, L, T0, Q, S, D >} ;; createIndex(TIS, N + 1) .
 
     eq toTermItemSet(emptyIndexedTermItemSet) = emptyTermItemSet .
     eq toTermItemSet({IDX, T0, L, TI} ;; IDXTIS) = TI ;; toTermItemSet(IDXTIS) .
@@ -302,7 +302,7 @@ mod HEURISTIC-NARROWING is
     op createSol : TermItem IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
-    vars T T' T'' T0 I I' : Term .
+    vars T T' T'' T0 : Term .
     vars N D D' : Nat . var S : Score .
     var VOS : VariantOptionSet .
     vars IDXTS IDXTS' IDXTS'' : IndexedTermSet .
@@ -314,7 +314,7 @@ mod HEURISTIC-NARROWING is
     vars QUEUE QUEUE' : LTree{TermItem} .
     var DB : DepthBound .
 
-    eq createSol(< T, L, T0, I, Q, S, D >, IDXTS) = sol(T, S, D, length(IDXTS)) .
+    eq createSol(< T, L, T0, Q, S, D >, IDXTS) = sol(T, S, D, length(IDXTS)) .
 
     op metaHeuristicNarrowingSearch : 
     Module Term Term RuleInstanceSet VariantOptionSet DepthBound
@@ -327,9 +327,9 @@ mod HEURISTIC-NARROWING is
 
     op isSolution : Module TermItem Term -> Bool .
 
-    ceq isSolution(M, < T, L, T0, I, Q, S, D >, T') = true
+    ceq isSolution(M, < T, L, T0, Q, S, D >, T') = true
     if UP := metaUnify(M, T =? T', Q, 0) 
-    /\ getTerm(metaReduce(M, applySubstitution(M, I, getSubstitution(UP)))) =/= 'false.Bool .
+    /\ getTerm(metaReduce(M, 'inv[T'])) =/= 'false.Bool .
 
     eq isSolution(M, TI, T') = false [owise] .
 
@@ -339,7 +339,7 @@ mod HEURISTIC-NARROWING is
 
     eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB,
-    insert(< T, 'none, T, 'initialCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
+    insert(< T, 'none, T, '@, score(T, 0), 0 >, empty), --- dummy values
     empty) .
 
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
