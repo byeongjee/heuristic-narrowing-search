@@ -30,6 +30,9 @@ fmod TERM-ITEM is
     op _<=_ : TermItem TermItem -> Bool .
     eq < T, L, T0, I, Q, S, D > <= < T', L', T0', I', Q', S', D' > = le(S, S') .
 
+    op getTerm : TermItem -> Term .
+    eq getTerm(< T, L, T0, I, Q, S, D >) = T .
+
     op getDepth : TermItem -> Nat .
     eq getDepth(< T, L, T0, I, Q, S, D >) = D .
  
@@ -189,11 +192,9 @@ endfm
 mod GET-CHILDREN is
     protecting META-LEVEL .
     protecting TERM-ITEM-SET .
-    protecting DEPTH-BOUND .
 
-    op getChildStates : Module TermItem VariantOptionSet DepthBound -> TermItemSet [memo] .
+    op getChildStates : Module TermItem VariantOptionSet -> TermItemSet [memo] .
     op getChildStatesUpToNth : Module TermItem VariantOptionSet Nat -> TermItemSet .
-    op getChildStatesUpToNthInternal : Module TermItem VariantOptionSet Nat NarrowingApplyResult? -> TermItemSet .
 
     var M : Module .
     var TI : TermItem . 
@@ -206,35 +207,33 @@ mod GET-CHILDREN is
     vars L L' Q Q' F : Qid . 
     vars S1 S2 : Substitution .
 
-    eq getChildStates(M, TI, VOS, unlimited) = getChildStatesUpToNth(M, TI, VOS, 0) .
-    ceq getChildStates(M, TI, VOS, D) = getChildStatesUpToNth(M, TI, VOS, 0) 
-    if getDepth(TI) <= D .
-    eq getChildStates(M, TI, VOS, D) = emptyTermItemSet [owise] .
+    eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
+
+    ceq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
+    = < T', L', applySubstitution(M, T, S1), I, Q', score(T', D + 1), D + 1 > 
+        ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
+    if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
     eq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
-    = getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, metaNarrowingApply(M, T, empty, Q, VOS, SOLN)) .
+    = emptyTermItemSet [owise] .
+endm
 
-    eq getChildStatesUpToNthInternal(M, TI, VOS, SOLN, failure) = emptyTermItemSet .
-    eq getChildStatesUpToNthInternal(M, TI, VOS, SOLN, failureIncomplete) 
-    = emptyTermItemSet [print "incomplete narrowing"] .
-    ceq getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
-        {T', TY', CO, L', S1, S2, Q'}) 
-    = < T', 
-        L',
-        applySubstitution(M, T, S1),
-        I',
-        Q', 
-        score(T', D + 1), 
-        D + 1 > 
-      ;; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
-    if getTerm(metaReduce(M, 'inv[T'])) =/= 'false.Bool
-    /\ I' := getTerm(metaReduce(M, applySubstitution(M, I, S1)))
-    /\ I' =/= 'false.Bool .
+mod FILTER-INVALID is
+    protecting META-LEVEL .
+    protecting TERM-ITEM-SET .
 
-    eq getChildStatesUpToNthInternal(M, < T, L, T0, I, Q, S, D >, VOS, SOLN, 
-        {T', TY', CO, L', S1, S2, Q'}) 
-    =  getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
-    [owise] .
+    op filterInvalid : Module TermItemSet -> TermItemSet .
+
+    var M : Module .
+    var TI : TermItem . 
+    var TIS : TermItemSet .
+
+    ceq filterInvalid(M, TI ;; TIS) = TI ;; filterInvalid(M, TIS)
+    if getTerm(metaReduce(M, 'inv[getTerm(TI)])) =/= 'false.Bool .
+
+    eq filterInvalid(M, TI ;; TIS) = filterInvalid(M, TIS) [owise] .
+
+    eq filterInvalid(M, emptyTermItemSet) = emptyTermItemSet .
 endm
 
 mod INVISIBLE-TRANSITION is
@@ -294,6 +293,8 @@ mod HEURISTIC-NARROWING is
     protecting FOLDING-APPLICATION .
     protecting INVISIBLE-TRANSITION .
     protecting RULE-INSTANCE .
+    protecting DEPTH-BOUND .
+    protecting FILTER-INVALID .
 
     sort HeuristicNarrowingSearchResult .
     op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
@@ -346,15 +347,17 @@ mod HEURISTIC-NARROWING is
     if TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, D, QUEUE, IDXTS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, D, deleteMin(QUEUE), IDXTS) 
+    if getDepth(findMin(QUEUE)) > D .
+
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE' , IDXTS') 
     if TI := findMin(QUEUE)
-    /\ CHILDREN := getChildStates(M, TI, VOS, DB)
     /\ {FILTERED, IDXTS'} := applyFolding(M, 
-        applyInvisibleTransitionReduction(M, RIS, CHILDREN), 
-        IDXTS)
+            applyInvisibleTransitionReduction(M, RIS, 
+                filterInvalid(M, getChildStates(M, TI, VOS))), IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
-    /\ D := getDepth(TI)
     [owise print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, empty, IDXTS)
