@@ -258,20 +258,20 @@ mod INVISIBLE-TRANSITION is
     sorts IndexedTermItem IndexedTermItemSet .
     subsort IndexedTermItem < IndexedTermItemSet .
 
-    op emptyIndexedTermItemSet : -> IndexedTermItemSet .
+    op empty : -> IndexedTermItemSet .
     op {_,_,_,_} : Index Term Qid TermItem -> IndexedTermItem [ctor] .
-    op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: emptyIndexedTermItemSet] .
+    op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: empty] .
 
     op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
     op removeSubsumed : Module RuleInstanceSet IndexedTermItemSet -> IndexedTermItemSet .
     op createIndex : TermItemSet Nat -> IndexedTermItemSet .
     op toTermItemSet : IndexedTermItemSet -> TermItemSet .
 
-    eq createIndex(empty, N) = emptyIndexedTermItemSet .
+    eq createIndex(empty, N) = empty .
     eq createIndex(< T, L, T0, Q, S, D > ; TIS, N) = 
     {createIndex(T0), rename(T0, N), L, < T, L, T0, Q, S, D >} ; createIndex(TIS, N + 1) .
 
-    eq toTermItemSet(emptyIndexedTermItemSet) = empty .
+    eq toTermItemSet(empty) = empty .
     eq toTermItemSet({IDX, T0, L, TI} ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
 
     eq applyInvisibleTransitionReduction(M, RIS, TIS) 
