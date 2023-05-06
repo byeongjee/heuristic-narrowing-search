@@ -19,14 +19,6 @@ mod ONETHIRDRULE-NO-VALUE-ORDERING-INVISIBLE is
     =>
     {N, OIDS, CONF} [narrowing] .
 
-    op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
-
-    op _<=_ : Nat Nat -> Bool' .
-    eq N <= N N' = true [variant] .
-
     rl [decideTrue-1] :
     {N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 

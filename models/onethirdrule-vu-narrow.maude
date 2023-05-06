@@ -210,8 +210,9 @@ mod ONETHIRDRULE-VU-NARROW is
     op updateTrue : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
     op updateFalse : Bool' Nat OidSet Object Configuration -> InternalState [ctor] .
 
-    op _<=_ : Nat Nat -> Bool' .
+    ops _<=_ _<_ : Nat Nat -> Bool' .
     eq N <= N N' = true [variant] .
+    eq N < N' = s N <= N' [variant] .
 
     rl [decideTrue-1] :
     ready({N, OIDS,
@@ -280,7 +281,7 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
         CONF}),
         updateTrue(
-        (s VT <=  N) and (N <= VA) and (VF <= VT),
+        (VT <  N) and (N <= VA) and (VF <= VT),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF
@@ -309,7 +310,7 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >
         CONF}),
     updateFalse(
-        (s VF <= N) and (N <= VA) and (s VT <= VF),
+        (VF < N) and (N <= VA) and (s VT <= VF),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
         CONF

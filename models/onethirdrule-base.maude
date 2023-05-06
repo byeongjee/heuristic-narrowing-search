@@ -152,8 +152,7 @@ mod ONETHIRDRULE-BASE is
     op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
 
-    op _<=_ : Nat Nat -> Bool' .
-    op _<_ : Nat Nat -> Bool' .
+    ops _<=_ _<_ : Nat Nat -> Bool' .
     eq N <= N N' = true [variant] .
     eq N < N' = s N <= N' [variant] .
 endm
