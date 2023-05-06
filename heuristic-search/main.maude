@@ -142,11 +142,10 @@ mod FOLDING-STATE-INSERTION is
 
     var M : Module .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
-    vars T I : Term . var IDX : Index . var D : Nat .
 
     ceq insertState(M, IDXT, IDXTS)
     = subsumed if IDXT isSubsumedBy IDXTS under M .
-    eq insertState(M, {T, IDX, D}, IDXTS) = rename({T, IDX, D}) ; IDXTS [owise] .
+    eq insertState(M, IDXT, IDXTS) = rename(IDXT) ; IDXTS [owise] .
 
 endm
 
