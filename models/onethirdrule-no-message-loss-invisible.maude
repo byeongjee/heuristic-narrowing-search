@@ -51,11 +51,11 @@ mod ONETHIRDRULE-NO-MESSAGE-LOSS-INVISIBLE is
     rl [decideFalse-2] :
     decideFalse(true,
         N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U24S >,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
         CONF)
     =>
     {N, OIDS,
-        < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U24S >
+        < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U2S >
         CONF
     } [narrowing] .
 

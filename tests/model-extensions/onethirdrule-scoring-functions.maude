@@ -39,7 +39,6 @@ fmod ONETHIRDRULE-SCORE-BASE is
     eq scoreConf((T, NETL)) 
     = scoreConf(T) + scoreConf(NETL) .
 
-
     eq scoreConf(T) = 0 [owise] .
 
     *** auxiliary functions
@@ -106,10 +105,8 @@ fmod ONETHIRDRULE-SCORE3 is
 
     var NETL : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    =  100 + 10 * max(2, toNumber(NT)) .
+    eq scoreConf('<_:_|_>[OT, CT, '_`,_['status`:_['_`,_[NT, ST]], NETL]]) 
+    =  100 + 10 * max(1, toNumber(NT)) .
 
     eq scoreConf('multicast_from_to_[NETL]) 
     = -1 .
@@ -169,7 +166,7 @@ fmod ONETHIRDRULE-SCORE3' is
     eq scoreConf('<_:_|_>[OT, CT, 
         '_`,_['status`:_['_`,_[NT, ST]], NETL]
     ]) 
-    =  100 + 10 * max(2, toNumber(NT)) .
+    =  100 + 10 * max(1, toNumber(NT)) .
 
     eq scoreConf('multicast_from_to_[NETL]) 
     = -1 .
