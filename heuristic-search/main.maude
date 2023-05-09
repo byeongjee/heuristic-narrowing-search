@@ -174,7 +174,7 @@ mod FOLDING-APPLICATION is
     ceq applyFolding(M, < T, L, T0, Q, S, D > ; TIS, IDXTS) 
     = {< T, L, T0, Q, S, D > ; TIS' , IDXTS'' }
     if IDXTS' := insertState(M, {T, createIndex(T), D}, IDXTS) 
-    /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS').
+    /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 
     eq applyFolding(M, < T, L, T0, Q, S, D > ; TIS, IDXTS) 
     = applyFolding(M, TIS, IDXTS) [owise] .
@@ -273,8 +273,10 @@ mod INVISIBLE-TRANSITION is
     eq toTermItemSet(empty) = empty .
     eq toTermItemSet({IDX, T0, L, TI} ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
 
+    eq applyInvisibleTransitionReduction(M, none, TIS) = TIS .
+
     eq applyInvisibleTransitionReduction(M, RIS, TIS) 
-    = toTermItemSet(removeSubsumed(M, RIS, createIndex(TIS, 0))) .
+    = toTermItemSet(removeSubsumed(M, RIS, createIndex(TIS, 0))) [owise] .
 
     ceq removeSubsumed(M, RIS, {IDX, T0, L, TI}  ; {IDX, T0', L', TI'} ; IDXTIS) 
     = removeSubsumed(M, RIS, {IDX, T0', L', TI'} ; IDXTIS)
