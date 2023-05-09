@@ -1,6 +1,7 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
+load ../heuristic-search/invariant.maude
 
 set include BOOL off .
 
@@ -67,93 +68,41 @@ mod ONETHIRDRULE-BASE is
     protecting FVP-NAT .
     protecting FVP-BOOL .
 
-    vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
-    vars OIDS OIDS' : OidSet . 
-    var R N N' VT VF VA : Nat .
-    var Z : Zero .
-    vars V : Value .
-
-    rl [vote-true-new] : 
-    {N, O ; OIDS,
-        < O : Node | status : (0, init), value : true, decision : nil, votes : (VT, VF, VA) > 
-        CONF
-    }
-    =>
-    {N, O ; OIDS,
-        < O : Node | status : (0, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(0) from O to OIDS)
-        CONF
-    } [narrowing] .
-
-    rl [vote-true-existing] : 
-    {N, O ; OIDS,
-        < O : Node | status : (s R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
-        CONF
-    }
-    =>
-    {N, O ; OIDS,
-        < O : Node | status : (s R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(s R) from O to OIDS)
-        CONF
-    } [narrowing] .
-
-
-    rl [vote-false-new] : 
-    {N, O ; OIDS,
-        < O : Node | status : (0, init), value : false, decision : nil, votes : (VT, VF, VA) > 
-        CONF
-    }
-    =>
-    {N, O ; OIDS,
-        < O : Node | status : (0, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(0) from O to OIDS)
-        CONF
-    } [narrowing] .
-
-    rl [vote-false-existing] : 
-    {N, O ; OIDS,
-        < O : Node | status : (s R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
-        CONF
-    }
-    =>
-    {N, O ; OIDS,
-        < O : Node | status : (s R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(s R) from O to OIDS)
-        CONF
-    } [narrowing] .
-
-
-    rl [receive-true-vote] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
-        (multicast trueVote(R) from O' to (O ; OIDS'))
-        CONF
-    } =>
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
-        (multicast trueVote(R) from O' to OIDS')  
-        CONF
-    } [narrowing] .
-
-    rl [receive-false-vote] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
-        (multicast falseVote(R) from O' to (O ; OIDS'))
-        CONF
-    } =>
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
-        (multicast falseVote(R) from O' to OIDS')  
-        CONF
-    } [narrowing] .
-
     op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
     op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
+
+    vars N N' : Nat .
 
     ops _<=_ _<_ : Nat Nat -> Bool' .
     eq N <= N N' = true [variant] .
     eq N < N' = s N <= N' [variant] .
 endm
 
+
+mod INV-BASE is
+    including ONETHIRDRULE-BASE .
+    including INVARIANT .
+
+    var N : Nat . var CONF : Configuration . var M : Msg . 
+    vars O O' : Oid . var C : Cid .  var OIDS  : OidSet .
+    var Z : Zero .
+
+    op getOids : Configuration -> OidSet [memo] .
+    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
+    eq getOids(M CONF) =  getOids(CONF) .
+    eq getOids(none) =  none .
+
+    op noDuplicate : OidSet -> Bool [memo] .
+    eq noDuplicate(O ; O ; OIDS) = false .
+
+    op isThresholdValid : OidSet Nat -> Bool [memo] .
+    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+
+    eq inv({N, OIDS, CONF}) 
+    = noDuplicate(OIDS) 
+    and noDuplicate(getOids(CONF)) 
+    and isThresholdValid(getOids(CONF), N) .
+endm

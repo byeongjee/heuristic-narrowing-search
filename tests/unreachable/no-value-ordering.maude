@@ -1,7 +1,6 @@
 load ../../heuristic-search/main.maude
 load ../model-extensions/onethirdrule-index.maude
 load ../model-extensions/onethirdrule-scoring-functions.maude
-load ../model-extensions/onethirdrule-invariant.maude
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is
@@ -10,25 +9,22 @@ mod ONETHIRDRULE-TEST-SCORE1 is
     protecting HEURISTIC-NARROWING .
 endm
 
+load ../../models/no-value-ordering-static.maude
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NO-VALUE-ORDERING-WITH-INV, false),
+    upModule('NO-VALUE-ORDERING-STATIC-WITH-INV, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
     'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
     none, delay filter, 5) .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NO-VALUE-ORDERING-INVISIBLE-WITH-INV, false),
-    '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
-    '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],
-    'votes`:_['_`,_`,_['0.Zero,'0.Zero,'0.Zero]]]]]],
-    none, delay filter, 5) .
+do clear memo .
+
+load ../../models/no-value-ordering-static-dynamic.maude
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-NO-VALUE-ORDERING-INVISIBLE-WITH-INV, false),
+    upModule('NO-VALUE-ORDERING-STATIC-DYNAMIC-WITH-INV, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U23S,'status`:_['_`,_['S:Nat,'finished.Step]],

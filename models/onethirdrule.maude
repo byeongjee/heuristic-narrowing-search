@@ -1,7 +1,5 @@
 load ./onethirdrule-base.maude
 
-set include BOOL off .
-
 
 mod ONETHIRDRULE is
     including ONETHIRDRULE-BASE .
@@ -11,6 +9,57 @@ mod ONETHIRDRULE is
     var R N N' VT VF VA : Nat .
     var Z : Zero .
     vars V : Value .
+
+    rl [vote-true] : 
+    {N, O ; OIDS,
+        < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    }
+    =>
+    {N, O ; OIDS,
+        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
+        (multicast trueVote(R) from O to OIDS)
+        CONF
+    } [narrowing] .
+
+
+    rl [vote-false] : 
+    {N, O ; OIDS,
+        < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
+        CONF
+    }
+    =>
+    {N, O ; OIDS,
+        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
+        (multicast falseVote(R) from O to OIDS)
+        CONF
+    } [narrowing] .
+
+
+    rl [receive-true] :
+    {N, OIDS,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
+        (multicast trueVote(R) from O' to (O ; OIDS'))
+        CONF
+    } =>
+    {N, OIDS,
+        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
+        (multicast trueVote(R) from O' to OIDS')  
+        CONF
+    } [narrowing] .
+
+    rl [receive-false] :
+    {N, OIDS,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
+        (multicast falseVote(R) from O' to (O ; OIDS'))
+        CONF
+    } =>
+    {N, OIDS,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
+        (multicast falseVote(R) from O' to OIDS')  
+        CONF
+    } [narrowing] .
+
 
     rl [loss] : 
     {N, OIDS, M CONF}
@@ -118,3 +167,7 @@ mod ONETHIRDRULE is
 
 endm
 
+mod ONETHIRDRULE-WITH-INV is
+    protecting ONETHIRDRULE .
+    protecting INV-BASE .
+endm

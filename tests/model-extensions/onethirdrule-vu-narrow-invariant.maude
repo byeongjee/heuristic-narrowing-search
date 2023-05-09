@@ -15,7 +15,6 @@ mod ONETHIRDRULE-VU-NARROW-WITH-INV is
     var Z : Zero .
 
     eq inv(SK:[State]) = true .
-    eq initialCond(SK:[State]) = true .
 
     eq invariant({N, OIDS, CONF}) 
     = noDuplicate(OIDS) 

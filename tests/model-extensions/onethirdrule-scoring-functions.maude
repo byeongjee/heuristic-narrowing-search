@@ -112,6 +112,37 @@ fmod ONETHIRDRULE-SCORE3 is
     = -1 .
 endfm
 
+fmod ONETHIRDRULE-SCORE4 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T BT NT OIDT OT CT ST DT : Term .
+    var D : Nat .
+
+    eq score(
+        'decideTrue[BT, NT, OIDT, OT, CT], D
+    ) = scoreConf((OT, CT)) .
+    eq score(
+            'decideFalse[BT, NT, OIDT, OT, CT], D
+        ) = scoreConf((OT, CT)) .
+    eq score(
+            'updateTrue[BT, NT, OIDT, OT, CT], D
+        ) = scoreConf((OT, CT)) .
+    eq score(
+            'updateFalse[BT, NT, OIDT, OT, CT], D
+        ) = scoreConf((OT, CT)) .
+
+    vars NETL NETL' : NeTermList .
+
+    eq scoreConf('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['_`,_[NT, ST]], NETL,
+    'decision`:_[DT], NETL']])
+    = if DT == 'nil.InitialValue then 1000 else 900 fi 
+    + 10 * max(1, toNumber(NT)) .
+
+    eq scoreConf('multicast_from_to_[NETL]) 
+    = 0 .
+endfm
+
 fmod ONETHIRDRULE-SCORE2' is
     including ONETHIRDRULE-SCORE-BASE .
 
