@@ -98,11 +98,32 @@ mod INV-BASE is
     eq noDuplicate(O ; O ; OIDS) = false .
 
     op isThresholdValid : OidSet Nat -> Bool [memo] .
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
 
     eq inv({N, OIDS, CONF}) 
     = noDuplicate(OIDS) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .
+endm
+
+mod INV-HALF is
+    including INV-BASE .
+
+    vars O O' : Oid . var OIDS  : OidSet .
+    var N : Nat . var Z : Zero .
+
+    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+
+endm
+
+mod INV-TWOTHIRD is
+    including INV-BASE .
+
+    vars O O' O'' : Oid . var OIDS  : OidSet .
+    var N : Nat . var Z : Zero .
+
+    eq isThresholdValid((O ; O' ; O'' ; OIDS), s s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+    eq isThresholdValid(O ; O' ; OIDS, s) = false .
+    eq isThresholdValid(O ; O' ; OIDS, s Z) = false .
 endm

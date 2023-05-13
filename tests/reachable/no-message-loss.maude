@@ -31,7 +31,7 @@ endm
 
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -41,7 +41,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -51,7 +51,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -65,7 +65,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -75,7 +75,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -85,7 +85,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -100,7 +100,7 @@ do clear memo .
 
 ***(
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -110,7 +110,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
@@ -120,7 +120,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-WITH-INV, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
     '`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
