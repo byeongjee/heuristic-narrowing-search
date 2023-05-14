@@ -1,0 +1,238 @@
+load ./sorts/fvp-nat.maude
+load ./sorts/sorts.maude
+load ../heuristic-search/state.maude
+
+set include BOOL off .
+
+
+mod CONFIGURATION is
+    protecting NODE .
+    protecting INITIAL-SORTS .
+
+    sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
+    subsort Attribute < AttributeSet .
+    subsort InitialAttributeSet < AttributeSet .
+
+    sorts None Object Msg ObjectSet MsgSet Configuration InitialObject InitialObjectSet .
+
+    subsort MsgSet ObjectSet < Configuration .
+    subsort InitialObject < Object InitialObjectSet < ObjectSet .
+    subsort None < ObjectSet MsgSet .
+    subsort Msg < MsgSet .
+
+    op <_:_|_> : Oid Cid IU12345S -> InitialObject [ctor object] .
+    op <_:_|_> : Oid Cid U12345S -> Object [ctor object] .
+    op none : -> None [ctor] .
+    op __ : None None -> None [ctor config assoc comm id: none] .
+    op __ : InitialObjectSet InitialObjectSet -> InitialObjectSet [ctor config assoc comm id: none] .
+    op __ : ObjectSet ObjectSet -> ObjectSet [ctor config assoc comm id: none] .
+    op __ : MsgSet MsgSet -> MsgSet [ctor config assoc comm id: none] .
+    op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
+
+endm
+
+
+fmod MESSAGE-CONTENT is
+    protecting FVP-NAT .
+    sort MsgContent . 
+
+    ops trueVote falseVote : Nat -> MsgContent [ctor] .
+endfm
+
+
+
+mod MULTICAST is 
+  including CONFIGURATION .
+  including MESSAGE-CONTENT .
+
+  op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
+  var MC : MsgContent . var SENDER : Oid .
+  eq multicast MC from SENDER to none = none [variant] .
+endm
+
+mod GLOBAL is
+    protecting CONFIGURATION .
+    protecting FVP-NAT .
+    including STATE .
+
+    op {_,_} : Nat Configuration -> State [ctor] .
+endm
+
+
+mod ONETHIRDRULE is
+    including GLOBAL .
+    protecting VALUE .
+    protecting MULTICAST .
+    protecting BOOL .
+    protecting FVP-NAT .
+    protecting FVP-BOOL .
+
+    vars O O' : Oid . vars CONF : Configuration . var MSG : Msg . var C : Cid .
+    vars NEIGHBORS OIDS : OidSet . 
+    var R N N' VT VF VA : Nat .
+    vars V : Value .
+
+    rl [loss] : 
+    {N, MSG CONF}
+    =>
+    {N, CONF} [narrowing] .
+
+    rl [vote-true] : 
+    {N,
+        < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA), neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA), neighbors : NEIGHBORS > 
+        (multicast trueVote(R) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-false] : 
+    {N,
+        < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA), neighbors : NEIGHBORS > 
+        CONF
+    }
+    =>
+    {N,
+        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA), neighbors : NEIGHBORS > 
+        (multicast falseVote(R) from O to NEIGHBORS)
+        CONF
+    } [narrowing] .
+
+
+    rl [receive-true-vote] :
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
+        (multicast trueVote(R) from O' to (O ; OIDS))
+        CONF
+    } =>
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U25S > 
+        (multicast trueVote(R) from O' to OIDS)  
+        CONF
+    } [narrowing] .
+
+    rl [receive-false-vote] :
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
+        (multicast falseVote(R) from O' to (O ; OIDS))
+        CONF
+    } =>
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U25S > 
+        (multicast falseVote(R) from O' to OIDS)  
+        CONF
+    } [narrowing] .
+
+
+    op decideTrue : Bool' Nat Object Configuration -> State [ctor] .
+    op decideFalse : Bool' Nat Object Configuration -> State [ctor] .
+    op updateTrue : Bool' Nat Object Configuration -> State [ctor] .
+    op updateFalse : Bool' Nat Object Configuration -> State [ctor] .
+
+    op _<=_ : Nat Nat -> Bool' .
+    eq N <= N N' = true [variant] .
+
+    rl [decideTrue-1] :
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
+        CONF
+    }
+    =>
+    decideTrue(N <= VT,
+        N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
+        CONF
+    ) [narrowing] .
+
+    rl [decideTrue-2] :
+    decideTrue(true,
+        N,
+        < O : Node | status : (R, waiting), decision : nil, ATTS:U245S >,
+        CONF
+    ) 
+    =>
+    {N,
+        < O : Node | status : (R, finished), decision : true, ATTS:U245S  >
+        CONF
+    } [narrowing] .
+
+    rl [decideFalse-1] :
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S > 
+        CONF
+    }
+    =>
+    decideFalse(N <= VF,
+        N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
+        CONF
+    ) [narrowing] .
+
+    rl [decideFalse-2] :
+    decideFalse(true,
+        N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U245S >,
+        CONF)
+    =>
+    {N,
+        < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U245S >
+        CONF
+    } [narrowing] .
+
+    rl [updateTrue-1] : 
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >
+        CONF
+    }
+    =>
+    updateTrue(
+        (s VT <=  N) and (N <= VA) and (VF <= VT),
+        N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
+        CONF
+    ) [narrowing] .
+
+    rl [updateTrue-2] : 
+    updateTrue(
+        true,
+        N,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
+        CONF
+    )
+    =>
+    {N,
+        < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0), ATTS:U5S >
+        CONF
+    } [narrowing] .
+
+    rl [updateFalse-1] : 
+    {N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >
+        CONF
+    }
+    =>
+    updateFalse(
+        (s VF <= N) and (N <= VA) and (s VT <= VF),
+        N,
+        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U25S >,
+        CONF
+    ) [narrowing] .
+
+    rl [updateFalse-2] : 
+    updateFalse(
+        true,
+        N,
+        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA), ATTS:U5S >,
+        CONF
+    )
+    =>
+    {N,
+        < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0), ATTS:U5S >
+        CONF
+    } [narrowing] .
+
+endm
+
