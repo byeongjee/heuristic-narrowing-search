@@ -31,15 +31,15 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     eq score(
         '`{_`,_`,_`}[T, OIDT, NETL], D
-    ) = scoreConf(NETL) .
+    ) = score(NETL) .
 
-    op scoreConf : NeTermList -> Score .
+    op score : NeTermList -> Score .
 
-    eq scoreConf('__[NETL]) = scoreConf(NETL) .
-    eq scoreConf((T, NETL)) 
-    = scoreConf(T) + scoreConf(NETL) .
+    eq score('__[NETL]) = score(NETL) .
+    eq score((T, NETL)) 
+    = score(T) + score(NETL) .
 
-    eq scoreConf(T) = 0 [owise] .
+    eq score(T) = 0 [owise] .
 
     *** auxiliary functions
     op toNumber : Term -> Int .
@@ -62,25 +62,25 @@ fmod ONETHIRDRULE-SCORE2 is
 
     eq score(
         'decideTrue[BT, NT, OIDT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
+    ) = score((OT, CT)) .
     eq score(
             'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
 
     var NETL : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, 
+    eq score('<_:_|_>[OT, CT, 
         '_`,_['status`:_['_`,_[NT, ST]], NETL]
     ]) 
     =  1 . 
 
-    eq scoreConf('multicast_from_to_[NETL]) 
+    eq score('multicast_from_to_[NETL]) 
     = 0 .
 endfm
 
@@ -93,26 +93,26 @@ fmod ONETHIRDRULE-SCORE3 is
 
     eq score(
         'decideTrue[BT, NT, OIDT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
+    ) = score((OT, CT)) .
     eq score(
             'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
 
     vars NETL NETL' : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, '_`,_[
+    eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['_`,_[NT, ST]], NETL,
     'decision`:_[DT], NETL']])
-    = if DT == 'nil.InitialValue then 1000 else 900 fi 
-    + 10 * max(1, toNumber(NT)) .
+    = if DT == 'nil.InitialValue then 100 else 90 fi 
+    + max(1, toNumber(NT)) .
 
-    eq scoreConf('multicast_from_to_[NETL]) 
+    eq score('multicast_from_to_[NETL]) 
     = 0 .
 endfm
 
@@ -124,23 +124,23 @@ fmod ONETHIRDRULE-SCORE3-OLD is
 
     eq score(
         'decideTrue[BT, NT, OIDT, OT, CT], D
-    ) = scoreConf((OT, CT)) .
+    ) = score((OT, CT)) .
     eq score(
             'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
     eq score(
             'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = scoreConf((OT, CT)) .
+        ) = score((OT, CT)) .
 
     var NETL : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, '_`,_['status`:_['_`,_[NT, ST]], NETL]]) 
+    eq score('<_:_|_>[OT, CT, '_`,_['status`:_['_`,_[NT, ST]], NETL]]) 
     =  100 + 10 * max(1, toNumber(NT)) .
 
-    eq scoreConf('multicast_from_to_[NETL]) 
+    eq score('multicast_from_to_[NETL]) 
     = -1 .
 endfm
 
@@ -165,12 +165,12 @@ fmod ONETHIRDRULE-SCORE2' is
 
     var NETL : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, 
+    eq score('<_:_|_>[OT, CT, 
         '_`,_['status`:_['_`,_[NT, ST]], NETL]
     ]) 
     = 1 . 
 
-    eq scoreConf('multicast_from_to_[NETL]) 
+    eq score('multicast_from_to_[NETL]) 
     = 0 .
 endfm
 
@@ -195,12 +195,12 @@ fmod ONETHIRDRULE-SCORE3' is
 
     var NETL : NeTermList .
 
-    eq scoreConf('<_:_|_>[OT, CT, 
+    eq score('<_:_|_>[OT, CT, 
         '_`,_['status`:_['_`,_[NT, ST]], NETL]
     ]) 
     =  100 + 10 * max(1, toNumber(NT)) .
 
-    eq scoreConf('multicast_from_to_[NETL]) 
+    eq score('multicast_from_to_[NETL]) 
     = -1 .
 endfm
 

@@ -5,6 +5,7 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
+load ../heuristic-search/invariant.maude
 
 
 mod CONFIGURATION is
@@ -133,7 +134,6 @@ mod ONETHIRDRULE-VU-NARROW is
         CONF
     }) [narrowing] .
 
-
     rl [vote-false-new] : 
     ready({N, O ; OIDS,
         < O : Node | status : (0, init), value : false, decision : nil, votes : (VT, VF, VA) > 
@@ -143,7 +143,7 @@ mod ONETHIRDRULE-VU-NARROW is
     check(
         invariant({N, O ; OIDS,
         < O : Node | status : (0, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(0) from O to OIDS)
+        (multicast falseVote(R) from O to OIDS)
         CONF
     }),
         {N, O ; OIDS,
@@ -171,7 +171,7 @@ mod ONETHIRDRULE-VU-NARROW is
     }) [narrowing] .
 
 
-    rl [receive-true-vote] :
+    rl [receive-true] :
     ready({N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         (multicast trueVote(R) from O' to (O ; OIDS'))
@@ -188,7 +188,7 @@ mod ONETHIRDRULE-VU-NARROW is
         CONF
     }) [narrowing] .
 
-    rl [receive-false-vote] :
+    rl [receive-false] :
     ready({N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
         (multicast falseVote(R) from O' to (O ; OIDS'))
@@ -231,17 +231,21 @@ mod ONETHIRDRULE-VU-NARROW is
     ))
     [narrowing] .
 
-    eq [decideTrue-2] :
-    decideTrue(true,
+    rl [decideTrue-2] :
+    ready(decideTrue(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, ATTS:U24S >,
         CONF
-    ) 
-    =
-    {N, OIDS,
+    ))
+    =>
+    check(
+        invariant({N, OIDS,
+        < O : Node | status : (R, finished), decision : true, ATTS:U24S  >
+        CONF}),
+        {N, OIDS,
         < O : Node | status : (R, finished), decision : true, ATTS:U24S  >
         CONF
-    } [variant] .
+    }) [narrowing] .
 
     rl [decideFalse-1] :
     ready({N, OIDS,
@@ -259,16 +263,20 @@ mod ONETHIRDRULE-VU-NARROW is
         CONF
     )) [narrowing] .
 
-    eq [decideFalse-2] :
-    decideFalse(true,
+    rl [decideFalse-2] :
+    ready(decideFalse(true,
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U24S >,
-        CONF)
-    =
-    {N, OIDS,
+        CONF))
+    =>
+    check(
+        invariant({N, OIDS,
+        < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U24S >
+        CONF}),
+        {N, OIDS,
         < O : Node | status : (R, finished), decision : false, votes : (VT, VF, VA), ATTS:U24S >
         CONF
-    } [variant] .
+    }) [narrowing] .
 
     rl [updateTrue-1] : 
     ready({N, OIDS,
@@ -288,17 +296,17 @@ mod ONETHIRDRULE-VU-NARROW is
     )) [narrowing] .
 
     eq [updateTrue-2] : 
-    updateTrue(
+    ready(updateTrue(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
-    )
+    ))
     =
-    {N, OIDS,
+    ready({N, OIDS,
         < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [variant] .
+    }) [variant] .
 
     rl [updateFalse-1] : 
     ready({N, OIDS,
@@ -310,23 +318,46 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >
         CONF}),
     updateFalse(
-        (VF < N) and (N <= VA) and (s VT <= VF),
+        (VF < N) and (N <= VA) and (VT < VF),
         N, OIDS,
         < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
         CONF
     )) [narrowing] .
 
     eq [updateFalse-2] : 
-    updateFalse(
+    ready(updateFalse(
         true,
         N, OIDS,
         < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
         CONF
-    )
+    ))
     =
-    {N, OIDS,
+    ready({N, OIDS,
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
         CONF
-    } [variant] .
+    }) [variant] .
 
+    eq invariant({N, OIDS, CONF}) 
+    = noDuplicate(OIDS) 
+    and noDuplicate(getOids(CONF)) 
+    and isThresholdValid(getOids(CONF), N) .
+
+    op getOids : Configuration -> OidSet [memo] .
+    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
+    eq getOids(M CONF) =  getOids(CONF) .
+    eq getOids(none) =  none .
+
+    op noDuplicate : OidSet -> Bool [memo] .
+    eq noDuplicate(O ; O ; OIDS) = false .
+
+    op isThresholdValid : OidSet Nat -> Bool [memo] .
+    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
+    eq isThresholdValid(OIDS, Z) = false .
+endm
+
+mod ONETHIRDRULE-VU-NARROW-HALF is
+    including ONETHIRDRULE-VU-NARROW .
+    including INVARIANT .
+
+    eq inv(SK:[State]) = true .
 endm
