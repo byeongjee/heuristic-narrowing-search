@@ -1,6 +1,6 @@
 load base-types.maude
 
-mod SORTS is
+fmod SORTS is
   including STATUS .
   including VOTE .
   including STEP .
@@ -212,9 +212,9 @@ mod SORTS is
   op _,_ : U35S U124S -> U12345S [ctor ditto] .
   op _,_ : U45S U123S -> U12345S [ctor ditto] .
   
-endm
+endfm
 
-mod INITIAL-SORTS is
+fmod INITIAL-SORTS is
   including SORTS .
 
   sorts InitialStatusAttr InitialDecisionAttr InitialVoteAttr .
@@ -420,4 +420,4 @@ mod INITIAL-SORTS is
   op _,_ : IU35S IU124S -> IU12345S [ctor ditto] .
   op _,_ : IU45S IU123S -> IU12345S [ctor ditto] .
 
-endm
+endfm

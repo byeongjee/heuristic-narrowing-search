@@ -1,15 +1,15 @@
 
 set include BOOL off . 
 
-mod FVP-BOOL is
-    sort Bool' .
-    ops false true : -> Bool' [ctor] .
+fmod FVP-BOOL is
+    sort Boolean .
+    ops false true : -> Boolean [ctor] .
 
-    op _and_ : Bool' Bool' -> Bool' [assoc comm] .
-    vars A B C : Bool' .
+    op _and_ : Boolean Boolean -> Boolean [assoc comm] .
+    vars A B C : Boolean .
 
     eq true and A = A [variant] .
     eq false and A = false [variant] .
     eq A and A = A [variant] .
 
-endm
+endfm

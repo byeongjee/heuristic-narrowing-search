@@ -57,153 +57,46 @@ endfm
 fmod ONETHIRDRULE-SCORE2 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T BT NT OIDT OT CT ST : Term .
+    vars T VT BT NT OIDT OT CT ST : Term .
     var D : Nat .
 
     eq score(
-        'decideTrue[BT, NT, OIDT, OT, CT], D
+        'decide?[VT, BT, NT, OIDT, OT, CT], D
     ) = score((OT, CT)) .
     eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
+        'update?[VT, BT, NT, OIDT, OT, CT], D
+    ) = score((OT, CT)) .
 
     var NETL : NeTermList .
 
-    eq score('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    =  1 . 
+    eq score('<_:_|_>[NETL]) =  1 . 
 
-    eq score('multicast_from_to_[NETL]) 
-    = 0 .
+    eq score('multicast_from_to_[NETL]) = 0 .
 endfm
 
 
 fmod ONETHIRDRULE-SCORE3 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T BT NT OIDT OT CT ST DT : Term .
+    vars T VT BT NT OIDT OT CT ST DT RT : Term .
     var D : Nat .
 
     eq score(
-        'decideTrue[BT, NT, OIDT, OT, CT], D
+        'decide?[VT, BT, NT, OIDT, OT, CT], D
     ) = score((OT, CT)) .
     eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
+        'update?[VT, BT, NT, OIDT, OT, CT], D
+    ) = score((OT, CT)) .
 
     vars NETL NETL' : NeTermList .
 
     eq score('<_:_|_>[OT, CT, '_`,_[
-        'status`:_['_`,_[NT, ST]], NETL,
-    'decision`:_[DT], NETL']])
+        'status`:_['`[_`,_`][RT, ST]], NETL, 'decision`:_[DT], NETL']])
     = if DT == 'nil.InitialValue then 100 else 90 fi 
-    + max(1, toNumber(NT)) .
+    + max(1, toNumber(RT)) .
 
-    eq score('multicast_from_to_[NETL]) 
-    = 0 .
+    eq score('multicast_from_to_[NETL]) = 0 .
 endfm
-
-fmod ONETHIRDRULE-SCORE3-OLD is
-    including ONETHIRDRULE-SCORE-BASE .
-
-    vars T BT NT OIDT OT CT ST : Term .
-    var D : Nat .
-
-    eq score(
-        'decideTrue[BT, NT, OIDT, OT, CT], D
-    ) = score((OT, CT)) .
-    eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = score((OT, CT)) .
-
-    var NETL : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, '_`,_['status`:_['_`,_[NT, ST]], NETL]]) 
-    =  100 + 10 * max(1, toNumber(NT)) .
-
-    eq score('multicast_from_to_[NETL]) 
-    = -1 .
-endfm
-
-fmod ONETHIRDRULE-SCORE2' is
-    including ONETHIRDRULE-SCORE-BASE .
-
-    vars T BT NT OIDT OT CT ST : Term .
-    var D : Nat .
-
-    eq score(
-            'decideTrue[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-
-    var NETL : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    = 1 . 
-
-    eq score('multicast_from_to_[NETL]) 
-    = 0 .
-endfm
-
-fmod ONETHIRDRULE-SCORE3' is
-    including ONETHIRDRULE-SCORE-BASE .
-
-    vars T BT NT OIDT OT CT ST : Term .
-    var D : Nat .
-
-    eq score(
-            'decideTrue[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'decideFalse[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'updateTrue[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-    eq score(
-            'updateFalse[BT, NT, OIDT, OT, CT], D
-        ) = 0 .
-
-    var NETL : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, 
-        '_`,_['status`:_['_`,_[NT, ST]], NETL]
-    ]) 
-    =  100 + 10 * max(1, toNumber(NT)) .
-
-    eq score('multicast_from_to_[NETL]) 
-    = -1 .
-endfm
-
 
 
 fmod ONETHIRDRULE-VU-NARROW-SCORE1 is

@@ -5,160 +5,106 @@ mod NO-MESSAGE-LOSS is
     including ONETHIRDRULE-BASE .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
-    vars OIDS OIDS' : OidSet . 
+    vars OS OS' : OidSet . 
     var R N N' VT VF VA : Nat .
     var Z : Zero .
-    vars V : Value .
+    vars V V' : Value .
 
-    rl [vote-true] : 
-    {N, O ; OIDS,
-        < O : Node | status : (R, init), value : true, decision : nil, votes : (VT, VF, VA) > 
+    rl [vote] : 
+    {N, O ; OS,
+        < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
         CONF
     }
     =>
-    {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : true, decision : nil, votes : (s VT, VF, s VA) > 
-        (multicast trueVote(R) from O to OIDS)
+    {N, O ; OS,
+        < O : Node | status : [R, waiting], value : V, decision : nil, votes : [s VT, VF, s VA] > 
+        (multicast vote(V, R) from O to OS)
         CONF
     } [narrowing] .
 
 
-    rl [vote-false] : 
-    {N, O ; OIDS,
-        < O : Node | status : (R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
-        CONF
-    }
-    =>
-    {N, O ; OIDS,
-        < O : Node | status : (R, waiting), value : false, decision : nil, votes : (VT, s VF, s VA) > 
-        (multicast falseVote(R) from O to OIDS)
-        CONF
-    } [narrowing] .
-
-
-    rl [receive-true] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
-        (multicast trueVote(R) from O' to (O ; OIDS'))
+    rl [receive] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        (multicast vote(V, R) from O' to (O ; OS'))
         CONF
     } =>
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (s VT, VF, s VA), ATTS:U2S > 
-        (multicast trueVote(R) from O' to OIDS')  
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : update([s VT, VF, s VA], V), ATTS:U2S > 
+        (multicast vote(V, R) from O' to OS')  
         CONF
     } [narrowing] .
 
-    rl [receive-false] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
-        (multicast falseVote(R) from O' to (O ; OIDS'))
-        CONF
-    } =>
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, s VF, s VA), ATTS:U2S > 
-        (multicast falseVote(R) from O' to OIDS')  
-        CONF
-    } [narrowing] .
 
-    rl [decideTrue-1] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
+
+    rl [decide-1-true] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         CONF
     }
     =>
-    decideTrue(N <= VT,
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
+    decide?(true, N <= VT, N, OS, 
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CONF
     ) [narrowing] .
 
-    rl [decideTrue-2] :
-    decideTrue(true,
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, ATTS:U24S >,
-        CONF
-    ) 
-    =>
-    {N, OIDS,
-        < O : Node | status : (R, finished), decision : true, ATTS:U24S  >
-        CONF
-    } [narrowing] .
-
-    rl [decideFalse-1] :
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S > 
+    rl [decide-1-true] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         CONF
     }
     =>
-    decideFalse(N <= VF,
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
+    decide?(false, N <= VF, N, OS, 
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CONF
     ) [narrowing] .
 
-    rl [decideFalse-2] :
-    decideFalse(true,
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, ATTS:U24S >,
+
+    rl [decide-2] :
+    decide?(V, true, N, OS,
+        < O : Node | status : [R, waiting], decision : nil, ATTS:U24S >,
         CONF)
     =>
-    {N, OIDS,
-        < O : Node | status : (R, finished), decision : false, ATTS:U24S >
+    {N, OS,
+        < O : Node | status : [R, finished], decision : V, ATTS:U24S >
         CONF
     } [narrowing] .
 
-    rl [updateTrue-1] : 
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >
+
+    rl [update-1-true] : 
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >
         CONF
     }
     =>
-    updateTrue(
-        (VT <  N) and (N <= VA) and (VF <= VT),
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA), ATTS:U2S >,
+    update?(true, (VT <  N) and (N <= VA) and (VF <= VT),
+        N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CONF
     ) [narrowing] .
 
-    rl [updateTrue-2] : 
-    updateTrue(
-        true,
-        N, OIDS,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
-        CONF
-    )
-    =>
-    {N, OIDS,
-        < O : Node | status : (s R, init), value : true, decision : nil, votes : (0, 0, 0) >
-        CONF
-    } [narrowing] .
-
-    rl [updateFalse-1] : 
-    {N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >
+    rl [update-1-false] : 
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA] >
         CONF
     }
     =>
-    updateFalse(
-        (VF < N) and (N <= VA) and (VT < VF),
-        N, OIDS,
-        < O : Node | status : (R, waiting), decision : nil, votes : (VT, VF, VA) >,
+    update?(false, (VF < N) and (N <= VA) and (VT < VF),
+        N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA] >,
         CONF
     ) [narrowing] .
 
-    rl [updateFalse-2] : 
-    updateFalse(
-        true,
-        N, OIDS,
-        < O : Node | status : (R, waiting), value : V, decision : nil, votes : (VT, VF, VA) >,
+    rl [update-2] : 
+    update?(V', true, N, OS,
+        < O : Node | status : [R, waiting], value : V, decision : nil, votes : [VT, VF, VA] >,
         CONF
     )
     =>
-    {N, OIDS,
-        < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
+    {N, OS,
+        < O : Node | status : [s R, init], value : V', decision : nil, votes : [0, 0, 0] >
         CONF
     } [narrowing] .
-
 endm
 
 mod NO-MESSAGE-LOSS-HALF is

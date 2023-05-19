@@ -158,7 +158,6 @@ mod NO-MESSAGE-LOSS-STATIC is
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (0, 0, 0) >
         CONF
     } [variant] .
-
 endm
 
 mod NO-MESSAGE-LOSS-STATIC-HALF is

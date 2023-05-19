@@ -35,9 +35,10 @@ endm
 
 fmod MESSAGE-CONTENT is
     protecting FVP-NAT .
+    protecting SORTS .
     sort MsgContent . 
 
-    ops trueVote falseVote : Nat -> MsgContent [ctor] .
+    op vote : Value Nat -> MsgContent [ctor] .
 endfm
 
 
@@ -68,16 +69,19 @@ mod ONETHIRDRULE-BASE is
     protecting FVP-NAT .
     protecting FVP-BOOL .
 
-    op decideTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op decideFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateTrue : Bool' Nat OidSet Object Configuration -> State [ctor] .
-    op updateFalse : Bool' Nat OidSet Object Configuration -> State [ctor] .
 
-    vars N N' : Nat .
+    vars N N' VT VF VA : Nat .
 
-    ops _<=_ _<_ : Nat Nat -> Bool' .
+    ops _<=_ _<_ : Nat Nat -> Boolean .
     eq N <= N N' = true [variant] .
     eq N < N' = s N <= N' [variant] .
+
+    op update : Vote Value -> Vote .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
+
+    op decide? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
+    op update? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
 endm
 
 

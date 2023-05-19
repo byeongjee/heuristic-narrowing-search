@@ -127,12 +127,12 @@ mod ONETHIRDRULE is
     } [narrowing] .
 
 
-    op decideTrue : Bool' Nat Object Configuration -> State [ctor] .
-    op decideFalse : Bool' Nat Object Configuration -> State [ctor] .
-    op updateTrue : Bool' Nat Object Configuration -> State [ctor] .
-    op updateFalse : Bool' Nat Object Configuration -> State [ctor] .
+    op decideTrue : Boolean Nat Object Configuration -> State [ctor] .
+    op decideFalse : Boolean Nat Object Configuration -> State [ctor] .
+    op updateTrue : Boolean Nat Object Configuration -> State [ctor] .
+    op updateFalse : Boolean Nat Object Configuration -> State [ctor] .
 
-    op _<=_ : Nat Nat -> Bool' .
+    op _<=_ : Nat Nat -> Boolean .
     eq N <= N N' = true [variant] .
 
     rl [decideTrue-1] :

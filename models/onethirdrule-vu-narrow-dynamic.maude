@@ -134,6 +134,7 @@ mod ONETHIRDRULE-VU-NARROW is
         CONF
     }) [narrowing] .
 
+
     rl [vote-false-new] : 
     ready({N, O ; OIDS,
         < O : Node | status : (0, init), value : false, decision : nil, votes : (VT, VF, VA) > 
@@ -151,7 +152,7 @@ mod ONETHIRDRULE-VU-NARROW is
         (multicast falseVote(0) from O to OIDS)
         CONF
     }) [narrowing] .
-
+    
     rl [vote-false-existing] : 
     ready({N, O ; OIDS,
         < O : Node | status : (s R, init), value : false, decision : nil, votes : (VT, VF, VA) > 
