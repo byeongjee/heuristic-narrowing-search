@@ -209,7 +209,7 @@ mod GET-CHILDREN is
     eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
 
     ceq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
-    = < T', L', applySubstitution(M, T, S1), getTerm(metaReduce(M, applySubstitution(M, I, S1))), Q', score(T', D + 1), D + 1 > 
+    = < T', L', getTerm(metaReduce(M, applySubstitution(M, T, S1))), getTerm(metaReduce(M, applySubstitution(M, I, S1))), Q', score(T', D + 1), D + 1 > 
         ; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
     if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
