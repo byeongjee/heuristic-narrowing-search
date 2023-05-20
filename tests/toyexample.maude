@@ -23,8 +23,7 @@ mod EXAMPLE-SYSTEM-WITH-INV is
 
     var N : Nat .
 
-    eq inv(g(s(s(N)))) = true .
-    eq inv(f(s(s(N)))) = true .
+    eq initialCond(f(s(s(N)))) = false .
 endm
 
 fmod EXAMPLE-SYSTEM-SCORE is
@@ -56,4 +55,4 @@ red in MAIN : metaHeuristicNarrowingSearch(
     'f['X:Nat],
     'g['Y:Nat],
     ['l1, 'f['s_['s_['Z:Nat]]]],
-    delay filter) .
+    delay filter, unlimited) .
