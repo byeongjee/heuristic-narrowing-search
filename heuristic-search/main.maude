@@ -351,7 +351,7 @@ mod HEURISTIC-NARROWING is
 
     eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
     = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB,
-    insert(< T, 'none, T, 'inv[T], '@, score(T, 0), 0 >, empty), --- dummy values
+    insert(< T, 'none, T, 'initialCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
     empty) .
 
     ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)

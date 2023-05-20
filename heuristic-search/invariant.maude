@@ -4,5 +4,6 @@ fmod INVARIANT is
     including BOOL .
     including STATE .
 
+    op initialCond : State -> Bool .
     op inv : State -> Bool .
 endfm
