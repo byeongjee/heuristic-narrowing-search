@@ -8,18 +8,21 @@ mod ONETHIRDRULE-TEST-SCORE1 is
     protecting ONETHIRDRULE-VU-NARROW-INDEX .
     protecting ONETHIRDRULE-VU-NARROW-SCORE1 .
     protecting HEURISTIC-NARROWING .
+    protecting ONETHIRDRULE-VU-NARROW .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE2 is
     protecting ONETHIRDRULE-VU-NARROW-INDEX .
     protecting ONETHIRDRULE-VU-NARROW-SCORE2 .
     protecting HEURISTIC-NARROWING .
+    protecting ONETHIRDRULE-VU-NARROW .
 endm
 
 mod ONETHIRDRULE-TEST-SCORE3 is
     protecting ONETHIRDRULE-VU-NARROW-INDEX .
     protecting ONETHIRDRULE-VU-NARROW-SCORE3 .
     protecting HEURISTIC-NARROWING .
+    protecting ONETHIRDRULE-VU-NARROW .
 endm
 
 
@@ -28,8 +31,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
     'ready[
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]]],
     (['vote-true-existing, any] ; 
     ['vote-false-existing, any] ; 
     ['receive-true, any] ; 
@@ -43,8 +46,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
     'ready[
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]]],
     (['vote-true-existing, any] ; 
     ['vote-false-existing, any] ; 
     ['receive-true, any] ; 
@@ -58,8 +61,8 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
     'ready[
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]]],
     none,
     delay filter, unlimited) .
 
@@ -70,8 +73,8 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     'ready['`{_`,_`,_`}['N:Nat, 'OIDS:OidSet, 'INITIAL:InitialObjectSet]],
     'ready[
     '`{_`,_`,_`}['N':Nat,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Bool']]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Bool']]]]]],
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]]],
     none,
     delay filter, unlimited) .
 

@@ -58,6 +58,8 @@ mod GLOBAL is
     including STATE .
 
     op {_,_,_} : Nat OidSet Configuration -> State [ctor] .
+    op decide? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
+    op update? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
 endm
 
 
@@ -79,9 +81,6 @@ mod ONETHIRDRULE-BASE is
     op update : Vote Value -> Vote .
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
-
-    op decide? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
-    op update? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
 endm
 
 
@@ -103,7 +102,7 @@ mod INV-BASE is
 
     op isThresholdValid : OidSet Nat -> Bool [memo] .
 
-    eq inv({N, OIDS, CONF}) 
+    eq initialCond({N, OIDS, CONF}) 
     = noDuplicate(OIDS) 
     and noDuplicate(getOids(CONF)) 
     and isThresholdValid(getOids(CONF), N) .

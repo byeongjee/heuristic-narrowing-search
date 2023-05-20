@@ -36,7 +36,6 @@ mod ONETHIRDRULE is
     } [narrowing] .
 
 
-
     rl [decide-1-true] :
     {N, OS,
         < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
