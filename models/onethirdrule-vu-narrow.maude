@@ -1,0 +1,235 @@
+--- The variant of the onethirdrule that embeds invariants in the model, 
+--- which can be tested using the "vu-narrow" command."
+--- static invisible transition-based reduction is applied
+
+load ./sorts/fvp-nat.maude
+load ./sorts/sorts.maude
+load ../heuristic-search/state.maude
+load ../heuristic-search/invariant.maude
+
+set include BOOL off .
+
+
+mod CONFIGURATION is
+    protecting NODE .
+    protecting INITIAL-SORTS .
+
+    sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
+    subsort Attribute < AttributeSet .
+    subsort InitialAttributeSet < AttributeSet .
+
+    sorts None Object Msg ObjectSet MsgSet Configuration InitialObject InitialObjectSet .
+
+    subsort MsgSet ObjectSet < Configuration .
+    subsort InitialObject < Object InitialObjectSet < ObjectSet .
+    subsort None < ObjectSet MsgSet .
+    subsort Msg < MsgSet .
+
+    op <_:_|_> : Oid Cid IU1234S -> InitialObject [ctor object] .
+    op <_:_|_> : Oid Cid U1234S -> Object [ctor object] .
+    op none : -> None [ctor] .
+    op __ : None None -> None [ctor config assoc comm id: none] .
+    op __ : InitialObjectSet InitialObjectSet -> InitialObjectSet [ctor config assoc comm id: none] .
+    op __ : ObjectSet ObjectSet -> ObjectSet [ctor config assoc comm id: none] .
+    op __ : MsgSet MsgSet -> MsgSet [ctor config assoc comm id: none] .
+    op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
+
+endm
+
+
+fmod MESSAGE-CONTENT is
+    protecting FVP-NAT .
+    protecting SORTS .
+    sort MsgContent . 
+
+    op vote : Value Natural -> MsgContent [ctor] .
+endfm
+
+
+
+mod MULTICAST is 
+  including CONFIGURATION .
+  including MESSAGE-CONTENT .
+
+  op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
+  var MC : MsgContent . var SENDER : Oid .
+  eq multicast MC from SENDER to none = none [variant] .
+endm
+
+mod GLOBAL is
+    protecting CONFIGURATION .
+    protecting FVP-NAT .
+    including STATE .
+
+    sort InternalState .
+
+    op {_,_,_} : Natural OidSet Configuration -> InternalState [ctor] .
+    op decide? :  Value Boolean Natural OidSet Object Configuration -> InternalState [ctor] .
+    op update? :  Value Boolean Natural OidSet Object Configuration -> InternalState [ctor] .
+    op _||_ : InternalState Bool -> State [ctor] .
+
+    op error : -> State [ctor] .
+    var IS : InternalState .
+    eq IS || false = error .
+
+    op none : -> State [ctor] . *** for debugging purposes
+endm
+
+
+mod ONETHIRDRULE-BASE is
+    including GLOBAL .
+    protecting VALUE .
+    protecting MULTICAST .
+    protecting BOOL .
+    protecting FVP-NAT .
+    protecting FVP-BOOL .
+
+
+    vars N N' VT VF VA : Natural .
+
+    ops _<=_ _<_ : Natural Natural -> Boolean .
+    eq N <= N N' = true [variant] .
+    eq N < N' = s N <= N' [variant] .
+
+    op update : Vote Value -> Vote .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
+endm
+
+
+mod ONETHIRDRULE-VU-NARROW is
+    including ONETHIRDRULE-BASE .
+
+    op inv : InternalState -> Bool .
+
+    vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
+    vars OS OS' : OidSet . 
+    var R N N' VT VF VA : Natural .
+    var Z : Zero .
+    vars V V' : Value .
+    var B : Bool .
+
+    rl [vote] : 
+    {N, O ; OS,
+        < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
+        CONF
+    } || B
+    =>
+    {N, O ; OS,
+    < O : Node | status : [R, waiting], value : V, decision : nil, votes : [s VT, VF, s VA] > 
+    (multicast vote(V, R) from O to OS) CONF} || B [narrowing] .
+
+
+    rl [receive] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        (multicast vote(V, R) from O' to (O ; OS'))
+        CONF} || B
+    =>
+    {N, OS,
+    < O : Node | status : [R, waiting], decision : nil, votes : update([s VT, VF, s VA], V), ATTS:U2S > 
+    (multicast vote(V, R) from O' to OS') CONF} ||
+    B [narrowing] .
+
+
+
+    rl [decide-1-true] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        CONF
+    } || B
+    =>
+    decide?(true, N <= VT, N, OS, 
+    < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+    CONF) || B [narrowing] .
+
+    rl [decide-1-true] :
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        CONF
+    } || B
+    =>
+    decide?(false, N <= VF, N, OS, 
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+        CONF) || B [narrowing] .
+
+
+    rl [decide-2] :
+    decide?(V, true, N, OS,
+        < O : Node | status : [R, waiting], decision : nil, ATTS:U24S >,
+        CONF) || B
+    =>
+    {N, OS,
+        < O : Node | status : [R, finished], decision : V, ATTS:U24S >
+        CONF} ||
+    B [narrowing] .
+
+
+    rl [update-1-true] : 
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >
+        CONF
+    } || B
+    =>
+    update?(true, (VT <  N) and (N <= VA) and (VF <= VT),
+        N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+        CONF) ||
+    B [narrowing] .
+
+    rl [update-1-false] : 
+    {N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA] >
+        CONF
+    } || B
+    =>
+    update?(false, (VF < N) and (N <= VA) and (VT < VF),
+        N, OS,
+        < O : Node | status : [R, waiting], decision : nil, votes : [VT, VF, VA] >,
+        CONF) || B [narrowing] .
+
+    rl [update-2] : 
+    update?(V', true, N, OS,
+        < O : Node | status : [R, waiting], value : V, decision : nil, votes : [VT, VF, VA] >,
+        CONF
+    ) || B
+    =>
+    {N, OS,
+        < O : Node | status : [s R, init], value : V', decision : nil, votes : [0, 0, 0] >
+        CONF} || B [narrowing] .
+
+    rl [loss] : 
+    {N, OS, M CONF} || B
+    =>
+    {N, OS, CONF} || B [narrowing] .
+endm
+
+mod ONETHIRDRULE-VU-NARROW-HALF is
+    including ONETHIRDRULE-VU-NARROW .
+
+    var B : Boolean . var V : Value . vars N R : Natural .
+    var S : Step . var Z : Zero .
+    var OS : OidSet . var OBJ : Object . vars O O' : Oid .
+    var C : Cid . var CONF : Configuration . var M : Msg .
+
+    eq inv(update?(B, V, N, OS, OBJ, CONF))
+    = inv({N, OS, OBJ CONF}) .
+    eq inv(decide?(B, V, N, OS, OBJ, CONF))
+    = inv({N, OS, OBJ CONF}) .
+
+    eq inv({N, OS, CONF})
+    = noDuplicate(OS) and noDuplicate(CONF) and sameRound(CONF) and validThreshold(CONF, N) .
+
+    op noDuplicate : OidSet -> Bool .
+    eq noDuplicate(O ; O ; OS) = false .
+
+    op noDuplicate : Configuration -> Bool .
+    eq noDuplicate(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
+
+    op sameRound : Configuration -> Bool .
+    eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
+
+    op validThreshold : Configuration Natural -> Bool .
+    eq validThreshold(< O : Node | ATTS:U1234S > < O' : Node | ATTS':U1234S > CONF, s N) = validThreshold(CONF, N) .
+    eq validThreshold(CONF, Z:Zero) = false .
+endm
