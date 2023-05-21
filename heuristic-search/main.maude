@@ -50,7 +50,7 @@ fmod INDEXED-TERM-SET is
     protecting META-LEVEL .
 
     sort IndexedTerm . *** Nat is depth for debugging purpose
-    op `{_`,_`,_`} : Term Index Nat -> IndexedTerm .
+    op `{_`,_`,_`,_`} : Term Term Index Nat -> IndexedTerm .
 
     op createIndex : Term -> Index .
 
@@ -98,15 +98,16 @@ mod SUBSUMPTION-CHECK is
     op _isSubsumedBy_under_ : Term Term Module -> Bool .
 
     var M : Module .
-    vars T T' : Term . var IDX : Index . vars D D' : Nat .
+    vars T T' I I' : Term . var IDX : Index . vars D D' : Nat .
     var IDXT : IndexedTerm . var IDXTS : IndexedTermSet .
-    var S : Substitution .
+    var S : Substitution . 
 
     eq T isSubsumedBy T' under M = metaMatch(M, T', T, nil, 0) =/= noMatch .
 
-    ceq ({T, IDX, D}) isSubsumedBy ({T', IDX, D'} ; IDXTS) under M 
+    ceq ({T, I ,IDX, D}) isSubsumedBy ({T', I', IDX, D'} ; IDXTS) under M 
     = true
-    if metaMatch(M, T', T, nil, 0) =/= noMatch .
+    if S := metaMatch(M, T', T, nil, 0)
+    /\ getTerm(metaReduce(M, '_or_['not_[applySubstitution(M, I, S)], I'])) == 'true.Bool .
 
     eq IDXT isSubsumedBy IDXTS under M = false [owise] .
 endm
@@ -121,7 +122,7 @@ mod RENAME is
     var F : Qid . var NETL : NeTermList .
 
     op rename : IndexedTerm -> IndexedTerm .
-    eq rename({T, IDX, D}) = {rename(T, D), IDX, D} .
+    eq rename({T, I, IDX, D}) = {rename(T, D), I, IDX, D} .
 
     op rename : NeTermList Nat -> NeTermList .
     eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
@@ -173,7 +174,7 @@ mod FOLDING-APPLICATION is
 
     ceq applyFolding(M, < T, L, T0, I, Q, S, D > ; TIS, IDXTS) 
     = {< T, L, T0, I, Q, S, D > ; TIS' , IDXTS'' }
-    if IDXTS' := insertState(M, {T, createIndex(T), D}, IDXTS) 
+    if IDXTS' := insertState(M, {T, I, createIndex(T), D}, IDXTS) 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 
     eq applyFolding(M, < T, L, T0, I, Q, S, D > ; TIS, IDXTS) 
@@ -370,7 +371,9 @@ mod HEURISTIC-NARROWING is
             applyInvisibleTransitionReduction(M, RIS, 
                 filterInvalid(M, getChildStates(M, TI, VOS))), IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
-    [owise print "current term item: " TI] .
+    [owise
+    print "current term item: " TI
+    ] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, empty, IDXTS)
     = noSolution(length(IDXTS)) .
