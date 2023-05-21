@@ -31,8 +31,8 @@ fmod STATUS is
     sorts Status InitialStatus .
     subsort InitialStatus < Status .
 
-    op [_,_] : Zero InitialStep -> InitialStatus [ctor] . 
-    op [_,_] : Nat Step -> Status [ctor] . 
+    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
+    op [_,_] : Natural Step -> Status [ctor] . 
 endfm
 
 fmod VOTE is
@@ -42,7 +42,7 @@ fmod VOTE is
     subsort InitialVote < Vote .
 
     op [_,_,_] : Zero Zero Zero -> InitialVote [ctor] .
-    op [_,_,_] : Nat Nat Nat -> Vote [ctor] .
+    op [_,_,_] : Natural Natural Natural -> Vote [ctor] .
 endfm
 
 fmod OID-SET is
