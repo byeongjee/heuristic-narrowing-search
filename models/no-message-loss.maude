@@ -6,7 +6,7 @@ mod NO-MESSAGE-LOSS is
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
-    var R N N' VT VF VA : Nat .
+    var R N N' VT VF VA : Natural .
     var Z : Zero .
     vars V V' : Value .
 

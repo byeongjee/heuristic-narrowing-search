@@ -38,7 +38,7 @@ fmod MESSAGE-CONTENT is
     protecting SORTS .
     sort MsgContent . 
 
-    op vote : Value Nat -> MsgContent [ctor] .
+    op vote : Value Natural -> MsgContent [ctor] .
 endfm
 
 
@@ -57,9 +57,9 @@ mod GLOBAL is
     protecting FVP-NAT .
     including STATE .
 
-    op {_,_,_} : Nat OidSet Configuration -> State [ctor] .
-    op decide? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
-    op update? :  Value Boolean Nat OidSet Object Configuration -> State [ctor] .
+    op {_,_,_} : Natural OidSet Configuration -> State [ctor] .
+    op decide? :  Value Boolean Natural OidSet Object Configuration -> State [ctor] .
+    op update? :  Value Boolean Natural OidSet Object Configuration -> State [ctor] .
 endm
 
 
@@ -72,9 +72,9 @@ mod ONETHIRDRULE-BASE is
     protecting FVP-BOOL .
 
 
-    vars N N' VT VF VA : Nat .
+    vars N N' VT VF VA : Natural .
 
-    ops _<=_ _<_ : Nat Nat -> Boolean .
+    ops _<=_ _<_ : Natural Natural -> Boolean .
     eq N <= N N' = true [variant] .
     eq N < N' = s N <= N' [variant] .
 
@@ -88,45 +88,71 @@ mod INV-BASE is
     including ONETHIRDRULE-BASE .
     including INVARIANT .
 
-    var N : Nat . var CONF : Configuration . var M : Msg . 
-    vars O O' : Oid . var C : Cid .  var OIDS  : OidSet .
-    var Z : Zero .
+    vars N R : Natural . 
+    var Z : Zero .  
+    var S : Step .
+    var CONF : Configuration . var M : Msg . 
+    vars O O' : Oid . var C : Cid .  var OS  : OidSet .
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
     eq getOids(M CONF) =  getOids(CONF) .
     eq getOids(none) =  none .
 
-    op noDuplicate : OidSet -> Bool [memo] .
-    eq noDuplicate(O ; O ; OIDS) = false .
+    eq inv(S:[State]) = true .
 
-    op isThresholdValid : OidSet Nat -> Bool [memo] .
+    eq initialCond({N, OS, CONF})
+    = noDuplicate(OS) 
+    and noDuplicate(CONF) 
+    and sameRound(CONF) 
+    and validThreshold(CONF, N) .
 
-    eq initialCond({N, OIDS, CONF}) 
-    = noDuplicate(OIDS) 
-    and noDuplicate(getOids(CONF)) 
-    and isThresholdValid(getOids(CONF), N) .
+    op noDuplicate : OidSet -> Bool .
+    eq noDuplicate(O ; O ; OS) = false .
+
+    op noDuplicate : Configuration -> Bool .
+    eq noDuplicate(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
+
+    op sameRound : Configuration -> Bool .
+    eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
+
+    op validThreshold : Configuration Natural -> Bool .
 endm
 
 mod INV-HALF is
     including INV-BASE .
 
-    vars O O' : Oid . var OIDS  : OidSet .
-    var N : Nat . var Z : Zero .
+    vars O O' : Oid . var CONF : Configuration .
+    var N : Natural . var Z : Zero .
 
-    eq isThresholdValid((O ; O' ; OIDS), s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
-
+    eq validThreshold(
+        < O : Node | ATTS:U1234S > 
+        < O' : Node | ATTS':U1234S > 
+        CONF, 
+        s N) 
+    = validThreshold(CONF, N) .
+    eq validThreshold(CONF, Z) = false .
 endm
 
 mod INV-TWOTHIRD is
     including INV-BASE .
 
-    vars O O' O'' : Oid . var OIDS  : OidSet .
-    var N : Nat . var Z : Zero .
+    vars O O' O'' : Oid . var CONF : Configuration .
+    var N : Natural . var Z : Zero .
 
-    eq isThresholdValid((O ; O' ; O'' ; OIDS), s s N) = isThresholdValid(OIDS, N) .
-    eq isThresholdValid(OIDS, Z) = false .
-    eq isThresholdValid(O ; O' ; OIDS, s) = false .
-    eq isThresholdValid(O ; O' ; OIDS, s Z) = false .
+    eq validThreshold(
+        < O : Node | ATTS:U1234S > 
+        < O' : Node | ATTS':U1234S > 
+        < O'' : Node | ATTS'':U1234S > 
+        CONF,
+        s s N) 
+    = validThreshold(CONF, N) .
+    eq validThreshold(
+        < O : Node | ATTS:U1234S > 
+        < O' : Node | ATTS':U1234S > 
+        CONF, s) = false .
+    eq validThreshold(
+        < O : Node | ATTS:U1234S > 
+        < O' : Node | ATTS':U1234S > 
+        CONF, s Z) = false .
 endm
