@@ -2,7 +2,6 @@ load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
 load ../heuristic-search/invariant.maude
-load ../heuristic-search/implication.maude
 
 set include BOOL off .
 
@@ -51,6 +50,7 @@ mod MULTICAST is
   op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
   var MC : MsgContent . var SENDER : Oid .
   eq multicast MC from SENDER to none = none [variant] .
+  eq multicast MC from SENDER to none = none .
 endm
 
 mod GLOBAL is
@@ -71,7 +71,6 @@ mod ONETHIRDRULE-BASE is
     protecting BOOL .
     protecting FVP-NAT .
     protecting FVP-BOOL .
-    protecting IMPLICATION .
 
 
     vars N N' VT VF VA : Natural .
@@ -79,10 +78,14 @@ mod ONETHIRDRULE-BASE is
     ops _<=_ _<_ : Natural Natural -> Boolean .
     eq N <= N N' = true [variant] .
     eq N < N' = s N <= N' [variant] .
+    eq N <= N N' = true .
+    eq N < N' = s N <= N' .
 
     op update : Vote Value -> Vote .
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
 endm
 
 

@@ -109,7 +109,7 @@ mod SUBSUMPTION-CHECK is
     ceq ({T, I ,IDX, D}) isSubsumedBy ({T', I', IDX, D'} ; IDXTS) under M 
     = true
     if S := metaMatch(M, T', T, nil, 0) 
-    /\ getTerm(metaReduce(M, trTerm(M, '_==>_[I, applySubstitution(M, I', S)]))) == 'true.Bool .
+    /\ getTerm(metaReduce(M, trTerm(M, '_or_['not_[I], applySubstitution(M, I', S)]))) == 'true.Bool .
 
     eq IDXT isSubsumedBy IDXTS under M = false [owise] .
 endm
