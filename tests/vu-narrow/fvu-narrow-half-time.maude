@@ -1,31 +1,31 @@
 load ../models/onethirdrule-vu-narrow.maude
 
-fvu-narrow [, 1] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 1] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
 
-fvu-narrow [, 2] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 2] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
 
-fvu-narrow [, 3] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 3] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
 
-fvu-narrow [, 4] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 4] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
 
-fvu-narrow [, 5] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 5] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
 
-fvu-narrow [, 6] in ONETHIRDRULE-VU-NARROW-HALF :
+{fold} vu-narrow {filter, delay} [, 6] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* none .
