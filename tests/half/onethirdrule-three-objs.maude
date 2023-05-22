@@ -41,7 +41,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-DYNAMIC-HALF, false),
+    upModule('ONETHIRDRULE-STATIC-HALF, false),
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['<_:_|_>['O1:Oid,'Node.Cid,
     'ATTS1:IU1234S],'<_:_|_>['O2:Oid,'Node.Cid,'ATTS2:IU1234S],'<_:_|_>['O3:Oid,
     'Node.Cid,'ATTS3:IU1234S]]],
