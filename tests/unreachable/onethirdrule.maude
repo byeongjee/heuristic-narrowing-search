@@ -1,10 +1,12 @@
 load ../../heuristic-search/main.maude
 load ../model-extensions/onethirdrule-index.maude
 load ../model-extensions/onethirdrule-scoring-functions.maude
+load ../model-extensions/onethirdrule-term-transformer.maude
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is
     protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
     protecting HEURISTIC-NARROWING .
 endm

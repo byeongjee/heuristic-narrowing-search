@@ -2,6 +2,7 @@ load ./data-structures/priority-queue.maude
 load ./rule-instance.maude
 load ./index.maude
 load ./score.maude
+load ./term-transformer.maude
 
 
 fmod TERM-ITEM is
@@ -93,6 +94,7 @@ endv
 
 mod SUBSUMPTION-CHECK is
     protecting INDEXED-TERM-SET .
+    protecting TERM-TRANSFORMER .
 
     op _isSubsumedBy_under_ : IndexedTerm IndexedTermSet Module -> Bool  .
     op _isSubsumedBy_under_ : Term Term Module -> Bool .
@@ -107,7 +109,7 @@ mod SUBSUMPTION-CHECK is
     ceq ({T, I ,IDX, D}) isSubsumedBy ({T', I', IDX, D'} ; IDXTS) under M 
     = true
     if S := metaMatch(M, T', T, nil, 0) 
-    /\ getTerm(metaReduce(M, '_or_['not_[I], applySubstitution(M, I', S)])) == 'true.Bool .
+    /\ getTerm(metaReduce(M, trTerm(M, '_==>_[I, applySubstitution(M, I', S)]))) == 'true.Bool .
 
     eq IDXT isSubsumedBy IDXTS under M = false [owise] .
 endm
@@ -371,9 +373,7 @@ mod HEURISTIC-NARROWING is
             applyInvisibleTransitionReduction(M, RIS, 
                 filterInvalid(M, getChildStates(M, TI, VOS))), IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
-    [owise
-    print "current term item: " TI
-    ] .
+    [owise print "current term item: " TI] .
 
     eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, empty, IDXTS)
     = noSolution(length(IDXTS)) .

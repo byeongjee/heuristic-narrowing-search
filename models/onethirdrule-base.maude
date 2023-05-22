@@ -2,6 +2,7 @@ load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
 load ../heuristic-search/invariant.maude
+load ../heuristic-search/implication.maude
 
 set include BOOL off .
 
@@ -70,6 +71,7 @@ mod ONETHIRDRULE-BASE is
     protecting BOOL .
     protecting FVP-NAT .
     protecting FVP-BOOL .
+    protecting IMPLICATION .
 
 
     vars N N' VT VF VA : Natural .
