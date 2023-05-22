@@ -1,0 +1,23 @@
+load ../../heuristic-search/term-transformer.maude
+
+mod ONETHIRDRULE-TERM-TRANSFORMER is
+    protecting TERM-TRANSFORMER .
+
+    op trTerm : Module NeTermList -> NeTermList .
+
+    var M : Module .
+
+    var T : Term .
+    var NETL : NeTermList .
+    var F : Qid .
+    var V : Variable .
+    
+
+    eq trTerm(M, F[NETL]) = F[trTerm(M, NETL)] .
+    eq trTerm(M, (T, NETL)) = trTerm(M, T), trTerm(M, NETL) .
+    eq trTerm(M, empty) = empty .
+
+    ceq trTerm(M, V) = '0.Zero if leastSort(M, V) == 'Zero .
+
+    eq trTerm(M, T) = T [owise] .
+endm

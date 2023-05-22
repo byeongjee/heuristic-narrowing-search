@@ -1,0 +1,6 @@
+
+mod TERM-TRANSFORMER is
+    protecting META-LEVEL .
+
+    op trTerm : Module Term -> Term .
+endm
