@@ -1,7 +1,7 @@
 load ./onethirdrule-base.maude
 
 
-mod NO-MESSAGE-LOSS is
+mod NO-MESSAGE-LOSS-STATIC is
     including ONETHIRDRULE-BASE .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
@@ -105,12 +105,12 @@ mod NO-MESSAGE-LOSS is
     } [variant] .
 endm
 
-mod NO-MESSAGE-LOSS-HALF is
-    protecting NO-MESSAGE-LOSS .
+mod NO-MESSAGE-LOSS-STATIC-HALF is
+    protecting NO-MESSAGE-LOSS-STATIC .
     protecting INV-HALF .
 endm
 
 mod NO-MESSAGE-LOSS-TWOTHIRD is
-    protecting NO-MESSAGE-LOSS .
+    protecting NO-MESSAGE-LOSS-STATIC .
     protecting INV-TWOTHIRD .
 endm

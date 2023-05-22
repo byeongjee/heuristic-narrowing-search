@@ -105,7 +105,12 @@ mod INV-BASE is
     = noDuplicate(OS) 
     and noDuplicate(CONF) 
     and sameRound(CONF) 
-    and validThreshold(CONF, N) .
+    and validThreshold(numObjs(CONF), N) .
+
+    op numObjs : Configuration -> Natural .
+    eq numObjs(< O : Node | ATTS:U1234S > CONF) = s numObjs(CONF) .
+    eq numObjs(M CONF) = numObjs(CONF) .
+    eq numObjs(none) = 0 .
 
     op noDuplicate : OidSet -> Bool .
     eq noDuplicate(O ; O ; OS) = false .
@@ -116,43 +121,28 @@ mod INV-BASE is
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
 
-    op validThreshold : Configuration Natural -> Bool .
+    op validThreshold : Natural Natural -> Bool .
 endm
 
 mod INV-HALF is
     including INV-BASE .
 
     vars O O' : Oid . var CONF : Configuration .
-    var N : Natural . var Z : Zero .
+    vars N N' : Natural . var Z : Zero .
 
-    eq validThreshold(
-        < O : Node | ATTS:U1234S > 
-        < O' : Node | ATTS':U1234S > 
-        CONF, 
-        s N) 
-    = validThreshold(CONF, N) .
-    eq validThreshold(CONF, Z) = false .
+    eq validThreshold(s s N, s N') 
+    = validThreshold(N, N') .
+    eq validThreshold(N, Z) = false .
 endm
 
 mod INV-TWOTHIRD is
     including INV-BASE .
 
     vars O O' O'' : Oid . var CONF : Configuration .
-    var N : Natural . var Z : Zero .
+    vars N N' : Natural . var Z : Zero .
 
-    eq validThreshold(
-        < O : Node | ATTS:U1234S > 
-        < O' : Node | ATTS':U1234S > 
-        < O'' : Node | ATTS'':U1234S > 
-        CONF,
-        s s N) 
-    = validThreshold(CONF, N) .
-    eq validThreshold(
-        < O : Node | ATTS:U1234S > 
-        < O' : Node | ATTS':U1234S > 
-        CONF, s) = false .
-    eq validThreshold(
-        < O : Node | ATTS:U1234S > 
-        < O' : Node | ATTS':U1234S > 
-        CONF, s Z) = false .
+    eq validThreshold(s s s N, s s N') 
+    = validThreshold(N, N') .
+    eq validThreshold(s s N, Z) = false .
+    eq validThreshold(s s N, s Z) = false .
 endm

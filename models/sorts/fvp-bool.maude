@@ -3,13 +3,11 @@ set include BOOL off .
 
 fmod FVP-BOOL is
     sort Boolean .
-    ops false true : -> Boolean [ctor] .
-
+    ops true false : -> Boolean [ctor] .
     op _and_ : Boolean Boolean -> Boolean [assoc comm] .
-    vars A B C : Boolean .
 
-    eq true and A = A [variant] .
-    eq false and A = false [variant] .
-    eq A and A = A [variant] .
-
+    var B : Boolean .
+    eq true and B = B [variant] .
+    eq false and B = false [variant] .
+    eq B and B = B [variant] .
 endfm
