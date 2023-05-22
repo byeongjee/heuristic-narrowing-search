@@ -106,8 +106,8 @@ mod SUBSUMPTION-CHECK is
 
     ceq ({T, I ,IDX, D}) isSubsumedBy ({T', I', IDX, D'} ; IDXTS) under M 
     = true
-    if S := metaMatch(M, T', T, nil, 0)
-    /\ getTerm(metaReduce(M, '_or_['not_[applySubstitution(M, I, S)], I'])) == 'true.Bool .
+    if S := metaMatch(M, T', T, nil, 0) 
+    /\ getTerm(metaReduce(M, '_or_['not_[I], applySubstitution(M, I', S)])) == 'true.Bool .
 
     eq IDXT isSubsumedBy IDXTS under M = false [owise] .
 endm
@@ -122,7 +122,7 @@ mod RENAME is
     var F : Qid . var NETL : NeTermList .
 
     op rename : IndexedTerm -> IndexedTerm .
-    eq rename({T, I, IDX, D}) = {rename(T, D), I, IDX, D} .
+    eq rename({T, I, IDX, D}) = {rename(T, D), rename(I, D), IDX, D} .
 
     op rename : NeTermList Nat -> NeTermList .
     eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
