@@ -207,7 +207,7 @@ endm
 mod ONETHIRDRULE-VU-NARROW-HALF is
     including ONETHIRDRULE-VU-NARROW .
 
-    var B : Boolean . var V : Value . vars N R : Natural .
+    var B : Boolean . var V : Value . vars N N' R : Natural .
     var S : Step . var Z : Zero .
     var OS : OidSet . var OBJ : Object . vars O O' : Oid .
     var C : Cid . var CONF : Configuration . var M : Msg .
@@ -218,7 +218,10 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     = inv({N, OS, OBJ CONF}) .
 
     eq inv({N, OS, CONF})
-    = noDuplicate(OS) and noDuplicate(CONF) and sameRound(CONF) and validThreshold(CONF, N) .
+    = noDuplicate(OS) 
+    and noDuplicate(CONF) 
+    and sameRound(CONF) 
+    and validThreshold(numObjs(CONF), N) .
 
     op noDuplicate : OidSet -> Bool .
     eq noDuplicate(O ; O ; OS) = false .
@@ -229,7 +232,14 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
 
-    op validThreshold : Configuration Natural -> Bool .
-    eq validThreshold(< O : Node | ATTS:U1234S > < O' : Node | ATTS':U1234S > CONF, s N) = validThreshold(CONF, N) .
-    eq validThreshold(CONF, Z:Zero) = false .
+    op numObjs : Configuration -> Natural .
+    eq numObjs(< O : Node | ATTS:U1234S > CONF) = s numObjs(CONF) .
+    eq numObjs(M CONF) = numObjs(CONF) .
+    eq numObjs(none) = 0 .
+
+    op validThreshold : Natural Natural -> Bool .
+
+    eq validThreshold(s s N, s N') 
+    = validThreshold(N, N') .
+    eq validThreshold(N, Z) = false .
 endm
