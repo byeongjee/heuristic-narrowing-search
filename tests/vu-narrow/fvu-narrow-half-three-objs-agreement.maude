@@ -1,16 +1,16 @@
-load ../models/onethirdrule-vu-narrow.maude
+load ../../models/onethirdrule-vu-narrow.maude
 
-fvu-narrow [1] in ONETHIRDRULE-VU-NARROW-HALF :
-{N:Natural, OIDS:OidSet, 
+{fold} vu-narrow {filter,delay} [1] in ONETHIRDRULE-VU-NARROW-HALF :
+{N:Natural, OS:OidSet, 
 < O1:Oid : Node | ATTS1:IU1234S >
 < O2:Oid : Node | ATTS2:IU1234S >
 < O3:Oid : Node | ATTS3:IU1234S >}
-|| inv({N:Natural, OIDS:OidSet, 
+|| inv({N:Natural, OS:OidSet, 
     < O1:Oid : Node | ATTS1:IU1234S >
     < O2:Oid : Node | ATTS2:IU1234S >
     < O3:Oid : Node | ATTS3:IU1234S >})
 =>* 
-{N:Natural, OIDS:OidSet,
+{N:Natural, OS:OidSet,
 < O:Oid : Node | decision : true, ATTS:U124S >
 < O':Oid : Node | decision : false, ATTS':U124S >
 CONF:Configuration} || B:Bool .

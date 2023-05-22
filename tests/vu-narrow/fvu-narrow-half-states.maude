@@ -1,4 +1,4 @@
-load ../models/onethirdrule-vu-narrow.maude
+load ../../models/onethirdrule-vu-narrow.maude
 
 {fold} vu-narrow {filter, delay} [, 1] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
@@ -26,6 +26,11 @@ load ../models/onethirdrule-vu-narrow.maude
 =>* S:State .
 
 {fold} vu-narrow {filter, delay} [, 6] in ONETHIRDRULE-VU-NARROW-HALF :
+{N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
+|| inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
+=>* S:State .
+
+{fold} vu-narrow {filter, delay} [, 7] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet}
 || inv({N:Natural, OIDS:OidSet, INITIAL:InitialObjectSet})
 =>* S:State .

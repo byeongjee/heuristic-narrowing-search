@@ -1,4 +1,4 @@
-load ../models/onethirdrule-vu-narrow.maude
+load ../../models/onethirdrule-vu-narrow.maude
 
 vu-narrow {filter, delay} [1] in ONETHIRDRULE-VU-NARROW-HALF :
 {N:Natural, OS:OidSet, 
