@@ -150,6 +150,8 @@ mod INV-TWOTHIRD is
     = validThreshold(N, N') .
     eq validThreshold(s s N, Z) = false .
     eq validThreshold(s s N, s Z) = false .
+    eq validThreshold(s N, Z) = false .
+    eq validThreshold(N, Z) = false .
 endm
 
 mod INV-FIXED-OBJS is
