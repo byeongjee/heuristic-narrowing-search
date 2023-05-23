@@ -116,7 +116,7 @@ mod ONETHIRDRULE-VU-NARROW is
     } || B
     =>
     {N, O ; OS,
-    < O : Node | status : [R, waiting], value : V, decision : nil, votes : [s VT, VF, s VA] > 
+    < O : Node | status : [R, waiting], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
     (multicast vote(V, R) from O to OS) CONF} || B [narrowing] .
 
 
@@ -127,7 +127,7 @@ mod ONETHIRDRULE-VU-NARROW is
         CONF} || B
     =>
     {N, OS,
-    < O : Node | status : [R, waiting], decision : nil, votes : update([s VT, VF, s VA], V), ATTS:U2S > 
+    < O : Node | status : [R, waiting], decision : nil, votes : update([VT, VF, VA], V), ATTS:U2S > 
     (multicast vote(V, R) from O' to OS') CONF} ||
     B [narrowing] .
 
