@@ -12,6 +12,12 @@ tmux new-session -d -s vu-narrow-half-three-objs-agreement '~/Maude/maude ~/heur
 
 tmux new-session -d -s fvu-narrow-half-three-objs-agreement '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/half/fvu-narrow-half-three-objs.maude > ~/heuristic-narrowing/tests/vu-narrow/half/fvu-narrow-half-three-objs.out'
 ## twothird
+tmux new-session -d -s vu-narrow-twothird-states '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-states.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-states.out'
+tmux new-session -d -s vu-narrow-twothird-time '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-time.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-time.out'
+
+tmux new-session -d -s fvu-narrow-twothird-states '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/fvu-narrow-twothird-states.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/fvu-narrow-twothird-states.out'
+tmux new-session -d -s fvu-narrow-twothird-time '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/fvu-narrow-twothird-time.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/fvu-narrow-twothird-time.out'
+
 tmux new-session -d -s vu-narrow-twothird-three-objs-states '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-three-objs-states.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-three-objs-states.out'
 tmux new-session -d -s vu-narrow-twothird-three-objs-time '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-three-objs-time.maude > ~/heuristic-narrowing/tests/vu-narrow/twothird/vu-narrow-twothird-three-objs-time.out'
 
