@@ -7,8 +7,6 @@ load ./sorts/sorts.maude
 load ../heuristic-search/state.maude
 load ../heuristic-search/invariant.maude
 
-set include BOOL off .
-
 
 mod CONFIGURATION is
     protecting NODE .
@@ -72,7 +70,7 @@ mod GLOBAL is
     var IS : InternalState .
     eq IS || false = error .
 
-    op none : -> State [ctor] . *** for debugging purposes
+    op unreachable : -> State [ctor] . *** for debugging purposes
 endm
 
 
@@ -89,7 +87,7 @@ mod ONETHIRDRULE-BASE is
 
     ops _<=_ _<_ : Natural Natural -> Boolean .
     eq N <= N N' = true [variant] .
-    eq N < N' = s N <= N' [variant] .
+    eq N < N N' s = true [variant] .
 
     op update : Vote Value -> Vote .
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
@@ -163,7 +161,6 @@ mod ONETHIRDRULE-VU-NARROW is
         < O : Node | status : [R, finished], decision : V, ATTS:U24S >
         CONF} ||
     B [narrowing] .
-
 
     rl [update-1-true] : 
     {N, OS,

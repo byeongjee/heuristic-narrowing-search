@@ -1,16 +1,18 @@
 load ../../models/onethirdrule-vu-narrow.maude
 
-vu-narrow {filter, delay} [1] in ONETHIRDRULE-VU-NARROW-HALF :
-{N:Natural, OS:OidSet, 
-< O1:Oid : Node | ATTS1:IU1234S >
-< O2:Oid : Node | ATTS2:IU1234S >
-< O3:Oid : Node | ATTS3:IU1234S >}
-|| inv({N:Natural, OS:OidSet, 
-    < O1:Oid : Node | ATTS1:IU1234S >
-    < O2:Oid : Node | ATTS2:IU1234S >
-    < O3:Oid : Node | ATTS3:IU1234S >})
+vu-narrow {filter,delay} [1] in ONETHIRDRULE-VU-NARROW-FIXED-OBJS :
+{s s, O1 ; O2 ; O3, 
+< O1 : Node | status : [R, init], value : V1, decision : nil, votes : [0, 0, 0] >
+< O2 : Node | status : [R, init], value : V2, decision : nil, votes : [0, 0, 0] >
+< O3 : Node | status : [R, init], value : V3, decision : nil, votes : [0, 0, 0] >}
+|| inv(
+{s s, O1 ; O2 ; O3, 
+< O1 : Node | status : [R, init], value : V1, decision : nil, votes : [0, 0, 0] >
+< O2 : Node | status : [R, init], value : V2, decision : nil, votes : [0, 0, 0] >
+< O3 : Node | status : [R, init], value : V3, decision : nil, votes : [0, 0, 0] >}
+)
 =>* 
-{N:Natural, OS:OidSet,
-< O:Oid : Node | decision : true, ATTS:U124S >
-< O':Oid : Node | decision : false, ATTS':U124S >
-CONF:Configuration} || B:Bool .
+{N, OS,
+< O : Node | decision : true, ATTS:U124S >
+< O' : Node | decision : false, ATTS':U124S >
+CONF} || INV .
