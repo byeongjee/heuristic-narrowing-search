@@ -120,3 +120,8 @@ mod ONETHIRDRULE-TWOTHIRD is
     protecting ONETHIRDRULE .
     protecting INV-TWOTHIRD .
 endm
+
+mod ONETHIRDRULE-FIXED-OBJS is
+    protecting ONETHIRDRULE .
+    protecting INV-FIXED-OBJS .
+endm

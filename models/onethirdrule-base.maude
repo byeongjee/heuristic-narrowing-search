@@ -151,3 +151,19 @@ mod INV-TWOTHIRD is
     eq validThreshold(s s N, Z) = false .
     eq validThreshold(s s N, s Z) = false .
 endm
+
+mod INV-FIXED-OBJS is
+    including ONETHIRDRULE-BASE .
+    including INVARIANT .
+
+    vars O : Oid . var OS : OidSet .
+    var N : Natural .
+    var CONF : Configuration .
+
+    eq inv(S:[State]) = true .
+
+    eq initialCond({N, OS, CONF}) = noDuplicate(OS) .
+
+    op noDuplicate : OidSet -> Bool .
+    eq noDuplicate(O ; O ; OS) = false .
+endm

@@ -114,3 +114,8 @@ mod NO-MESSAGE-LOSS-TWOTHIRD is
     protecting NO-MESSAGE-LOSS .
     protecting INV-TWOTHIRD .
 endm
+
+mod NO-MESSAGE-LOSS-FIXED-OBJS is
+    protecting NO-MESSAGE-LOSS .
+    protecting INV-FIXED-OBJS .
+endm

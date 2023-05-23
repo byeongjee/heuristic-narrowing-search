@@ -242,4 +242,31 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     eq validThreshold(s s N, s N') 
     = validThreshold(N, N') .
     eq validThreshold(N, Z) = false .
+
+    var INITIAL : InitialObjectSet .
+endm
+
+mod ONETHIRDRULE-VU-NARROW-FIXED-OBJS is
+    including ONETHIRDRULE-VU-NARROW .
+
+    var B : Boolean . var V : Value . vars N N' : Natural .
+    var S : Step . var Z : Zero .
+    var OS : OidSet . var OBJ : Object . vars O O' : Oid .
+    var C : Cid . var CONF : Configuration . var M : Msg .
+
+    eq inv(update?(B, V, N, OS, OBJ, CONF))
+    = inv({N, OS, OBJ CONF}) .
+    eq inv(decide?(B, V, N, OS, OBJ, CONF))
+    = inv({N, OS, OBJ CONF}) .
+
+    eq inv({N, OS, CONF})
+    = noDuplicate(OS) .
+
+    op noDuplicate : OidSet -> Bool .
+    eq noDuplicate(O ; O ; OS) = false .
+
+    vars O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var R : Natural .
+    var INV : Bool .
 endm

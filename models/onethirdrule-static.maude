@@ -119,3 +119,8 @@ mod ONETHIRDRULE-STATIC-TWOTHIRD is
     protecting ONETHIRDRULE-STATIC .
     protecting INV-TWOTHIRD .
 endm
+
+mod ONETHIRDRULE-STATIC-FIXED-OBJS is
+    protecting ONETHIRDRULE-STATIC .
+    protecting INV-FIXED-OBJS .
+endm
