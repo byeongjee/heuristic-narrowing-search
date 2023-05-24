@@ -30,9 +30,12 @@ fmod STATUS is
 
     sorts Status InitialStatus .
     subsort InitialStatus < Status .
+    sort InitialRound .
 
-    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
     op [_,_] : Natural Step -> Status [ctor] . 
+
+*** InitialStatus will be defined in each model. We take this approach to
+*** customize the initial round for each model.
 endfm
 
 fmod VOTE is

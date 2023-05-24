@@ -98,6 +98,8 @@ endm
 mod ONETHIRDRULE-VU-NARROW is
     including ONETHIRDRULE-BASE .
 
+    subsort Natural < InitialRound .
+
     op inv : InternalState -> Bool .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .

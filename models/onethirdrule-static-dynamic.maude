@@ -1,10 +1,10 @@
 load ./onethirdrule-base.maude
 
 
-mod ONETHIRDRULE-STATIC is
+mod ONETHIRDRULE-STATIC-DYNAMIC is
     including ONETHIRDRULE-BASE .
 
-    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
+    op [_,_] : Zero InitialStep -> InitialStatus [ctor] . 
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
@@ -12,15 +12,27 @@ mod ONETHIRDRULE-STATIC is
     var Z : Zero .
     vars V V' : Value .
 
-    rl [vote] : 
+    rl [vote-by-new] : 
     {N, O ; OS,
-        < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
+        < O : Node | status : [0, init], value : V, decision : nil, votes : [VT, VF, VA] > 
         CONF
     }
     =>
     {N, O ; OS,
-        < O : Node | status : [R, waiting], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
-        (multicast vote(V, R) from O to OS)
+        < O : Node | status : [0, waiting], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
+        (multicast vote(V, 0) from O to OS)
+        CONF
+    } [narrowing] .
+
+    rl [vote-by-existing] : 
+    {N, O ; OS,
+        < O : Node | status : [s R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
+        CONF
+    }
+    =>
+    {N, O ; OS,
+        < O : Node | status : [s R, waiting], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
+        (multicast vote(V, s R) from O to OS)
         CONF
     } [narrowing] .
 
@@ -112,17 +124,27 @@ mod ONETHIRDRULE-STATIC is
     {N, OS, CONF} [narrowing] .
 endm
 
-mod ONETHIRDRULE-STATIC-HALF is
-    protecting ONETHIRDRULE-STATIC .
+mod ONETHIRDRULE-STATIC-DYNAMIC-HALF is
+    protecting ONETHIRDRULE-STATIC-DYNAMIC .
     protecting INV-HALF .
 endm
 
-mod ONETHIRDRULE-STATIC-TWOTHIRD is
-    protecting ONETHIRDRULE-STATIC .
+mod ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD is
+    protecting ONETHIRDRULE-STATIC-DYNAMIC .
     protecting INV-TWOTHIRD .
 endm
 
-mod ONETHIRDRULE-STATIC-FIXED-OBJS is
-    protecting ONETHIRDRULE-STATIC .
+mod ONETHIRDRULE-STATIC-DYNAMIC-HALF-FIXED-INITIAL-ROUND is
+    protecting ONETHIRDRULE-STATIC-DYNAMIC .
+    protecting INV-HALF-FIXED-INITIAL-ROUND .
+endm
+
+mod ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD-FIXED-INITIAL-ROUND is
+    protecting ONETHIRDRULE-STATIC-DYNAMIC .
+    protecting INV-TWOTHIRD-FIXED-INITIAL-ROUND .
+endm
+
+mod ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS is
+    protecting ONETHIRDRULE-STATIC-DYNAMIC .
     protecting INV-FIXED-OBJS .
 endm

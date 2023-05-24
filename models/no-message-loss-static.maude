@@ -4,6 +4,8 @@ load ./onethirdrule-base.maude
 mod NO-MESSAGE-LOSS-STATIC is
     including ONETHIRDRULE-BASE .
 
+    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
+
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
     var R N N' VT VF VA : Natural .
