@@ -30,7 +30,7 @@ load ../../models/onethirdrule-static-dynamic.maude
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -51,7 +51,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -71,7 +71,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -94,7 +94,7 @@ load ../../models/onethirdrule-static.maude
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -114,7 +114,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -134,7 +134,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -157,7 +157,7 @@ load ../../models/onethirdrule.maude
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -177,7 +177,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
@@ -197,7 +197,7 @@ do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-FIXED-OBJS, false),
-    '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
+    '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
     'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
