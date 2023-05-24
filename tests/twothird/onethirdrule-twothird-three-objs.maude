@@ -71,8 +71,10 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
+load ../../models/onethirdrule-static-dynamic.maude
+
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
+    upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
@@ -86,7 +88,7 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ('receive),  
+    'vote-by-existing ; 'receive,
     delay filter, unlimited) .
 
 do clear memo .
@@ -136,8 +138,10 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
+load ../../models/onethirdrule-static-dynamic.maude
+
 red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
+    upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
@@ -151,7 +155,7 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ('receive),  
+    'vote-by-existing ; 'receive,
     delay filter, unlimited) .
 
 do clear memo .
@@ -201,8 +205,10 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
+load ../../models/onethirdrule-static-dynamic.maude
+
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-FIXED-OBJS, false),
+    upModule('ONETHIRDRULE-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
     'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
@@ -216,7 +222,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OIDS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ('receive),  
+    'vote-by-existing ; 'receive,
     delay filter, unlimited) .
 
 do clear memo .

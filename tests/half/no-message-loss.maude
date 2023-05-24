@@ -25,30 +25,50 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     protecting HEURISTIC-NARROWING .
 endm
 
+*** static + dynamic reduction
+load ../../models/no-message-loss-static-dynamic.maude
+
+red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'vote-by-existing ; 'receive,
+    delay filter, unlimited) .
+
+do clear memo .
+
+red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'vote-by-existing ; 'receive,
+    delay filter, unlimited) .
+
+do clear memo .
+
+***(
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'vote-by-existing ; 'receive,
+    delay filter, unlimited) .
+
+do clear memo .
+)
+
+*** static reduction
+
 load ../../models/no-message-loss-static.maude
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
-    '`{_`,_`,_`}['N:Natural,. 'OS:OidSet, 'INITIAL:InitialObjectSet],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive,
-    delay filter, unlimited) .
-
-do clear memo .
-
-red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive,
-    delay filter, unlimited) .
-
-red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -67,6 +87,19 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
+***(
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('NO-MESSAGE-LOSS-STATIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    none, delay filter, unlimited) .
+
+do clear memo .
+)
+
+*** no reduction
 
 load ../../models/no-message-loss.maude
 
@@ -89,3 +122,13 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     none, delay filter, unlimited) .
 
 do clear memo .
+
+***(
+red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+    upModule('NO-MESSAGE-LOSS-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    none, delay filter, unlimited) .
+)

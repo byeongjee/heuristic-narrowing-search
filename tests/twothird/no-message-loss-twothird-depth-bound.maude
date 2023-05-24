@@ -138,63 +138,70 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 *** static + dynamic reduction
+load ../../models/no-message-loss-static-dynamic.maude
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 1) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 1) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 2) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 2) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 3) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 3) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 4) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 4) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 5) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 5) .
 
 do clear memo .
 
 red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
-    upModule('NO-MESSAGE-LOSS-STATIC-TWOTHIRD, false),
+    upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive, delay filter, 6) .
+    'vote-by-existing ; 'receive, 
+    delay filter, 6) .
 
 do clear memo .
