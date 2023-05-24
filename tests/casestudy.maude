@@ -1,0 +1,37 @@
+load ../heuristic-search/main.maude
+load ./model-extensions/onethirdrule-index.maude
+load ./model-extensions/onethirdrule-scoring-functions.maude
+load ./model-extensions/onethirdrule-term-transformer.maude
+
+
+
+mod ONETHIRDRULE-TEST-SCORE3 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
+    protecting ONETHIRDRULE-SCORE3 .
+    protecting HEURISTIC-NARROWING .
+endm
+
+load ../models/onethirdrule-static.maude
+
+red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-STATIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'receive,
+    delay filter, unlimited) .
+
+do clear memo .
+
+load ../models/onethirdrule-static-dynamic.maude
+
+red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-STATIC-DYNAMIC-HALF-FIXED-INITIAL-ROUND, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitialObjectSet],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'vote-by-existing ; 'receive,
+    delay filter, unlimited) .
