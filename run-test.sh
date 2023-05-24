@@ -32,13 +32,9 @@ tmux new-session -d -s no-message-loss-half '~/Maude/maude ~/heuristic-narrowing
 tmux new-session -d -s no-message-loss-half-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/half/no-message-loss-three-objs.maude > ~/heuristic-narrowing/tests/half/no-message-loss-three-objs.out'
 
 # twothird
-tmux new-session -d -s onethirdrule-twothird-depth-bound-score1 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score1.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score1.out'
-tmux new-session -d -s onethirdrule-twothird-depth-bound-score2 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score2.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score2.out'
-tmux new-session -d -s onethirdrule-twothird-depth-bound-score3 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score3.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound-score3.out'
+tmux new-session -d -s onethirdrule-twothird-depth-bound '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound.out'
 
-tmux new-session -d -s no-message-loss-twothird-depth-bound-score1 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score1.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score1.out'
-tmux new-session -d -s no-message-loss-twothird-depth-bound-score2 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score2.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score2.out'
-tmux new-session -d -s no-message-loss-twothird-depth-bound-score3 '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score3.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound-score3.out'
+tmux new-session -d -s no-message-loss-twothird-depth-bound '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-depth-bound.out'
 
 tmux new-session -d -s onethirdrule-twothird-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-three-objs.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-three-objs.out'
 tmux new-session -d -s no-message-loss-twothird-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-three-objs.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-three-objs.out'
