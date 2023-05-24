@@ -23,14 +23,14 @@ fmod ONETHIRDRULE-SCORE-BASE is
     subsort Int < Score .
 
     vars N N' : Int .
-    vars T BT NT OIDT OT CT ST : Term .
+    vars T BT NT OST OT CT ST : Term .
     var D : Nat .
     var NETL : NeTermList .
 
     eq le(N, N') = N <= N' .
 
     eq score(
-        '`{_`,_`,_`}[T, OIDT, NETL], D
+        '`{_`,_`,_`}[T, OST, NETL], D
     ) = score(NETL) .
 
     op score : NeTermList -> Score .
@@ -43,13 +43,13 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     *** auxiliary functions
     op toNumber : Term -> Int .
-    eq toNumber('0.Nat) = 0 .
-    eq toNumber('s.Nat) = 1 .
+    eq toNumber('0.Natural) = 0 .
+    eq toNumber('s.Natural) = 1 .
     eq toNumber(T) = 0 [owise] .
     eq toNumber('__[NETL]) = countS(NETL) .
 
     op countS : NeTermList -> Int .
-    eq countS('s.Nat) = 1 .
+    eq countS('s.Natural) = 1 .
     eq countS(T) = 0 [owise] .
     eq countS((T, NETL)) = countS(T) + countS(NETL) .
 endfm
@@ -57,14 +57,14 @@ endfm
 fmod ONETHIRDRULE-SCORE2 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OIDT OT CT ST : Term .
+    vars T VT BT NT OST OT CT ST : Term .
     var D : Nat .
 
     eq score(
-        'decide?[VT, BT, NT, OIDT, OT, CT], D
+        'decide?[VT, BT, NT, OST, OT, CT], D
     ) = score((OT, CT)) .
     eq score(
-        'update?[VT, BT, NT, OIDT, OT, CT], D
+        'update?[VT, BT, NT, OST, OT, CT], D
     ) = score((OT, CT)) .
 
     var NETL : NeTermList .
@@ -78,50 +78,21 @@ endfm
 fmod ONETHIRDRULE-SCORE3 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OIDT OT CT ST DT RT : Term .
+    vars T VT BT NT OST OT CT ST DT RT : Term .
     var D : Nat .
 
     eq score(
-        'decide?[VT, BT, NT, OIDT, OT, CT], D
+        'decide?[VT, BT, NT, OST, OT, CT], D
     ) = score((OT, CT)) .
     eq score(
-        'update?[VT, BT, NT, OIDT, OT, CT], D
+        'update?[VT, BT, NT, OST, OT, CT], D
     ) = score((OT, CT)) .
 
     vars NETL NETL' : NeTermList .
 
     eq score('<_:_|_>[OT, CT, '_`,_[
-        'status`:_['`[_`,_`][RT, ST]], NETL, 'decision`:_[DT], NETL']])
-    = if DT == 'nil.InitialValue then 100 else 90 fi 
-    + max(1, toNumber(RT)) .
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    =  if ST == 'finished.Step then 1 else 10 fi .
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm
-
-
-fmod ONETHIRDRULE-VU-NARROW-SCORE1 is
-    including ONETHIRDRULE-SCORE1 .
-
-    vars T BT : Term . var D : Nat .
-
-    eq score('ready[T], D) = score(T, D) .
-    eq score('check[BT, T], D) = score(T, D) .
-endfm
-
-fmod ONETHIRDRULE-VU-NARROW-SCORE2 is
-    including ONETHIRDRULE-SCORE2 .
-
-    vars T BT : Term . var D : Nat .
-
-    eq score('ready[T], D) = score(T, D) .
-    eq score('check[BT, T], D) = score(T, D) .
-endfm 
-
-fmod ONETHIRDRULE-VU-NARROW-SCORE3 is
-    including ONETHIRDRULE-SCORE3 .
-
-    vars T BT : Term . var D : Nat .
-
-    eq score('ready[T], D) = score(T, D) .
-    eq score('check[BT, T], D) = score(T, D) .
-endfm 
