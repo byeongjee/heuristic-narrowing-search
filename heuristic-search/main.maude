@@ -1,5 +1,4 @@
 load ./data-structures/priority-queue.maude
-load ./rule-instance.maude
 load ./index.maude
 load ./score.maude
 load ./term-transformer.maude
@@ -253,7 +252,6 @@ mod INVISIBLE-TRANSITION is
     protecting TERM-ITEM-SET .
     protecting SUBSUMPTION-CHECK .
     protecting RENAME .
-    protecting RULE-INSTANCE .
 
     var M : Module . 
     vars T T' T0 T0' I : Term .
@@ -266,7 +264,6 @@ mod INVISIBLE-TRANSITION is
     var IDXTI : IndexedTermItem .
     var IDXTIS : IndexedTermItemSet .
     var IDX : Index .
-    var RIS : RuleInstanceSet .
 
     sorts IndexedTermItem IndexedTermItemSet .
     subsort IndexedTermItem < IndexedTermItemSet .
@@ -275,8 +272,8 @@ mod INVISIBLE-TRANSITION is
     op {_,_,_,_} : Index Term Qid TermItem -> IndexedTermItem [ctor] .
     op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: empty] .
 
-    op applyInvisibleTransitionReduction : Module RuleInstanceSet TermItemSet -> TermItemSet .
-    op removeSubsumed : Module RuleInstanceSet IndexedTermItemSet -> IndexedTermItemSet .
+    op applyInvisibleTransitionReduction : Module QidSet TermItemSet -> TermItemSet .
+    op removeSubsumed : Module QidSet IndexedTermItemSet -> IndexedTermItemSet .
     op createIndex : TermItemSet Nat -> IndexedTermItemSet .
     op toTermItemSet : IndexedTermItemSet -> TermItemSet .
 
@@ -289,14 +286,13 @@ mod INVISIBLE-TRANSITION is
 
     eq applyInvisibleTransitionReduction(M, none, TIS) = TIS .
 
-    eq applyInvisibleTransitionReduction(M, RIS, TIS) 
-    = toTermItemSet(removeSubsumed(M, RIS, createIndex(TIS, 0))) [owise] .
+    eq applyInvisibleTransitionReduction(M, LS, TIS) 
+    = toTermItemSet(removeSubsumed(M, LS, createIndex(TIS, 0))) [owise] .
 
-    ceq removeSubsumed(M, RIS, {IDX, T0, L, TI}  ; {IDX, T0', L', TI'} ; IDXTIS) 
-    = removeSubsumed(M, RIS, {IDX, T0', L', TI'} ; IDXTIS)
-    if isRuleInstance(M, RIS, L', T0')
-    /\ T0 isSubsumedBy T0' under M .
-    eq removeSubsumed(M, RIS, IDXTIS) = IDXTIS [owise] .
+    ceq removeSubsumed(M, LS ; L', {IDX, T0, L, TI}  ; {IDX, T0', L', TI'} ; IDXTIS) 
+    = removeSubsumed(M, LS ; L', {IDX, T0', L', TI'} ; IDXTIS)
+    if T0 isSubsumedBy T0' under M .
+    eq removeSubsumed(M, LS, IDXTIS) = IDXTIS [owise] .
 endm 
 
 mod HEURISTIC-NARROWING is
@@ -307,7 +303,6 @@ mod HEURISTIC-NARROWING is
     protecting GET-CHILDREN .
     protecting FOLDING-APPLICATION .
     protecting INVISIBLE-TRANSITION .
-    protecting RULE-INSTANCE .
     protecting DEPTH-BOUND .
     protecting FILTER-INVALID .
 
@@ -324,7 +319,7 @@ mod HEURISTIC-NARROWING is
     vars TI SOL : TermItem .
     vars TIS FILTERED CHILDREN : TermItemSet .
     vars L Q : Qid .
-    var RIS : RuleInstanceSet .
+    var LS : QidSet .
     var UP : UnificationPair .
     vars QUEUE QUEUE' : LTree{TermItem} .
     var DB : DepthBound .
@@ -332,11 +327,11 @@ mod HEURISTIC-NARROWING is
     eq createSol(< T, L, T0, I, Q, S, D >, IDXTS) = sol(T, I, S, D, length(IDXTS)) .
 
     op metaHeuristicNarrowingSearch : 
-    Module Term Term RuleInstanceSet VariantOptionSet DepthBound
+    Module Term Term QidSet VariantOptionSet DepthBound
     -> HeuristicNarrowingSearchResult .
 
     op metaHeuristicNarrowingSearchInternal : 
-    Module Term Term RuleInstanceSet VariantOptionSet DepthBound LTree{TermItem} IndexedTermSet 
+    Module Term Term QidSet VariantOptionSet DepthBound LTree{TermItem} IndexedTermSet 
     -> HeuristicNarrowingSearchResult .
 
 
@@ -352,30 +347,30 @@ mod HEURISTIC-NARROWING is
     eq insert(empty, QUEUE) = QUEUE .
     eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
-    eq metaHeuristicNarrowingSearch(M, T, T', RIS, VOS, DB)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB,
+    eq metaHeuristicNarrowingSearch(M, T, T', LS, VOS, DB)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB,
     insert(< T, 'none, T, 'initialCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
     empty) .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE, IDXTS)
     = createSol(TI, IDXTS) 
     if TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, D, QUEUE, IDXTS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, D, deleteMin(QUEUE), IDXTS) 
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, D, QUEUE, IDXTS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, D, deleteMin(QUEUE), IDXTS) 
     if getDepth(findMin(QUEUE)) > D .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE, IDXTS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, QUEUE' , IDXTS') 
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE, IDXTS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE' , IDXTS') 
     if TI := findMin(QUEUE)
     /\ {FILTERED, IDXTS'} := applyFolding(M, 
-            applyInvisibleTransitionReduction(M, RIS, 
+            applyInvisibleTransitionReduction(M, LS, 
                 filterInvalid(M, getChildStates(M, TI, VOS))), IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
     [owise print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchInternal(M, T, T', RIS, VOS, DB, empty, IDXTS)
+    eq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, empty, IDXTS)
     = noSolution(length(IDXTS)) .
 
 endm

@@ -145,7 +145,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 1) .
+    'receive, delay filter, 1) .
 
 do clear memo .
 
@@ -155,7 +155,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 2) .
+    'receive, delay filter, 2) .
 
 do clear memo .
 
@@ -165,7 +165,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 3) .
+    'receive, delay filter, 3) .
 
 do clear memo .
 
@@ -175,7 +175,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 4) .
+    'receive, delay filter, 4) .
 
 do clear memo .
 
@@ -185,7 +185,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 5) .
+    'receive, delay filter, 5) .
 
 do clear memo .
 
@@ -195,6 +195,6 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    ['receive, any], delay filter, 6) .
+    'receive, delay filter, 6) .
 
 do clear memo .
