@@ -4,7 +4,7 @@ load ./onethirdrule-base.maude
 mod ONETHIRDRULE is
     including ONETHIRDRULE-BASE .
 
-    subsort Natural < InitialRound .
+    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
