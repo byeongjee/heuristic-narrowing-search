@@ -3,30 +3,34 @@ load ../heuristic-search/invariant.maude
 load ../heuristic-search/main.maude
 load ../heuristic-search/score.maude
 load ../heuristic-search/state.maude
+load ../heuristic-search/term-transformer.maude
 
-mod EXAMPLE-SYSTEM is
+mod EXAMPLE-2 is
     protecting NAT .
     including STATE .
 
     ops f g : Nat -> State .
 
-    var X : Nat .
+    var N : Nat .
 
-    rl [l1] : f(s(X)) => f(X) [narrowing] .
-    rl [l2] : g(s(X)) => g(X) [narrowing] .
-    rl [l3] : f(s(X)) => g(X) [narrowing] .
+    rl [l1-1]: f(s(0)) => f(0) [narrowing] .        *** an instance of l1
+    rl [l1-2]: f(s(s(N))) => f(s(N)) [narrowing] .  *** an instance of l1
+    rl [l2]: g(s(N)) => g(N) [narrowing] .
+    rl [l3]: f(s(N)) => g(N) [narrowing] .
 endm
 
-mod EXAMPLE-SYSTEM-WITH-INV is
-    protecting EXAMPLE-SYSTEM .
+mod EXAMPLE-2-WITH-INV is
+    protecting EXAMPLE-2 .
     including INVARIANT .
 
     var N : Nat .
 
-    eq initialCond(f(s(s(N)))) = false .
+    eq initialCond(S:State) = true .
+    eq inv(g(s(s(s(N))))) = false .
+    eq inv(f(s(s(s(N))))) = false .
 endm
 
-fmod EXAMPLE-SYSTEM-SCORE is
+fmod EXAMPLE-2-SCORE is
     including SCORE .
     protecting NAT .
 
@@ -46,13 +50,14 @@ endfm
 
 mod MAIN is
     protecting HEURISTIC-NARROWING .
-    protecting EXAMPLE-SYSTEM-SCORE .
+    protecting EXAMPLE-2-SCORE .
     protecting DEFAULT-INDEX .
+    protecting DEFAULT-TERM-TRANSFORMER .
 endm
 
 red in MAIN : metaHeuristicNarrowingSearch(
-    upModule('EXAMPLE-SYSTEM-WITH-INV, false),
+    upModule('EXAMPLE-2-WITH-INV, false),
     'f['X:Nat],
     'g['Y:Nat],
-    ['l1, 'f['s_['s_['Z:Nat]]]],
+    'l1-2 ; 'l2,
     delay filter, unlimited) .
