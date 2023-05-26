@@ -108,11 +108,11 @@ mod INV-BASE is
     eq numObjs(M CONF) = numObjs(CONF) .
     eq numObjs(none) = 0 .
 
-    op noDuplicate : OidSet -> Bool .
-    eq noDuplicate(O ; O ; OS) = false .
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
 
-    op noDuplicate : Configuration -> Bool .
-    eq noDuplicate(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
+    op noDupl : Configuration -> Bool .
+    eq noDupl(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
 
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
@@ -142,8 +142,8 @@ mod INV-HALF is
     eq inv(S:[State]) = true .
 
     eq initialCond({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and sameRound(CONF) 
     and isHalfThreshold(numObjs(CONF), N) .
 
@@ -159,8 +159,8 @@ mod INV-TWOTHIRD is
     eq inv(S:[State]) = true .
 
     eq initialCond({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and sameRound(CONF) 
     and isTwoThirdThreshold(numObjs(CONF), N) .
 endm
@@ -175,8 +175,8 @@ mod INV-HALF-FIXED-INITIAL-ROUND is
     eq inv(S:[State]) = true .
 
     eq initialCond({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and isHalfThreshold(numObjs(CONF), N) .
 
 endm
@@ -191,8 +191,8 @@ mod INV-TWOTHIRD-FIXED-INITIAL-ROUND is
     eq inv(S:[State]) = true .
 
     eq initialCond({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and isTwoThirdThreshold(numObjs(CONF), N) .
 endm
 
@@ -207,8 +207,8 @@ mod INV-FIXED-OBJS is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF}) = noDuplicate(OS) .
+    eq initialCond({N, OS, CONF}) = noDupl(OS) .
 
-    op noDuplicate : OidSet -> Bool .
-    eq noDuplicate(O ; O ; OS) = false .
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
 endm

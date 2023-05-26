@@ -217,16 +217,16 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     = inv({N, OS, OBJ CONF}) .
 
     eq inv({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and sameRound(CONF) 
     and validThreshold(numObjs(CONF), N) .
 
-    op noDuplicate : OidSet -> Bool .
-    eq noDuplicate(O ; O ; OS) = false .
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
 
-    op noDuplicate : Configuration -> Bool .
-    eq noDuplicate(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
+    op noDupl : Configuration -> Bool .
+    eq noDupl(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
 
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
@@ -259,16 +259,16 @@ mod ONETHIRDRULE-VU-NARROW-TWOTHIRD is
     = inv({N, OS, OBJ CONF}) .
 
     eq inv({N, OS, CONF})
-    = noDuplicate(OS) 
-    and noDuplicate(CONF) 
+    = noDupl(OS) 
+    and noDupl(CONF) 
     and sameRound(CONF) 
     and validThreshold(numObjs(CONF), N) .
 
-    op noDuplicate : OidSet -> Bool .
-    eq noDuplicate(O ; O ; OS) = false .
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
 
-    op noDuplicate : Configuration -> Bool .
-    eq noDuplicate(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
+    op noDupl : Configuration -> Bool .
+    eq noDupl(< O : Node | ATTS:U1234S > < O : Node | ATTS':U1234S > CONF) = false .
 
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
@@ -304,10 +304,10 @@ mod ONETHIRDRULE-VU-NARROW-FIXED-OBJS is
     = inv({N, OS, OBJ CONF}) .
 
     eq inv({N, OS, CONF})
-    = noDuplicate(OS) .
+    = noDupl(OS) .
 
-    op noDuplicate : OidSet -> Bool .
-    eq noDuplicate(O ; O ; OS) = false .
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
 
     vars O1 O2 O3 : Oid .
     vars V1 V2 V3 : Value .
