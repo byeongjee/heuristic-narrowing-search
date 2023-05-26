@@ -27,9 +27,11 @@ tmux new-session -d -s fvu-narrow-twothird-three-objs-time '~/Maude/maude ~/heur
 # half
 tmux new-session -d -s onethirdrule-half '~/Maude/maude ~/heuristic-narrowing/tests/half/onethirdrule.maude > ~/heuristic-narrowing/tests/half/onethirdrule.out'
 tmux new-session -d -s onethirdrule-half-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/half/onethirdrule-three-objs.maude > ~/heuristic-narrowing/tests/half/onethirdrule-three-objs.out'
+tmux new-session -d -s onethirdrule-guarded '~/Maude/maude ~/heuristic-narrowing/tests/half/onethirdrule-guarded.maude > ~/heuristic-narrowing/tests/half/onethirdrule-guarded.out'
 
 tmux new-session -d -s no-message-loss-half '~/Maude/maude ~/heuristic-narrowing/tests/half/no-message-loss.maude > ~/heuristic-narrowing/tests/half/no-message-loss.out'
 tmux new-session -d -s no-message-loss-half-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/half/no-message-loss-three-objs.maude > ~/heuristic-narrowing/tests/half/no-message-loss-three-objs.out'
+tmux new-session -d -s no-message-loss-guarded '~/Maude/maude ~/heuristic-narrowing/tests/half/no-message-loss-guarded.maude > ~/heuristic-narrowing/tests/half/no-message-loss-guarded.out'
 
 # twothird
 tmux new-session -d -s onethirdrule-twothird-depth-bound '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-depth-bound.out'
