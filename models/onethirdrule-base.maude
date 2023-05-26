@@ -141,7 +141,7 @@ mod INV-HALF is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF})
+    eq initCond({N, OS, CONF})
     = noDupl(OS) 
     and noDupl(CONF) 
     and sameRound(CONF) 
@@ -158,7 +158,7 @@ mod INV-TWOTHIRD is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF})
+    eq initCond({N, OS, CONF})
     = noDupl(OS) 
     and noDupl(CONF) 
     and sameRound(CONF) 
@@ -174,7 +174,7 @@ mod INV-HALF-FIXED-INITIAL-ROUND is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF})
+    eq initCond({N, OS, CONF})
     = noDupl(OS) 
     and noDupl(CONF) 
     and isHalfThreshold(numObjs(CONF), N) .
@@ -190,7 +190,7 @@ mod INV-TWOTHIRD-FIXED-INITIAL-ROUND is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF})
+    eq initCond({N, OS, CONF})
     = noDupl(OS) 
     and noDupl(CONF) 
     and isTwoThirdThreshold(numObjs(CONF), N) .
@@ -207,7 +207,7 @@ mod INV-FIXED-OBJS is
 
     eq inv(S:[State]) = true .
 
-    eq initialCond({N, OS, CONF}) = noDupl(OS) .
+    eq initCond({N, OS, CONF}) = noDupl(OS) .
 
     op noDupl : OidSet -> Bool .
     eq noDupl(O ; O ; OS) = false .

@@ -25,7 +25,7 @@ mod EXAMPLE-2-WITH-INV is
 
     var N : Nat .
 
-    eq initialCond(S:State) = true .
+    eq initCond(S:State) = true .
     eq inv(g(s(s(s(N))))) = false .
     eq inv(f(s(s(s(N))))) = false .
 endm
