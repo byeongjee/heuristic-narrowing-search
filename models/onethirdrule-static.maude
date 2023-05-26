@@ -4,7 +4,7 @@ load ./onethirdrule-base.maude
 mod ONETHIRDRULE-STATIC is
     including ONETHIRDRULE-BASE .
 
-    op [_,_] : Natural InitialStep -> InitialStatus [ctor] . 
+    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 

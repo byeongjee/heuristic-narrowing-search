@@ -3,17 +3,17 @@ load fvp-bool.maude
 fmod VALUE is
     protecting FVP-BOOL .
 
-    sorts Value InitialValue Value? .
+    sorts Value InitValue? Value? .
     subsort Boolean < Value < Value? .
-    subsort InitialValue < Value? .
+    subsort InitValue? < Value? .
 
-    op nil : -> InitialValue [ctor] .
+    op nil : -> InitValue? [ctor] .
 endfm
 
 fmod STEP is
-    sorts Step InitialStep .
-    subsort InitialStep < Step .
-    op init : -> InitialStep [ctor] .
+    sorts Step InitStep .
+    subsort InitStep < Step .
+    op init : -> InitStep [ctor] .
     ops wait done : -> Step [ctor] .
 endfm
 
@@ -28,23 +28,23 @@ fmod STATUS is
     protecting FVP-NAT .
     protecting STEP .
 
-    sorts Status InitialStatus .
-    subsort InitialStatus < Status .
+    sorts Status InitStatus .
+    subsort InitStatus < Status .
     sort InitialRound .
 
     op [_,_] : Natural Step -> Status [ctor] . 
 
-*** InitialStatus will be defined in each model. We take this approach to
+*** InitStatus will be defined in each model. We take this approach to
 *** customize the initial round for each model.
 endfm
 
 fmod VOTE is
     protecting FVP-NAT .
 
-    sorts Vote InitialVote .
-    subsort InitialVote < Vote .
+    sorts Vote InitVote .
+    subsort InitVote < Vote .
 
-    op [_,_,_] : Zero Zero Zero -> InitialVote [ctor] .
+    op [_,_,_] : Zero Zero Zero -> InitVote [ctor] .
     op [_,_,_] : Natural Natural Natural -> Vote [ctor] .
 endfm
 

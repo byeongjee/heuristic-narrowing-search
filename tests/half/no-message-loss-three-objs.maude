@@ -32,13 +32,13 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -53,13 +53,13 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -73,13 +73,13 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-DYNAMIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -96,13 +96,13 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -116,13 +116,13 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -136,13 +136,13 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-STATIC-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -159,13 +159,13 @@ red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -179,13 +179,13 @@ red in ONETHIRDRULE-TEST-SCORE2 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -199,13 +199,13 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
     upModule('NO-MESSAGE-LOSS-FIXED-OBJS, false),
     '`{_`,_`,_`}['__['s.Natural,'s.Natural],'_;_['O1:Oid,
     'O2:Oid,'O3:Oid],'__['<_:_|_>['O1:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`][
-    'R:Natural,'init.InitialStep]],'value`:_['V1:Value],'decision`:_[
-    'nil.InitialValue],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
+    'R:Natural,'init.InitStep]],'value`:_['V1:Value],'decision`:_[
+    'nil.InitValue?],'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],
     '<_:_|_>['O2:Oid,'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,
-    'init.InitialStep]],'value`:_['V2:Value],'decision`:_['nil.InitialValue],
+    'init.InitStep]],'value`:_['V2:Value],'decision`:_['nil.InitValue?],
     'votes`:_['`[_`,_`,_`]['0.Zero,'0.Zero,'0.Zero]]]],'<_:_|_>['O3:Oid,
-    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitialStep]],
-    'value`:_['V3:Value],'decision`:_['nil.InitialValue],'votes`:_['`[_`,_`,_`][
+    'Node.Cid,'_`,_['status`:_['`[_`,_`]['R:Natural,'init.InitStep]],
+    'value`:_['V3:Value],'decision`:_['nil.InitValue?],'votes`:_['`[_`,_`,_`][
     '0.Zero,'0.Zero,'0.Zero]]]]]],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[

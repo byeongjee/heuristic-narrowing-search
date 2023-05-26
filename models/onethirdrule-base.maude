@@ -10,22 +10,22 @@ mod CONFIGURATION is
     protecting NODE .
     protecting INITIAL-SORTS .
 
-    sorts Attribute AttributeSet InitialAttribute InitialAttributeSet .
+    sorts Attribute AttributeSet InitAttribute InitAttributeSet .
     subsort Attribute < AttributeSet .
-    subsort InitialAttributeSet < AttributeSet .
+    subsort InitAttributeSet < AttributeSet .
 
-    sorts None Object Msg ObjectSet MsgSet Configuration InitialObject InitialObjectSet .
+    sorts None Object Msg ObjectSet MsgSet Configuration InitObject InitObjectSet .
 
     subsort MsgSet ObjectSet < Configuration .
-    subsort InitialObject < Object InitialObjectSet < ObjectSet .
+    subsort InitObject < Object InitObjectSet < ObjectSet .
     subsort None < ObjectSet MsgSet .
     subsort Msg < MsgSet .
 
-    op <_:_|_> : Oid Cid IU1234S -> InitialObject [ctor object] .
+    op <_:_|_> : Oid Cid IU1234S -> InitObject [ctor object] .
     op <_:_|_> : Oid Cid U1234S -> Object [ctor object] .
     op none : -> None [ctor] .
     op __ : None None -> None [ctor config assoc comm id: none] .
-    op __ : InitialObjectSet InitialObjectSet -> InitialObjectSet [ctor config assoc comm id: none] .
+    op __ : InitObjectSet InitObjectSet -> InitObjectSet [ctor config assoc comm id: none] .
     op __ : ObjectSet ObjectSet -> ObjectSet [ctor config assoc comm id: none] .
     op __ : MsgSet MsgSet -> MsgSet [ctor config assoc comm id: none] .
     op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .

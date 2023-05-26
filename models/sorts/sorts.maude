@@ -217,18 +217,18 @@ endfm
 fmod INITIAL-SORTS is
   including SORTS .
 
-  sorts InitialStatusAttr InitialDecisionAttr InitialVoteAttr .
+  sorts InitStatusAttr InitialDecisionAttr InitVoteAttr .
 
-  subsort InitialStatusAttr < StatusAttr .
+  subsort InitStatusAttr < StatusAttr .
   subsort InitialDecisionAttr < DecisionAttr .
-  subsort InitialVoteAttr < VoteAttr .
+  subsort InitVoteAttr < VoteAttr .
 
-  op status`:_ : InitialStatus -> InitialStatusAttr [ctor] .
-  op decision`:_ : InitialValue -> InitialDecisionAttr [ctor] .
-  op votes`:_ : InitialVote -> InitialVoteAttr [ctor] .
+  op status`:_ : InitStatus -> InitStatusAttr [ctor] .
+  op decision`:_ : InitValue? -> InitialDecisionAttr [ctor] .
+  op votes`:_ : InitVote -> InitVoteAttr [ctor] .
 
   sort IU1S .
-  subsort InitialStatusAttr < IU1S < U1S .
+  subsort InitStatusAttr < IU1S < U1S .
 
 --- {1,2}
 
@@ -259,7 +259,7 @@ fmod INITIAL-SORTS is
 
 --- {1, 2, 3, 4}
   sort IU4S .
-  subsort InitialVoteAttr < IU4S < U4S .
+  subsort InitVoteAttr < IU4S < U4S .
 
   sort IU14S .
   subsort IU1S IU4S < IU14S < U14S .
