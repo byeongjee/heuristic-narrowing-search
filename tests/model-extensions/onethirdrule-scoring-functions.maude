@@ -45,8 +45,8 @@ fmod ONETHIRDRULE-SCORE-BASE is
     op toNumber : Term -> Int .
     eq toNumber('0.Natural) = 0 .
     eq toNumber('s.Natural) = 1 .
-    eq toNumber(T) = 0 [owise] .
     eq toNumber('__[NETL]) = countS(NETL) .
+    eq toNumber(T) = 0 [owise] .
 
     op countS : NeTermList -> Int .
     eq countS('s.Natural) = 1 .
