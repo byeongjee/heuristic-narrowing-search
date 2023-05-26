@@ -4,3 +4,11 @@ mod TERM-TRANSFORMER is
 
     op trTerm : Module Term -> Term .
 endm
+
+mod DEFAULT-TERM-TRANSFORMER is
+    extending TERM-TRANSFORMER .
+
+    var M : Module . var T : Term .
+
+    eq trTerm(M, T) = T .
+endm
