@@ -12,10 +12,6 @@ mod CONFIGURATION is
     protecting NODE .
     protecting INITIAL-SORTS .
 
-    sorts Attribute AttributeSet InitAttribute InitAttributeSet .
-    subsort Attribute < AttributeSet .
-    subsort InitAttributeSet < AttributeSet .
-
     sorts None Object Msg ObjectSet Configuration InitObject InitConfiguration .
     subsort InitObject < Object InitConfiguration < Configuration .
     subsort Msg < Configuration .
