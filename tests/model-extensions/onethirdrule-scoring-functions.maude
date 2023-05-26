@@ -92,7 +92,7 @@ fmod ONETHIRDRULE-SCORE3 is
 
     eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['`[_`,_`][RT, ST]], NETL]])
-    = if ST == 'finished.Step then 100 else 100 fi .
+    = if ST == 'done.Step then 100 else 100 fi .
 
     eq score('multicast_from_to_[NETL]) = -1 .
 endfm
@@ -135,7 +135,7 @@ fmod ONETHIRDRULE-SCORE5 is
 
     eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['`[_`,_`][RT, ST]], NETL]])
-    =  if ST == 'finished.Step then 1 else 10 fi .
+    =  if ST == 'done.Step then 1 else 10 fi .
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm

@@ -66,7 +66,7 @@ mod NO-MESSAGE-LOSS is
         CONF)
     =>
     {N, OS,
-        < O : Node | status : [R, finished], decision : V, ATTS:U24S >
+        < O : Node | status : [R, done], decision : V, ATTS:U24S >
         CONF
     } [narrowing] .
 
