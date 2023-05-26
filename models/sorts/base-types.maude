@@ -14,7 +14,7 @@ fmod STEP is
     sorts Step InitialStep .
     subsort InitialStep < Step .
     op init : -> InitialStep [ctor] .
-    ops waiting finished : -> Step [ctor] .
+    ops wait finished : -> Step [ctor] .
 endfm
 
 
