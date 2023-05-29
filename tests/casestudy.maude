@@ -2,6 +2,7 @@ load ../heuristic-search/main.maude
 load ./aux-functions/onethirdrule-index.maude
 load ./aux-functions/onethirdrule-scoring-functions.maude
 load ./aux-functions/onethirdrule-term-transformer.maude
+load ./aux-functions/onethirdrule-transition-scoring-function.maude
 
 
 
@@ -10,25 +11,14 @@ mod DRIVER3 is
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE3 .
     protecting HEURISTIC-NARROWING .
+    protecting DEFAULT-TRANSITION-SCORE .
 endm
 
-load ../models/onethirdrule-static.maude
-
-red in DRIVER3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'receive,
-    delay filter, unlimited) .
-
-do clear memo .
 
 load ../models/onethirdrule-static-dynamic.maude
 
 red in DRIVER3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-DYNAMIC-HALF-FIXED-INITIAL-ROUND, false),
+    upModule('ONETHIRDRULE-STATIC-DYNAMIC-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
