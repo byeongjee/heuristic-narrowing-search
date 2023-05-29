@@ -2,12 +2,14 @@ load ../../heuristic-search/main.maude
 load ../aux-functions/onethirdrule-index.maude
 load ../aux-functions/onethirdrule-scoring-functions.maude
 load ../aux-functions/onethirdrule-term-transformer.maude
+load ../aux-functions/onethirdrule-transition-scoring-function.maude
 
 
 mod DRIVER1 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
+    protecting DEFAULT-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 

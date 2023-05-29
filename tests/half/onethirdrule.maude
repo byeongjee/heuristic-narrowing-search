@@ -9,7 +9,7 @@ mod DRIVER1 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
-    protecting ONETHIRDRULE-TRANSITION-SCORE .
+    protecting DEFAULT-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 
@@ -17,7 +17,7 @@ mod DRIVER2 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE2 .
-    protecting ONETHIRDRULE-TRANSITION-SCORE .
+    protecting DEFAULT-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 
@@ -25,7 +25,7 @@ mod DRIVER3 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE3 .
-    protecting ONETHIRDRULE-TRANSITION-SCORE .
+    protecting DEFAULT-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 

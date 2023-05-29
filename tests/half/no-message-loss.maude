@@ -2,6 +2,7 @@ load ../../heuristic-search/main.maude
 load ../aux-functions/onethirdrule-index.maude
 load ../aux-functions/onethirdrule-scoring-functions.maude
 load ../aux-functions/onethirdrule-term-transformer.maude
+load ../aux-functions/onethirdrule-transition-scoring-function.maude
 
 
 mod DRIVER1 is
