@@ -105,14 +105,14 @@ fmod ONETHIRDRULE-SCORE4 is
 
     eq score(
         'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = 0 .
+    ) = score((OT, CT)) + (- 1) .
     eq score(
         'update?[VT, BT, NT, OST, OT, CT], D
-    ) = 0 .
+    ) = score((OT, CT)) + (- 1) .
 
     var NETL : NeTermList .
 
-    eq score('<_:_|_>[NETL]) =  1 . 
+    eq score('<_:_|_>[NETL]) =  10 . 
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm
@@ -126,16 +126,16 @@ fmod ONETHIRDRULE-SCORE5 is
 
     eq score(
         'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = 0 .
+    ) = score((OT, CT)) + (- 1) .
     eq score(
         'update?[VT, BT, NT, OST, OT, CT], D
-    ) = 0 .
+    ) = score((OT, CT)) + (- 1) .
 
     vars NETL NETL' : NeTermList .
 
     eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['`[_`,_`][RT, ST]], NETL]])
-    =  if ST == 'done.Step then 1 else 10 fi .
+    =  if ST == 'done.Step then 10 else 100 fi .
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm

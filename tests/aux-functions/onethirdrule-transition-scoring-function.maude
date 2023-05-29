@@ -1,0 +1,92 @@
+
+load ../../heuristic-search/transition-score.maude
+load ./onethirdrule-scoring-functions.maude
+
+
+fmod DEFAULT-TRANSITION-SCORE is
+    including TRANSITION-SCORE .
+    protecting NAT .
+
+    subsort Nat < TransitionScore .
+
+
+    vars N N' : Nat .
+    vars T : Term .
+    var L : Qid .
+
+    eq le(N, N') = N <= N' .
+
+    eq score(T, L) = 0 .
+endfm
+
+fmod ONETHIRDRULE-TRANSITION-SCORE-BASE is
+    including TRANSITION-SCORE .
+    protecting INT .
+
+    subsort Int < TransitionScore .
+
+    vars N N' : Int .
+    vars T BT NT OST OT CT ST : Term .
+    var L : Qid .
+    var NETL : NeTermList .
+
+    eq le(N, N') = N <= N' .
+
+    eq score('`{_`,_`,_`}[T, OST, NETL], L) = score(NETL) .
+
+    op score : NeTermList -> TransitionScore .
+
+    eq score('__[NETL]) = score(NETL) .
+    eq score((T, NETL)) 
+    = score(T) + score(NETL) .
+
+    eq score(T) = 0 [owise] .
+
+    *** auxiliary functions
+    op toNumber : Term -> Int .
+    eq toNumber('0.Natural) = 0 .
+    eq toNumber('s.Natural) = 1 .
+    eq toNumber('__[NETL]) = countS(NETL) .
+    eq toNumber(T) = 0 [owise] .
+
+    op countS : NeTermList -> Int .
+    eq countS('s.Natural) = 1 .
+    eq countS(T) = 0 [owise] .
+    eq countS((T, NETL)) = countS(T) + countS(NETL) .
+endfm
+
+
+fmod ONETHIRDRULE-TRANSITION-SCORE4 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST : Term .
+    var L : Qid .
+
+    eq score('decide?[VT, BT, NT, OST, OT, CT]) = score((OT, CT)) + (- 1) .
+    eq score('update?[VT, BT, NT, OST, OT, CT]) = score((OT, CT)) + (- 1) .
+
+    var NETL : NeTermList .
+
+    eq score('<_:_|_>[NETL]) =  1 . 
+
+    eq score('multicast_from_to_[NETL]) = 0 .
+endfm
+
+
+fmod ONETHIRDRULE-TRANSITION-SCORE5 is
+    including ONETHIRDRULE-TRANSITION-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST DT RT : Term .
+    var L : Qid .
+
+    eq score('decide?[VT, BT, NT, OST, OT, CT]) = score((OT, CT)) + (- 1) .
+    eq score('update?[VT, BT, NT, OST, OT, CT]) = score((OT, CT)) + (- 1) .
+
+    vars NETL NETL' : NeTermList .
+
+    eq score('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    =  if ST == 'done.Step then 1 else 10 fi .
+
+    eq score('multicast_from_to_[NETL]) = 0 .
+endfm

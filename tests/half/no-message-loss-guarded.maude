@@ -1,7 +1,7 @@
 load ../../heuristic-search/main-guarded.maude
-load ../model-extensions/onethirdrule-index.maude
-load ../model-extensions/onethirdrule-scoring-functions.maude
-load ../model-extensions/onethirdrule-term-transformer.maude
+load ../aux-functions/onethirdrule-index.maude
+load ../aux-functions/onethirdrule-scoring-functions.maude
+load ../aux-functions/onethirdrule-term-transformer.maude
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is

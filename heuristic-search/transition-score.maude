@@ -1,0 +1,8 @@
+fmod TRANSITION-SCORE is
+    protecting META-LEVEL .
+
+    sort TransitionScore .
+
+    op score : Term Qid -> TransitionScore . *** TODO: Add more arguments
+    op le : TransitionScore TransitionScore -> Bool .
+endfm

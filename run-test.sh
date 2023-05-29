@@ -41,3 +41,17 @@ tmux new-session -d -s no-message-loss-twothird-depth-bound '~/Maude/maude ~/heu
 tmux new-session -d -s onethirdrule-twothird-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-three-objs.maude > ~/heuristic-narrowing/tests/twothird/onethirdrule-twothird-three-objs.out'
 tmux new-session -d -s no-message-loss-twothird-three-objs '~/Maude/maude ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-three-objs.maude > ~/heuristic-narrowing/tests/twothird/no-message-loss-twothird-three-objs.out'
 
+
+tmux new-session -d -s s1 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule.maude > ~/transition-score/tests/temp/onethirdrule.out'
+tmux new-session -d -s s2 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule-transition-score.maude > ~/transition-score/tests/temp/onethirdrule-transition-score.out'
+tmux new-session -d -s s3 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule-static.maude > ~/transition-score/tests/temp/onethirdrule-static.out'
+tmux new-session -d -s s4 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule-static-transition-score.maude > ~/transition-score/tests/temp/onethirdrule-static-transition-score.out'
+tmux new-session -d -s s5 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule-static-dynamic.maude > ~/transition-score/tests/temp/onethirdrule-static-dynamic.out'
+tmux new-session -d -s s6 '~/Maude/maude ~/transition-score/tests/temp/onethirdrule-static-dynamic-transition-score.maude > ~/transition-score/tests/temp/onethirdrule-static-dynamic-transition-score.out'
+
+tmux new-session -d -s s7 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss.maude > ~/transition-score/tests/temp/no-message-loss.out'
+tmux new-session -d -s s8 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss-transition-score.maude > ~/transition-score/tests/temp/no-message-loss-transition-score.out'
+tmux new-session -d -s s9 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss-static.maude > ~/transition-score/tests/temp/no-message-loss-static.out'
+tmux new-session -d -s s10 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss-static-transition-score.maude > ~/transition-score/tests/temp/no-message-loss-static-transition-score.out'
+tmux new-session -d -s s11 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss-static-dynamic.maude > ~/transition-score/tests/temp/no-message-loss-static-dynamic.out'
+tmux new-session -d -s s12 '~/Maude/maude ~/transition-score/tests/temp/no-message-loss-static-dynamic-transition-score.maude > ~/transition-score/tests/temp/no-message-loss-static-dynamic-transition-score.out'

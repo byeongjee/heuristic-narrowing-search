@@ -2,6 +2,7 @@ load ./data-structures/priority-queue.maude
 load ./index.maude
 load ./score.maude
 load ./term-transformer.maude
+load ./transition-score.maude
 
 
 fmod TERM-ITEM is
@@ -130,6 +131,12 @@ mod RENAME is
     eq rename(C, D) = C .
     eq rename(F[NETL], D) = F[rename(NETL, D)] .
     eq rename((T, NETL), D) = rename(T, D) , rename(NETL, D) .
+
+    op rename : NeTermList -> NeTermList [memo] .
+    eq rename(V) = qid("$" + string(V)) . 
+    eq rename(C) = C .
+    eq rename(F[NETL]) = F[rename(NETL)] .
+    eq rename((T, NETL)) = rename(T) , rename(NETL) .
 endm
 
 mod FOLDING-STATE-INSERTION is
@@ -252,9 +259,10 @@ mod INVISIBLE-TRANSITION is
     protecting TERM-ITEM-SET .
     protecting SUBSUMPTION-CHECK .
     protecting RENAME .
+    protecting TRANSITION-SCORE .
 
     var M : Module . 
-    vars T T' T0 T0' I : Term .
+    vars T T' T0 T0' I I' : Term .
     vars L L' Q Q' F : Qid . 
     var LS : QidSet . 
     vars S S' : Score .
@@ -269,7 +277,7 @@ mod INVISIBLE-TRANSITION is
     subsort IndexedTermItem < IndexedTermItemSet .
 
     op empty : -> IndexedTermItemSet .
-    op {_,_,_,_} : Index Term Qid TermItem -> IndexedTermItem [ctor] .
+    op [_,_] : Index TermItem -> IndexedTermItem [ctor] .
     op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: empty] .
 
     op applyInvisibleTransitionReduction : Module QidSet TermItemSet -> TermItemSet .
@@ -279,19 +287,22 @@ mod INVISIBLE-TRANSITION is
 
     eq createIndex(empty, N) = empty .
     eq createIndex(< T, L, T0, I, Q, S, D > ; TIS, N) = 
-    {createIndex(T0), rename(T0, N), L, < T, L, T0, I, Q, S, D >} ; createIndex(TIS, N + 1) .
+    [createIndex(T0), < T, L, T0, I, Q, S, D >] ; createIndex(TIS, N + 1) .
 
     eq toTermItemSet(empty) = empty .
-    eq toTermItemSet({IDX, T0, L, TI} ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
+    eq toTermItemSet([IDX, TI] ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
 
     eq applyInvisibleTransitionReduction(M, none, TIS) = TIS .
 
     eq applyInvisibleTransitionReduction(M, LS, TIS) 
     = toTermItemSet(removeSubsumed(M, LS, createIndex(TIS, 0))) [owise] .
 
-    ceq removeSubsumed(M, LS ; L', {IDX, T0, L, TI}  ; {IDX, T0', L', TI'} ; IDXTIS) 
-    = removeSubsumed(M, LS ; L', {IDX, T0', L', TI'} ; IDXTIS)
-    if T0 isSubsumedBy T0' under M .
+    ceq removeSubsumed(M, LS ; L', 
+    [IDX, < T, L, T0, I, Q, S, D >] ; 
+    [IDX, < T', L', T0', I', Q', S', D' >] ; IDXTIS) 
+    = removeSubsumed(M, LS ; L', [IDX, < T', L', T0', I', Q', S', D'  >] ; IDXTIS)
+    if le(score(T, L), score(T', L'))
+    /\ rename(T0) isSubsumedBy T0' under M .
     eq removeSubsumed(M, LS, IDXTIS) = IDXTIS [owise] .
 endm 
 

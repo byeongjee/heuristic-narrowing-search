@@ -1,13 +1,15 @@
 load ../../heuristic-search/main.maude
-load ../model-extensions/onethirdrule-index.maude
-load ../model-extensions/onethirdrule-scoring-functions.maude
-load ../model-extensions/onethirdrule-term-transformer.maude
+load ../aux-functions/onethirdrule-index.maude
+load ../aux-functions/onethirdrule-scoring-functions.maude
+load ../aux-functions/onethirdrule-term-transformer.maude
+load ../aux-functions/onethirdrule-transition-scoring-function.maude
 
 
 mod ONETHIRDRULE-TEST-SCORE1 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
+    protecting ONETHIRDRULE-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 
@@ -15,6 +17,7 @@ mod ONETHIRDRULE-TEST-SCORE2 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE2 .
+    protecting ONETHIRDRULE-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 
@@ -22,10 +25,10 @@ mod ONETHIRDRULE-TEST-SCORE3 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE3 .
+    protecting ONETHIRDRULE-TRANSITION-SCORE .
     protecting HEURISTIC-NARROWING .
 endm
 
-*** static + dynamic reduction
 load ../../models/onethirdrule-static-dynamic.maude
 
 red in ONETHIRDRULE-TEST-SCORE3 : metaHeuristicNarrowingSearch(
