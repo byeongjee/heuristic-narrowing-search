@@ -4,7 +4,7 @@ load ../aux-functions/onethirdrule-scoring-functions.maude
 load ../aux-functions/onethirdrule-term-transformer.maude
 
 
-mod ONETHIRDRULE-TEST-SCORE1 is
+mod DRIVER1 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
@@ -14,7 +14,7 @@ endm
 *** no reduction
 load ../../models/onethirdrule.maude
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -24,7 +24,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -34,7 +34,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -44,7 +44,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -54,7 +54,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -64,7 +64,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -77,7 +77,7 @@ do clear memo .
 *** static reduction
 load ../../models/onethirdrule-static.maude
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -87,7 +87,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -97,7 +97,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -107,7 +107,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -117,7 +117,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -127,7 +127,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -140,7 +140,7 @@ do clear memo .
 *** static + dynamic reduction
 load ../../models/onethirdrule-static-dynamic.maude
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -151,7 +151,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -162,7 +162,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -173,7 +173,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -184,7 +184,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
@@ -195,7 +195,7 @@ red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
 
 do clear memo .
 
-red in ONETHIRDRULE-TEST-SCORE1 : metaHeuristicNarrowingSearch(
+red in DRIVER1 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-STATIC-DYNAMIC-TWOTHIRD, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N':Natural,'OS':OidSet,'__['CONF:Configuration,'<_:_|_>[
