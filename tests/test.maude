@@ -1,0 +1,28 @@
+
+load ../heuristic-search/main.maude
+load ./aux-functions/onethirdrule-index.maude
+load ./aux-functions/onethirdrule-scoring-functions.maude
+load ./aux-functions/onethirdrule-term-transformer.maude
+load ./aux-functions/onethirdrule-transition-scoring-function.maude
+
+
+mod DRIVER is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
+    protecting ONETHIRDRULE-SCORE3 .
+    protecting DEFAULT-TRANSITION-SCORE .
+    protecting HEURISTIC-NARROWING .
+endm
+
+load ../models/onethirdrule-static.maude
+
+set print attribute on .
+
+red in DRIVER : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-STATIC-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    none, delay filter, unlimited) .
+

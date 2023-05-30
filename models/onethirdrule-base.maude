@@ -10,12 +10,17 @@ mod CONFIGURATION is
     protecting NODE .
     protecting INITIAL-SORTS .
 
-    sorts None Object Msg ObjectSet Configuration InitObject InitConfiguration .
+    sorts None Object ObjectSet Msg MsgSet Configuration InitObject InitConfiguration .
     subsort InitObject < Object InitConfiguration < Configuration .
-    subsort Msg < Configuration .
+    subsort Msg < MsgSet < Configuration .
+    subsort None < InitConfiguration .
+    subsort None < MsgSet .
 
-    op none : -> InitConfiguration [ctor] .
+
+    op none : -> None [ctor] .
+    op __ : None None -> None [ctor assoc comm id: none] .
     op __ : InitConfiguration InitConfiguration -> InitConfiguration [ctor assoc comm id: none] .
+    op __ : MsgSet MsgSet -> MsgSet [ctor assoc comm id: none] .
     op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
 
     op <_:_|_> : Oid Cid IU1234S -> InitObject [ctor object] .
