@@ -113,17 +113,12 @@ mod ONETHIRDRULE is
     {N, OS, CONF} [narrowing] .
 endm
 
-mod ONETHIRDRULE-HALF is
+mod ONETHIRDRULE-WITH-INV is
+    protecting ONETHIRDRULE .
+    protecting INV-BASE .
+endm
+
+mod ONETHIRDRULE-WITH-INV-HALF is
     protecting ONETHIRDRULE .
     protecting INV-HALF .
-endm
-
-mod ONETHIRDRULE-TWOTHIRD is
-    protecting ONETHIRDRULE .
-    protecting INV-TWOTHIRD .
-endm
-
-mod ONETHIRDRULE-FIXED-OBJS is
-    protecting ONETHIRDRULE .
-    protecting INV-FIXED-OBJS .
 endm

@@ -1,8 +1,8 @@
 load ../../heuristic-search/main.maude
+load ../../models/onethirdrule.maude
 load ../aux-functions/onethirdrule-index.maude
 load ../aux-functions/onethirdrule-scoring-functions.maude
 load ../aux-functions/onethirdrule-term-transformer.maude
-load ../../models/onethirdrule.maude
 
 
 mod DRIVER1 is
@@ -26,10 +26,42 @@ mod DRIVER3 is
     protecting HEURISTIC-NARROWING .
 endm
 
+mod DRIVER4 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
+    protecting ONETHIRDRULE-SCORE4 .
+    protecting HEURISTIC-NARROWING .
+endm
 
+mod DRIVER5 is
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
+    protecting ONETHIRDRULE-SCORE5 .
+    protecting HEURISTIC-NARROWING .
+endm
+
+red in DRIVER5 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    delay filter) .
+
+do clear memo .
+
+red in DRIVER4 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
+    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
+    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    delay filter) .
+
+do clear memo .
 
 red in DRIVER3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-HALF, false),
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
@@ -39,21 +71,19 @@ red in DRIVER3 : metaHeuristicNarrowingSearch(
 do clear memo .
 
 red in DRIVER2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-HALF, false),
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
     delay filter) .
 
-***(
 do clear memo .
 
 red in DRIVER1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-HALF, false),
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
     delay filter) .
-)

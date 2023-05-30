@@ -92,7 +92,8 @@ fmod ONETHIRDRULE-SCORE3 is
 
     eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['`[_`,_`][RT, ST]], NETL]])
-    = if ST == 'done.Step then 1 else 10 fi .
+    = (if ST == 'done.Step then 1 else 10 fi)
+    + max(1, toNumber(RT)) .
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm
@@ -100,19 +101,22 @@ endfm
 fmod ONETHIRDRULE-SCORE4 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OST OT CT ST : Term .
+    vars T VT BT NT OST OT CT ST DT RT : Term .
     var D : Nat .
 
     eq score(
         'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) + (- 1) .
+    ) = score((OT, CT)) .
     eq score(
         'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) + (- 1) .
+    ) = score((OT, CT)) .
 
-    var NETL : NeTermList .
+    vars NETL NETL' : NeTermList .
 
-    eq score('<_:_|_>[NETL]) =  10 . 
+    eq score('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    = (if ST == 'done.Step then 9 else 10 fi)
+    + max(1, toNumber(RT)) .
 
     eq score('multicast_from_to_[NETL]) = 0 .
 endfm
@@ -126,16 +130,106 @@ fmod ONETHIRDRULE-SCORE5 is
 
     eq score(
         'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) + (- 1) .
+    ) = score((OT, CT)) .
     eq score(
         'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) + (- 1) .
+    ) = score((OT, CT)) .
 
     vars NETL NETL' : NeTermList .
 
     eq score('<_:_|_>[OT, CT, '_`,_[
         'status`:_['`[_`,_`][RT, ST]], NETL]])
-    =  if ST == 'done.Step then 10 else 100 fi .
+    = 100 + 10 * max(1, toNumber(RT)) .
+
+    eq score('multicast_from_to_[NETL]) = -1 .
+endfm
+
+fmod ONETHIRDRULE-SCORE2' is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST : Term .
+    var D : Nat .
+
+    eq score(
+        'decide?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 .
+    eq score(
+        'update?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 .
+
+    var NETL : NeTermList .
+
+    eq score('<_:_|_>[NETL]) =  1 . 
 
     eq score('multicast_from_to_[NETL]) = 0 .
+endfm
+
+
+fmod ONETHIRDRULE-SCORE3' is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST DT RT : Term .
+    var D : Nat .
+
+    eq score(
+        'decide?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 . 
+    eq score(
+        'update?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 . 
+
+    vars NETL NETL' : NeTermList .
+
+    eq score('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    = (if ST == 'done.Step then 1 else 10 fi)
+    + max(1, toNumber(RT)) .
+
+    eq score('multicast_from_to_[NETL]) = 0 .
+endfm
+
+fmod ONETHIRDRULE-SCORE4' is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST DT RT : Term .
+    var D : Nat .
+
+    eq score(
+        'decide?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 .
+    eq score(
+        'update?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 . 
+
+    vars NETL NETL' : NeTermList .
+
+    eq score('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    = (if ST == 'done.Step then 9 else 10 fi)
+    + max(1, toNumber(RT)) .
+
+    eq score('multicast_from_to_[NETL]) = 0 .
+endfm
+
+
+fmod ONETHIRDRULE-SCORE5' is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T VT BT NT OST OT CT ST DT RT : Term .
+    var D : Nat .
+
+    eq score(
+        'decide?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 . 
+    eq score(
+        'update?[VT, BT, NT, OST, OT, CT], D
+    ) = 0 .
+
+    vars NETL NETL' : NeTermList .
+
+    eq score('<_:_|_>[OT, CT, '_`,_[
+        'status`:_['`[_`,_`][RT, ST]], NETL]])
+    = 100 + 10 * max(1, toNumber(RT)) .
+
+    eq score('multicast_from_to_[NETL]) = -1 .
 endfm

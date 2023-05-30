@@ -86,7 +86,7 @@ mod ONETHIRDRULE-BASE is
 endm
 
 
-mod ONETHIRDRULE-VU-NARROW is
+mod NO-MESSAGE-LOSS-VU-NARROW is
     including ONETHIRDRULE-BASE .
 
     subsort Natural < InitialRound .
@@ -187,15 +187,10 @@ mod ONETHIRDRULE-VU-NARROW is
     {N, OS,
         < O : Node | status : [s R, init], value : V', decision : nil, votes : [0, 0, 0] >
         CONF} || B [narrowing] .
-
-    rl [loss] : 
-    {N, OS, M CONF} || B
-    =>
-    {N, OS, CONF} || B [narrowing] .
 endm
 
-mod ONETHIRDRULE-VU-NARROW-HALF is
-    including ONETHIRDRULE-VU-NARROW .
+mod NO-MESSAGE-LOSS-VU-NARROW-HALF is
+    including NO-MESSAGE-LOSS-VU-NARROW .
 
     var B : Boolean . var V : Value . vars N N' R : Natural .
     var S : Step . var Z : Zero .
@@ -236,8 +231,8 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     var INITIAL : InitConfiguration .
 endm
 
-mod ONETHIRDRULE-VU-NARROW-ONE is
-    including ONETHIRDRULE-VU-NARROW .
+mod NO-MESSAGE-LOSS-VU-NARROW-ONE is
+    including NO-MESSAGE-LOSS-VU-NARROW .
 
     var B : Boolean . var V : Value . vars N N' R : Natural .
     var S : Step . var Z : Zero .

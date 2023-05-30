@@ -1,0 +1,6 @@
+load ../../../models/no-message-loss-vu-narrow.maude
+
+{fold} vu-narrow {filter,delay} [1]  in NO-MESSAGE-LOSS-VU-NARROW-ONE :
+{N, OS, INITIAL} || inv({N, OS, INITIAL})
+=>* 
+{N, OS, < O : Node | decision : true, ATTS:U124S > < O' : Node | decision : false, ATTS':U124S > CONF} || INV .

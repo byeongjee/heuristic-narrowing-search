@@ -76,17 +76,12 @@ mod ONETHIRDRULE-BASE is
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
-endm
 
-
-mod INV-BASE is
-    including ONETHIRDRULE-BASE .
-    including INVARIANT .
-
-    vars N N' R : Natural . var Z : Zero .  
+    vars R : Natural . var Z : Zero .  
     var S : Step .
     var CONF : Configuration . var M : Msg . 
     vars O O' : Oid . var C : Cid .  var OS : OidSet .
+
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
@@ -107,98 +102,43 @@ mod INV-BASE is
     op sameRound : Configuration -> Bool .
     eq sameRound(< O : Node | status : [R, S], ATTS:U234S > < O' : Node | status : [s R N, S], ATTS':U234S > CONF) = false .
 
-    ops isHalfThreshold isTwoThirdThreshold 
-    : Natural Natural -> Bool .
+    op isHalfThreshold  : Natural Natural -> Bool .
 
     eq isHalfThreshold(s s N, s N') 
     = isHalfThreshold(N, N') .
     eq isHalfThreshold(N, Z) = false .
-
-    eq isTwoThirdThreshold(s s s N, s s N') 
-    = isTwoThirdThreshold(N, N') .
-    eq isTwoThirdThreshold(s s N, Z) = false .
-    eq isTwoThirdThreshold(s s N, s Z) = false .
-    eq isTwoThirdThreshold(s N, Z) = false .
-    eq isTwoThirdThreshold(N, Z) = false .
-endm
-
-mod INV-HALF is
-    including INV-BASE .
-
-    vars N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S:[State]) = true .
-
-    eq initCond({N, OS, CONF})
-    = noDupl(OS) 
-    and noDupl(CONF) 
-    and sameRound(CONF) 
-    and isHalfThreshold(numObjs(CONF), N) .
-
-endm
-
-mod INV-TWOTHIRD is
-    including INV-BASE .
-
-    vars N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S:[State]) = true .
-
-    eq initCond({N, OS, CONF})
-    = noDupl(OS) 
-    and noDupl(CONF) 
-    and sameRound(CONF) 
-    and isTwoThirdThreshold(numObjs(CONF), N) .
-endm
-
-mod INV-HALF-FIXED-INITIAL-ROUND is
-    including INV-BASE .
-
-    vars N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S:[State]) = true .
-
-    eq initCond({N, OS, CONF})
-    = noDupl(OS) 
-    and noDupl(CONF) 
-    and isHalfThreshold(numObjs(CONF), N) .
-
-endm
-
-mod INV-TWOTHIRD-FIXED-INITIAL-ROUND is
-    including INV-BASE .
-
-    vars N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S:[State]) = true .
-
-    eq initCond({N, OS, CONF})
-    = noDupl(OS) 
-    and noDupl(CONF) 
-    and isTwoThirdThreshold(numObjs(CONF), N) .
 endm
 
 
-mod INV-FIXED-OBJS is
+mod INV-BASE is
     including ONETHIRDRULE-BASE .
     including INVARIANT .
 
-    vars O : Oid . var OS : OidSet .
+    var S : State .
     var N : Natural .
+    var OS : OidSet .
     var CONF : Configuration .
 
-    eq inv(S:[State]) = true .
+    eq inv(S) = true .
+    eq initCond({N, OS, CONF})
+    = noDupl(OS) 
+    and noDupl(CONF) 
+    and sameRound(CONF) .
+endm
 
-    eq initCond({N, OS, CONF}) = noDupl(OS) .
+mod INV-HALF is
+    including ONETHIRDRULE-BASE .
+    including INVARIANT .
 
-    op noDupl : OidSet -> Bool .
-    eq noDupl(O ; O ; OS) = false .
+    var S : State .
+    var N : Natural .
+    var OS : OidSet .
+    var CONF : Configuration .
+
+    eq inv(S) = true .
+    eq initCond({N, OS, CONF})
+    = noDupl(OS) 
+    and noDupl(CONF) 
+    and sameRound(CONF) 
+    and isHalfThreshold(numObjs(CONF), N) .
 endm

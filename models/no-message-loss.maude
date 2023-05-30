@@ -107,17 +107,13 @@ mod NO-MESSAGE-LOSS is
     } [narrowing] .
 endm
 
-mod NO-MESSAGE-LOSS-HALF is
+
+mod NO-MESSAGE-LOSS-WITH-INV is
+    protecting NO-MESSAGE-LOSS .
+    protecting INV-BASE .
+endm
+
+mod NO-MESSAGE-LOSS-WITH-INV-HALF is
     protecting NO-MESSAGE-LOSS .
     protecting INV-HALF .
-endm
-
-mod NO-MESSAGE-LOSS-TWOTHIRD is
-    protecting NO-MESSAGE-LOSS .
-    protecting INV-TWOTHIRD .
-endm
-
-mod NO-MESSAGE-LOSS-FIXED-OBJS is
-    protecting NO-MESSAGE-LOSS .
-    protecting INV-FIXED-OBJS .
 endm
