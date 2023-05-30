@@ -2,7 +2,6 @@ load ./data-structures/priority-queue.maude
 load ./index.maude
 load ./score.maude
 load ./term-transformer.maude
-load ./transition-score.maude
 
 
 fmod TERM-ITEM is
@@ -14,34 +13,31 @@ fmod TERM-ITEM is
 
     sort TermItem .
 
-    op <_,_,_,_,_,_,_> : Term Qid Term Term Qid Score Nat -> TermItem [ctor] .
+    op <_,_,_,_,_> : Term Term Qid Score Nat -> TermItem [ctor] .
     --- resulting term, rule label, term, constraint, variable prefix, score, depth
 
-    vars T T' T0 T0' I I' : Term .
+    vars T T' I I' : Term .
     vars N N' D D' : Nat .
     vars S S' : Score .
-    vars Q Q' L L' : Qid .
+    vars Q Q' : Qid .
 
     op _<_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > < < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, I, Q, S, D > < < T', I', Q', S', D' > = le(S, S') .
 
     op _>_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > > < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, I, Q, S, D > > < T', I', Q', S', D' > = le(S, S') .
 
     op _<=_ : TermItem TermItem -> Bool .
-    eq < T, L, T0, I, Q, S, D > <= < T', L', T0', I', Q', S', D' > = le(S, S') .
+    eq < T, I, Q, S, D > <= < T', I', Q', S', D' > = le(S, S') .
 
     op getTerm : TermItem -> Term .
-    eq getTerm(< T, L, T0, I, Q, S, D >) = T .
+    eq getTerm(< T, I, Q, S, D >) = T .
 
     op getDepth : TermItem -> Nat .
-    eq getDepth(< T, L, T0, I, Q, S, D >) = D .
+    eq getDepth(< T, I, Q, S, D >) = D .
  
-    op getLabel : TermItem -> Qid .
-    eq getLabel(< T, L, T0, I, Q, S, D >) = L .
-
     op getScore : TermItem -> Score .
-    eq getScore(< T, L, T0, I, Q, S, D >) = S .
+    eq getScore(< T, I, Q, S, D >) = S .
 endfm
 
 fmod INDEXED-TERM-SET is
@@ -166,8 +162,8 @@ mod FOLDING-APPLICATION is
     var IDXT : IndexedTerm . vars IDXTS IDXTS' IDXTS'' : IndexedTermSet .
     var TI : TermItem .
     vars TIS TIS' : TermItemSet .
-    vars T T0 I : Term .
-    vars L Q : Qid .
+    vars T I : Term .
+    vars Q : Qid .
     var S : Score .
     var D : Nat .
 
@@ -180,22 +176,14 @@ mod FOLDING-APPLICATION is
 
     eq applyFolding(M, empty, IDXTS) = {empty, IDXTS} .
 
-    ceq applyFolding(M, < T, L, T0, I, Q, S, D > ; TIS, IDXTS) 
-    = {< T, L, T0, I, Q, S, D > ; TIS' , IDXTS'' }
+    ceq applyFolding(M, < T, I, Q, S, D > ; TIS, IDXTS) 
+    = {< T, I, Q, S, D > ; TIS' , IDXTS'' }
     if IDXTS' := insertState(M, {T, I, createIndex(T), D}, IDXTS) 
     /\ {TIS', IDXTS''} := applyFolding(M, TIS, IDXTS') .
 
-    eq applyFolding(M, < T, L, T0, I, Q, S, D > ; TIS, IDXTS) 
+    eq applyFolding(M, < T, I, Q, S, D > ; TIS, IDXTS) 
     = applyFolding(M, TIS, IDXTS) [owise] .
 endm
-
-fmod DEPTH-BOUND is
-    protecting NAT .
-    sort DepthBound .
-    subsort Nat < DepthBound .
-    op unlimited : -> DepthBound .
-
-endfm
 
 mod GET-CHILDREN is
     protecting META-LEVEL .
@@ -207,28 +195,26 @@ mod GET-CHILDREN is
     var M : Module .
     var TI : TermItem . 
     var VOS : VariantOptionSet .
-    vars T T' T0 I : Term .
+    vars T T' I : Term .
     var S : Score .
     vars D SOLN : Nat .
     var TY' : Type . 
     var CO : Context . 
-    vars L L' Q Q' F : Qid . 
+    vars Q Q' F L : Qid . 
     vars S1 S2 : Substitution .
 
     eq getChildStates(M, TI, VOS) = getChildStatesUpToNth(M, TI, VOS, 0) .
 
-    ceq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
+    ceq getChildStatesUpToNth(M, < T, I, Q, S, D >, VOS, SOLN) 
     = < T', 
-        L', 
-        getTerm(metaReduce(M, applySubstitution(M, T, S1))), 
         getTerm(metaReduce(M, '_and_[applySubstitution(M, I, S1), 'inv[T']])), 
         Q', 
         score(T', D + 1), 
         D + 1 > 
-        ; getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN + 1) 
-    if {T', TY', CO, L', S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
+        ; getChildStatesUpToNth(M, < T, I, Q, S, D >, VOS, SOLN + 1) 
+    if {T', TY', CO, L, S1, S2, Q'} := metaNarrowingApply(M, T, empty, Q, VOS, SOLN) .
 
-    eq getChildStatesUpToNth(M, < T, L, T0, I, Q, S, D >, VOS, SOLN) 
+    eq getChildStatesUpToNth(M, < T, I, Q, S, D >, VOS, SOLN) 
     = empty [owise] .
 endm
 
@@ -241,13 +227,13 @@ mod FILTER-INVALID is
     var M : Module .
     var TI : TermItem . 
     var TIS : TermItemSet .
-    vars T T0 : Term .
-    vars L Q : Qid .
+    vars T : Term .
+    vars Q : Qid .
     var S : Score .
     var D : Nat .
 
 
-    eq filterInvalid(M, < T, L, T0, 'false.Bool, Q, S, D >  ; TIS) 
+    eq filterInvalid(M, < T, 'false.Bool, Q, S, D >  ; TIS) 
     = filterInvalid(M, TIS) .
 
     eq filterInvalid(M, TI ; TIS) = TI ; filterInvalid(M, TIS) [owise] .
@@ -255,56 +241,6 @@ mod FILTER-INVALID is
     eq filterInvalid(M, empty) = empty .
 endm
 
-mod INVISIBLE-TRANSITION is
-    protecting TERM-ITEM-SET .
-    protecting SUBSUMPTION-CHECK .
-    protecting RENAME .
-    protecting TRANSITION-SCORE .
-
-    var M : Module . 
-    vars T T' T0 T0' I I' : Term .
-    vars L L' Q Q' F : Qid . 
-    var LS : QidSet . 
-    vars S S' : Score .
-    vars D D' : Nat .
-    vars TI TI' : TermItem . vars TIS MATCHED NMATCHED : TermItemSet .
-    var N : Nat .
-    var IDXTI : IndexedTermItem .
-    var IDXTIS : IndexedTermItemSet .
-    var IDX : Index .
-
-    sorts IndexedTermItem IndexedTermItemSet .
-    subsort IndexedTermItem < IndexedTermItemSet .
-
-    op empty : -> IndexedTermItemSet .
-    op [_,_] : Index TermItem -> IndexedTermItem [ctor] .
-    op _;_ : IndexedTermItemSet IndexedTermItemSet -> IndexedTermItemSet [ctor assoc comm id: empty] .
-
-    op applyInvisibleTransitionReduction : Module QidSet TermItemSet -> TermItemSet .
-    op removeSubsumed : Module QidSet IndexedTermItemSet -> IndexedTermItemSet .
-    op createIndex : TermItemSet Nat -> IndexedTermItemSet .
-    op toTermItemSet : IndexedTermItemSet -> TermItemSet .
-
-    eq createIndex(empty, N) = empty .
-    eq createIndex(< T, L, T0, I, Q, S, D > ; TIS, N) = 
-    [createIndex(T0), < T, L, T0, I, Q, S, D >] ; createIndex(TIS, N + 1) .
-
-    eq toTermItemSet(empty) = empty .
-    eq toTermItemSet([IDX, TI] ; IDXTIS) = TI ; toTermItemSet(IDXTIS) .
-
-    eq applyInvisibleTransitionReduction(M, none, TIS) = TIS .
-
-    eq applyInvisibleTransitionReduction(M, LS, TIS) 
-    = toTermItemSet(removeSubsumed(M, LS, createIndex(TIS, 0))) [owise] .
-
-    ceq removeSubsumed(M, LS ; L', 
-    [IDX, < T, L, T0, I, Q, S, D >] ; 
-    [IDX, < T', L', T0', I', Q', S', D' >] ; IDXTIS) 
-    = removeSubsumed(M, LS ; L', [IDX, < T', L', T0', I', Q', S', D'  >] ; IDXTIS)
-    if le(score(T, L), score(T', L'))
-    /\ rename(T0) isSubsumedBy T0' under M .
-    eq removeSubsumed(M, LS, IDXTIS) = IDXTIS [owise] .
-endm 
 
 mod HEURISTIC-NARROWING is
     protecting SCORE .
@@ -313,8 +249,6 @@ mod HEURISTIC-NARROWING is
     protecting LEFTIST-TREES{TermItem} .
     protecting GET-CHILDREN .
     protecting FOLDING-APPLICATION .
-    protecting INVISIBLE-TRANSITION .
-    protecting DEPTH-BOUND .
     protecting FILTER-INVALID .
 
     sort HeuristicNarrowingSearchResult .
@@ -323,32 +257,29 @@ mod HEURISTIC-NARROWING is
     op createSol : TermItem IndexedTermSet -> HeuristicNarrowingSearchResult .
 
     var M : Module .
-    vars T T' T'' T0 I : Term .
+    vars T T' T'' I : Term .
     vars N D D' : Nat . var S : Score .
     var VOS : VariantOptionSet .
     vars IDXTS IDXTS' IDXTS'' : IndexedTermSet .
     vars TI SOL : TermItem .
     vars TIS FILTERED CHILDREN : TermItemSet .
-    vars L Q : Qid .
-    var LS : QidSet .
+    vars Q : Qid .
     var UP : UnificationPair .
     vars QUEUE QUEUE' : LTree{TermItem} .
-    var DB : DepthBound .
 
-    eq createSol(< T, L, T0, I, Q, S, D >, IDXTS) = sol(T, I, S, D, length(IDXTS)) .
+    eq createSol(< T, I, Q, S, D >, IDXTS) = sol(T, I, S, D, length(IDXTS)) .
 
     op metaHeuristicNarrowingSearch : 
-    Module Term Term QidSet VariantOptionSet DepthBound
+    Module Term Term VariantOptionSet
     -> HeuristicNarrowingSearchResult .
 
     op metaHeuristicNarrowingSearchInternal : 
-    Module Term Term QidSet VariantOptionSet DepthBound LTree{TermItem} IndexedTermSet 
+    Module Term Term VariantOptionSet LTree{TermItem} IndexedTermSet 
     -> HeuristicNarrowingSearchResult .
-
 
     op isSolution : Module TermItem Term -> Bool .
 
-    ceq isSolution(M, < T, L, T0, I, Q, S, D >, T') = true
+    ceq isSolution(M, < T, I, Q, S, D >, T') = true
     if UP := metaUnify(M, T =? T', Q, 0) 
     /\ getTerm(metaReduce(M, applySubstitution(M, I, getSubstitution(UP)))) =/= 'false.Bool .
 
@@ -358,30 +289,24 @@ mod HEURISTIC-NARROWING is
     eq insert(empty, QUEUE) = QUEUE .
     eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 
-    eq metaHeuristicNarrowingSearch(M, T, T', LS, VOS, DB)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB,
-    insert(< T, 'none, T, 'initCond[T], '@, score(T, 0), 0 >, empty), --- dummy values
+    eq metaHeuristicNarrowingSearch(M, T, T', VOS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS,
+    insert(< T, 'initCond[T], '@, score(T, 0), 0 >, empty),
     empty) .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE, IDXTS)
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, IDXTS)
     = createSol(TI, IDXTS) 
     if TI := findMin(QUEUE)
     /\ isSolution(M, TI, T') .
 
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, D, QUEUE, IDXTS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, D, deleteMin(QUEUE), IDXTS) 
-    if getDepth(findMin(QUEUE)) > D .
-
-    ceq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE, IDXTS)
-    = metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, QUEUE' , IDXTS') 
+    ceq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE, IDXTS)
+    = metaHeuristicNarrowingSearchInternal(M, T, T', VOS, QUEUE' , IDXTS') 
     if TI := findMin(QUEUE)
-    /\ {FILTERED, IDXTS'} := applyFolding(M, 
-            applyInvisibleTransitionReduction(M, LS, 
-                filterInvalid(M, getChildStates(M, TI, VOS))), IDXTS)
+    /\ {FILTERED, IDXTS'} := applyFolding(M, filterInvalid(M, getChildStates(M, TI, VOS)), IDXTS)
     /\ QUEUE' := insert(FILTERED, deleteMin(QUEUE)) 
     [owise print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchInternal(M, T, T', LS, VOS, DB, empty, IDXTS)
+    eq metaHeuristicNarrowingSearchInternal(M, T, T', VOS, empty, IDXTS)
     = noSolution(length(IDXTS)) .
 
 endm
