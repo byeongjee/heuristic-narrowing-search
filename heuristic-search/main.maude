@@ -127,12 +127,6 @@ mod RENAME is
     eq rename(C, D) = C .
     eq rename(F[NETL], D) = F[rename(NETL, D)] .
     eq rename((T, NETL), D) = rename(T, D) , rename(NETL, D) .
-
-    op rename : NeTermList -> NeTermList [memo] .
-    eq rename(V) = qid("$" + string(V)) . 
-    eq rename(C) = C .
-    eq rename(F[NETL]) = F[rename(NETL)] .
-    eq rename((T, NETL)) = rename(T) , rename(NETL) .
 endm
 
 mod FOLDING-STATE-INSERTION is
