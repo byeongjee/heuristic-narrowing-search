@@ -2,26 +2,23 @@ load ../heuristic-search/main.maude
 load ./aux-functions/onethirdrule-index.maude
 load ./aux-functions/onethirdrule-scoring-functions.maude
 load ./aux-functions/onethirdrule-term-transformer.maude
-load ./aux-functions/onethirdrule-transition-scoring-function.maude
 
 
 
-mod DRIVER3 is
+mod DRIVER4 is
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-TERM-TRANSFORMER .
-    protecting ONETHIRDRULE-SCORE3 .
+    protecting ONETHIRDRULE-SCORE4 .
     protecting HEURISTIC-NARROWING .
-    protecting DEFAULT-TRANSITION-SCORE .
 endm
 
 
-load ../models/onethirdrule-static-dynamic.maude
+load ../models/onethirdrule.maude
 
-red in DRIVER3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-STATIC-DYNAMIC-HALF, false),
+red in DRIVER4 : metaHeuristicNarrowingSearch(
+    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'vote-by-existing ; 'receive,
-    delay filter, unlimited) .
+    delay filter) .

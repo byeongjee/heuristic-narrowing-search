@@ -83,13 +83,15 @@ mod ONETHIRDRULE-BASE is
     op update : Vote Value -> Vote .
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
 endm
 
 
 mod NO-MESSAGE-LOSS-VU-NARROW is
     including ONETHIRDRULE-BASE .
 
-    subsort Natural < InitialRound .
+    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
 
     op inv : InternalState -> Bool .
 
@@ -229,6 +231,7 @@ mod NO-MESSAGE-LOSS-VU-NARROW-HALF is
     eq validThreshold(N, Z) = false .
 
     var INITIAL : InitConfiguration .
+    var INV : Bool .
 endm
 
 mod NO-MESSAGE-LOSS-VU-NARROW-ONE is
@@ -264,4 +267,5 @@ mod NO-MESSAGE-LOSS-VU-NARROW-ONE is
     eq numObjs(none) = 0 .
 
     var INITIAL : InitConfiguration .
+    var INV : Bool .
 endm

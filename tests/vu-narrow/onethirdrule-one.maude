@@ -1,6 +1,9 @@
-load ../../../models/onethirdrule-vu-narrow.maude
+load ../../models/onethirdrule-vu-narrow.maude
 
-{fold} vu-narrow {filter,delay} [1]  in ONETHIRDRULE-VU-NARROW-ONE :
-{N, OS, INITIAL} || inv({N, OS, INITIAL})
+{fold} vu-narrow {filter, delay} [1] 
+in ONETHIRDRULE-VU-NARROW-ONE :
+{s, OS, INITIAL} || inv({s, OS, INITIAL})
 =>* 
-{N, OS, < O : Node | decision : true, ATTS:U124S > < O' : Node | decision : false, ATTS':U124S > CONF} || INV .
+{s, OS, 
+    < O : Node | decision : true, ATTS:U124S > 
+    < O' : Node | decision : false, ATTS':U124S > CONF} || INV .
