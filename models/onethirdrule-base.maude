@@ -1,12 +1,11 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
-load ../heuristic-search/state.maude
-load ../heuristic-search/invariant.maude
+load ../heuristic-search/constraint.maude
 
 set include BOOL off .
 
 
-mod CONFIGURATION is
+mod ALT-CONFIGURATION is
     protecting NODE .
     protecting INITIAL-SORTS .
 
@@ -34,7 +33,7 @@ endfm
 
 
 mod MULTICAST is 
-  including CONFIGURATION .
+  including ALT-CONFIGURATION .
   including MESSAGE-CONTENT .
 
   op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
@@ -44,7 +43,7 @@ mod MULTICAST is
 endm
 
 mod GLOBAL is
-    protecting CONFIGURATION .
+    protecting ALT-CONFIGURATION .
     protecting FVP-NAT .
     including STATE .
 

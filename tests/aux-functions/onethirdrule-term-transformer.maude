@@ -1,7 +1,7 @@
-load ../../heuristic-search/term-transformer.maude
 
 mod ONETHIRDRULE-TERM-TRANSFORMER is
     protecting TERM-TRANSFORMER .
+    protecting META-LEVEL .
 
     op trTerm : Module NeTermList -> NeTermList .
 

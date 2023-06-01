@@ -1,4 +1,8 @@
-load ./state.maude
+
+fmod STATE is
+    sort State .
+endfm
+
 
 fmod INVARIANT is
     including BOOL .

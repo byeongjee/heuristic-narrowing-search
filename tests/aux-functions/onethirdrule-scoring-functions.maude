@@ -1,5 +1,3 @@
-load ../../heuristic-search/score.maude
-
 
 fmod ONETHIRDRULE-SCORE1 is
     including SCORE .

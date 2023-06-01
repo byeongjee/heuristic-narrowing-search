@@ -1,0 +1,178 @@
+
+load term-item.maude
+
+
+fmod SUBSUMPTION is
+    protecting SET{IndexedTerm} * 
+    (op _,_ : Set{IndexedTerm} Set{IndexedTerm} -> Set{IndexedTerm} to _;_) .
+    protecting TERM-TRANSFORMER .
+    protecting META-LEVEL .
+
+    var M : Module .
+    vars T T' I I' COND : Term . 
+    var IDX : Index . 
+    vars D D' N : Nat .
+    var IT : IndexedTerm . 
+    var ITS : Set{IndexedTerm} .
+    var SUB : Substitution . 
+
+    op subsumedBy : Module IndexedTerm Set{IndexedTerm} -> Bool  .
+    ceq subsumedBy(M, {T, I ,IDX, D}, {T', I', IDX, D'} ; ITS) = true
+     if checkImpl(M, T, I, T', I', 0) .
+    eq subsumedBy(M, IT, ITS) = false [owise] .
+
+    op checkImpl : Module Term Term Term Term Nat -> Bool .
+    ceq checkImpl(M, T, I, T', I', N) = 
+       if getTerm(metaReduce(M, trTerm(M, COND))) == 'true.Bool then true
+       else checkImpl(M, T, I, T', I', s(N)) fi 
+     if SUB := metaMatch(M, T', T, nil, N) 
+     /\ COND := '_or_['not_[I], applySubstitution(M, I', SUB)] .
+    eq checkImpl(M, T, I, T', I', N) = false [owise] .
+endfm
+
+
+fmod FOLDING-APPLICATION is
+    protecting SUBSUMPTION .
+    protecting SET{TermItem} *
+    (op _,_ : Set{TermItem} Set{TermItem} -> Set{TermItem} to _;_) .
+    protecting CONVERSION .
+
+    var M : Module .
+    var IDX : Index . 
+    var IT : IndexedTerm . 
+    vars ITS ITS' ITS'' : Set{IndexedTerm} .
+    var TI : TermItem .
+    vars TIS TIS' : Set{TermItem} .
+    vars T I : Term .
+    var S : Score .
+    var D : Nat .
+    vars Q F : Qid .
+    var V : Variable . 
+    var C : Constant .
+    var NETL : NeTermList .
+
+    --- filtered, new most general so far
+    sort FoldingResult .
+    op {_,_} : Set{TermItem} Set{IndexedTerm} -> FoldingResult [ctor] .
+
+    *** module, children, most general so far, resulting children
+    op applyFolding : Module Set{TermItem} Set{IndexedTerm} Set{TermItem} -> FoldingResult .
+    eq applyFolding(M, [T, I, Q, S, D] ; TIS, ITS, TIS') 
+    = if subsumedBy(M, {T, I, createIndex(T), D}, ITS)
+      then applyFolding(M, TIS, ITS, TIS')
+      else applyFolding(M, TIS, rename({T, I, createIndex(T), D}) ; ITS, 
+                                       [T, I, Q, S, D] ; TIS') fi .
+    eq applyFolding(M, empty, ITS, TIS') = {TIS', ITS} .
+
+    --- rename variables
+    op rename : IndexedTerm -> IndexedTerm .
+    eq rename({T, I, IDX, D}) = {rename(T, D), rename(I, D), IDX, D} .
+
+    op rename : NeTermList Nat -> NeTermList .
+    eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
+    eq rename(C, D) = C .
+    eq rename(F[NETL], D) = F[rename(NETL, D)] .
+    eq rename((T, NETL), D) = rename(T, D) , rename(NETL, D) .
+endfm
+
+
+fmod NARROWING-TRANSITION is
+    protecting META-LEVEL .
+    protecting SET{TermItem} *
+    (op _,_ : Set{TermItem} Set{TermItem} -> Set{TermItem} to _;_) .
+
+
+    var M : Module .
+    var TI : TermItem . 
+    var OPTION : VariantOptionSet .
+    vars T T' I : Term .
+    var S : Score .
+    vars D N : Nat .
+    var TY : Type . 
+    var CXT : Context . 
+    vars Q Q' F L : Qid . 
+    vars S1 S2 : Substitution .
+    var RP : ResultPair .
+    var UP : UnificationPair .
+
+    --- obtain the set of next symbolic states
+    op next : Module TermItem VariantOptionSet -> Set{TermItem} [memo] .
+    eq next(M, TI, OPTION) = nextAux(M, TI, OPTION, 0) .
+
+    op nextAux : Module TermItem VariantOptionSet Nat -> Set{TermItem} .
+    ceq nextAux(M, [T, I, Q, S, D], OPTION, N) 
+      = [T', getTerm(RP), Q', score(T', s(D)), s(D)] ; 
+        nextAux(M, [T, I, Q, S, D], OPTION, s(N)) 
+     if {T',TY,CXT,L,S1,S2,Q'} := metaNarrowingApply(M,T,empty,Q,OPTION,N) 
+     /\ RP := metaReduce(M, '_and_[applySubstitution(M,I,S1), 'inv[T']]) .
+    eq nextAux(M, TI, OPTION, N) = empty [owise] .
+
+    --- check if a goal is reached
+    op checkSol : Module TermItem Term -> Bool .
+    eq checkSol(M, TI, T) = checkSol(M, TI, T, 0) .
+
+    op checkSol : Module TermItem Term Nat -> Bool .
+    ceq checkSol(M, [T, I, Q, S, D], T', N) 
+      = if getTerm(RP) =/= 'false.Bool then true
+        else checkSol(M, [T, I, Q, S, D], T', s(N)) fi 
+     if UP := metaUnify(M, T =? T', Q, 0) 
+     /\ RP := metaReduce(M, applySubstitution(M, I, getSubstitution(UP))) .
+    eq checkSol(M, TI, T', N) = false [owise] .
+endfm
+
+
+fmod HEURISTIC-NARROWING is
+    protecting SCORE .
+    protecting LEFTIST-TREES{TermItem<=} .
+    protecting NARROWING-TRANSITION .
+    protecting FOLDING-APPLICATION .
+
+    sort HeuristicNarrowingSearchResult .
+    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
+    op sol : Term Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
+
+    var M : Module .
+    vars T T' T'' I : Term .
+    vars N D D' : Nat . 
+    var S : Score .
+    var OPTION : VariantOptionSet .
+    vars ITS ITS' ITS'' : Set{IndexedTerm} .
+    vars TI SOL : TermItem .
+    vars TIS TIS' : Set{TermItem} .
+    vars Q : Qid .
+    vars QUEUE QUEUE' : LTree{TermItem<=} .
+
+    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
+    eq metaHeuristicNarrowingSearch(M, T, T', OPTION)
+     = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, insert([T, 'initCond[T], '@, score(T, 0), 0], empty), empty) .
+
+
+    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> HeuristicNarrowingSearchResult .
+
+    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) = createSol(TI, ITS) 
+     if TI := findMin(QUEUE)
+     /\ checkSol(M, TI, T') .
+
+    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE,  ITS)
+      = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE', ITS') 
+     if TI := findMin(QUEUE)
+     /\ {TIS', ITS'} := applyFolding(M, filter(M, next(M, TI, OPTION)), ITS, empty)
+     /\ QUEUE' := insert(TIS', deleteMin(QUEUE)) 
+       [owise print "current term item: " TI] .
+
+    eq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, empty, ITS)
+     = noSolution(| ITS |) .
+
+    op createSol : TermItem Set{IndexedTerm} -> HeuristicNarrowingSearchResult .
+    eq createSol([T, I, Q, S, D], ITS) = sol(T, I, S, D, | ITS |) .
+
+    --- remove invalid states
+    op filter : Module Set{TermItem} -> Set{TermItem} .
+    eq filter(M, [T, 'false.Bool, Q, S, D] ; TIS) = filter(M, TIS) .
+    eq filter(M, TIS) = TIS [owise] .
+
+    --- insert a set of items into the queue
+    op insert : Set{TermItem} LTree{TermItem<=} -> LTree{TermItem<=} .
+    eq insert(empty, QUEUE) = QUEUE .
+    eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
+endfm

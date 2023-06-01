@@ -1,9 +1,6 @@
-load ../heuristic-search/index.maude
-load ../heuristic-search/invariant.maude
-load ../heuristic-search/main.maude
-load ../heuristic-search/score.maude
-load ../heuristic-search/state.maude
-load ../heuristic-search/term-transformer.maude
+load ../heuristic-search/constraint.maude
+load ../heuristic-search/param.maude
+load ../heuristic-search/tool.maude
 
 mod EXAMPLE-SYSTEM is
     including STATE .

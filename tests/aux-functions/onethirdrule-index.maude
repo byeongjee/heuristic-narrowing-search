@@ -1,4 +1,3 @@
-load ../../heuristic-search/index.maude
 
 fmod ONETHIRDRULE-INDEX is
     including INDEX .
@@ -35,7 +34,7 @@ fmod ONETHIRDRULE-INDEX is
 endfm
 
 mod ONETHIRDRULE-VU-NARROW-INDEX is
-    including HEURISTIC-NARROWING .
+    including INDEX .
 
     op index : Qid Qid Nat Nat -> Index [ctor] .
 

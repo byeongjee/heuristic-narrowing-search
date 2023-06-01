@@ -1,0 +1,45 @@
+--- a base module for a score function
+fmod SCORE is
+    protecting META-TERM .
+    sort Score .
+    op score : Term Nat -> Score .
+    op le : Score Score -> Bool .
+endfm
+
+
+--- a base module for indexing
+fmod INDEX is
+    protecting META-TERM .
+    sort Index .
+    op createIndex : Term -> Index .
+endfm
+
+
+--- a base module for transformation
+fmod TERM-TRANSFORMER is
+    protecting META-MODULE .
+    op trTerm : Module Term -> Term .
+endfm
+
+
+--- a default indexing 
+fmod DEFAULT-INDEX is
+    including INDEX .
+
+    subsort Qid < Index .
+
+    var F : Qid . *** function symbol
+    var NETL : NeTermList . *** list of arguments
+
+    eq createIndex(F[NETL]) = F .
+    eq createIndex(F) = F . *** constant
+endfm
+
+
+fmod DEFAULT-TERM-TRANSFORMER is
+    extending TERM-TRANSFORMER .
+
+    var M : Module . var T : Term .
+
+    eq trTerm(M, T) = T .
+endfm

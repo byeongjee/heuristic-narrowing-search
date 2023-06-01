@@ -1,9 +1,0 @@
-fmod SCORE is
-    protecting META-LEVEL .
-    protecting NAT .
-
-    sort Score .
-
-    op score : Term Nat -> Score .
-    op le : Score Score -> Bool .
-endfm
