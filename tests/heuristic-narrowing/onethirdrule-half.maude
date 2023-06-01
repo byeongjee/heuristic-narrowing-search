@@ -1,89 +1,126 @@
-load ../../heuristic-search/main.maude
-load ../../models/onethirdrule.maude
+load ../../heuristic-search/param.maude
 load ../aux-functions/onethirdrule-index.maude
 load ../aux-functions/onethirdrule-scoring-functions.maude
-load ../aux-functions/onethirdrule-term-transformer.maude
+
+load ../../heuristic-search/constraint.maude
+load ../../heuristic-search/tool.maude
+
+load ../../models/onethirdrule.maude
 
 
 mod DRIVER1 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE1 .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
 endm
 
 mod DRIVER2 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE2 .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
 endm
 
 mod DRIVER3 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE3 .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
 endm
 
 mod DRIVER4 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE4 .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
 endm
 
 mod DRIVER5 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
     protecting ONETHIRDRULE-SCORE5 .
-    protecting HEURISTIC-NARROWING .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
 endm
 
-red in DRIVER5 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    delay filter) .
+
+
+red in DRIVER5 : 
+heuristic-narrow {filter delay} in  'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .
 
 do clear memo .
 
-red in DRIVER4 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    delay filter) .
+red in DRIVER4 : 
+heuristic-narrow {filter delay} in  'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .
 
 do clear memo .
 
-red in DRIVER3 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    delay filter) .
+red in DRIVER3 : 
+heuristic-narrow {filter delay} in  'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .
 
 do clear memo .
 
-red in DRIVER2 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    delay filter) .
+red in DRIVER2 : 
+heuristic-narrow {filter delay} in  'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .
 
 do clear memo .
 
-red in DRIVER1 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    delay filter) .
+red in DRIVER1 : 
+heuristic-narrow {filter delay} in  'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .
+
+do clear memo .

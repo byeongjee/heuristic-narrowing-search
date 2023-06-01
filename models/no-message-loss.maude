@@ -2,14 +2,13 @@ load ./onethirdrule-base.maude
 
 
 mod NO-MESSAGE-LOSS is
-    including ONETHIRDRULE-BASE .
-
-    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
+    including GLOBAL .
+    protecting MULTICAST .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
     var R N N' VT VF VA : Natural .
-    var Z : Zero .
+    var Z : FZero .
     vars V V' : Value .
 
     rl [vote] : 
@@ -36,6 +35,7 @@ mod NO-MESSAGE-LOSS is
         (multicast vote(V, R) from O' to OS')  
         CONF
     } [narrowing] .
+
 
     rl [decide-1-true] :
     {N, OS,
@@ -112,6 +112,7 @@ mod NO-MESSAGE-LOSS-WITH-INV is
     protecting NO-MESSAGE-LOSS .
     protecting INV-BASE .
 endm
+
 
 mod NO-MESSAGE-LOSS-WITH-INV-HALF is
     protecting NO-MESSAGE-LOSS .
