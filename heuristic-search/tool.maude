@@ -5,7 +5,6 @@ load term-item.maude
 fmod SUBSUMPTION is
     protecting SET{IndexedTerm} * 
     (op _,_ : Set{IndexedTerm} Set{IndexedTerm} -> Set{IndexedTerm} to _;_) .
-    protecting TERM-TRANSFORMER .
     protecting META-LEVEL .
 
     var M : Module .
@@ -23,7 +22,7 @@ fmod SUBSUMPTION is
 
     op checkImpl : Module Term Term Term Term Nat -> Bool .
     ceq checkImpl(M, T, I, T', I', N) = 
-       if getTerm(metaReduce(M, trTerm(M, COND))) == 'true.Bool then true
+       if getTerm(metaReduce(M, COND)) == 'true.Bool then true
        else checkImpl(M, T, I, T', I', s(N)) fi 
      if SUB := metaMatch(M, T', T, nil, N) 
      /\ COND := '_or_['not_[I], applySubstitution(M, I', SUB)] .
@@ -150,7 +149,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNarrowingSearchResult .
 
     ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) 
-      = {T, I, S, D, | ITS |}
+      = {T'', I, S, D, | ITS |}
      if [T'', I, Q, S, D] := findMin(QUEUE)
      /\ checkSol(M, [T'', I, Q, S, D], T') .
 
@@ -186,6 +185,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var B : Bool .
     vars N D : Nat . 
     var S : Score .
+    vars T T' : Term .
 
     sort State? .
     subsort State < State? .
@@ -195,12 +195,9 @@ fmod HEURISTIC-NARROWING-DRIVER is
     subsort Bool < Bool? .
     op errB : -> Bool? [ctor] .
 
-    vars T T' : Term .
-
     sort HNarrowingSearchResult .
     op <_,_,_,_> : State Bool Nat Nat -> HNarrowingSearchResult [ctor] .
     op noSolution : Nat -> HNarrowingSearchResult [ctor] .
-
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNarrowingSearchResult .
     eq heuristic-narrow {OPTION} in Q : ST =>* ST' such that B
@@ -209,7 +206,6 @@ fmod HEURISTIC-NARROWING-DRIVER is
     op prettyPrint : Module MetaHNarrowingSearchResult -> HNarrowingSearchResult .
     eq prettyPrint(M, {T, T', S, N, D})
      = < downTerm(T,errS), downTerm(T',errB), N, D > .
-
     eq prettyPrint(M, failure(N)) = noSolution(N) .
 endfm
 

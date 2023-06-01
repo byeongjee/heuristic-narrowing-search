@@ -2,6 +2,7 @@ load ../heuristic-search/constraint.maude
 load ../heuristic-search/param.maude
 load ../heuristic-search/tool.maude
 
+
 mod EXAMPLE-SYSTEM is
     including STATE .
 
@@ -18,6 +19,7 @@ mod EXAMPLE-SYSTEM is
     rl [l3]: f(s(N)) => g(N) [narrowing] .
 endm
 
+
 mod EXAMPLE-SYSTEM-WITH-INV is
     protecting EXAMPLE-SYSTEM .
     including INVARIANT .
@@ -28,6 +30,7 @@ mod EXAMPLE-SYSTEM-WITH-INV is
     eq inv(g(s(s(s(N))))) = false .
     eq inv(f(s(s(s(N))))) = false .
 endm
+
 
 fmod EXAMPLE-2-SCORE is
     including SCORE .
@@ -47,15 +50,16 @@ fmod EXAMPLE-2-SCORE is
     eq score(T, D) = 1 [owise] .
 endfm
 
+
 mod MAIN is
     protecting EXAMPLE-SYSTEM-WITH-INV .
     protecting HEURISTIC-NARROWING-DRIVER .
     protecting EXAMPLE-2-SCORE .
     protecting DEFAULT-INDEX .
-    protecting DEFAULT-TERM-TRANSFORMER .
 
     vars X Y : Natural .
 endm
+
 
 ---(
 red in MAIN : metaHeuristicNarrowingSearch(

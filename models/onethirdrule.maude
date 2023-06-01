@@ -2,9 +2,8 @@ load ./onethirdrule-base.maude
 
 
 mod ONETHIRDRULE is
-    including ONETHIRDRULE-BASE .
-
-    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
+    including GLOBAL .
+    protecting MULTICAST .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
@@ -113,10 +112,12 @@ mod ONETHIRDRULE is
     {N, OS, CONF} [narrowing] .
 endm
 
+
 mod ONETHIRDRULE-WITH-INV is
     protecting ONETHIRDRULE .
     protecting INV-BASE .
 endm
+
 
 mod ONETHIRDRULE-WITH-INV-HALF is
     protecting ONETHIRDRULE .

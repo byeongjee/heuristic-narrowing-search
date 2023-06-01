@@ -1,5 +1,3 @@
-load fvp-bool.maude 
-
 fmod VALUE is
     protecting FVP-BOOL .
 
@@ -10,6 +8,7 @@ fmod VALUE is
     op nil : -> InitValue? [ctor] .
 endfm
 
+
 fmod STEP is
     sorts Step InitStep .
     subsort InitStep < Step .
@@ -19,10 +18,11 @@ endfm
 
 
 fmod NODE is
-  sorts Node Cid  .
-  subsort Node < Cid .
-  op Node : -> Cid [ctor] .
+    sorts Node Cid  .
+    subsort Node < Cid .
+    op Node : -> Cid [ctor] .
 endfm
+
 
 fmod STATUS is
     protecting FVP-NAT .
@@ -33,20 +33,29 @@ fmod STATUS is
     sort InitialRound .
 
     op [_,_] : Natural Step -> Status [ctor] . 
-
-*** InitStatus will be defined in each model. We take this approach to
-*** customize the initial round for each model.
+    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
 endfm
+
 
 fmod VOTE is
     protecting FVP-NAT .
+    protecting VALUE .
 
     sorts Vote InitVote .
     subsort InitVote < Vote .
 
     op [_,_,_] : FZero FZero FZero -> InitVote [ctor] .
     op [_,_,_] : Natural Natural Natural -> Vote [ctor] .
+
+    vars VT VF VA : Natural .
+
+    op update : Vote Value -> Vote .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
+    eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
+    eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
 endfm
+
 
 fmod OID-SET is
     sorts Oid OidSet .

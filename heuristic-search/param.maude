@@ -15,13 +15,6 @@ fmod INDEX is
 endfm
 
 
---- a base module for transformation
-fmod TERM-TRANSFORMER is
-    protecting META-MODULE .
-    op trTerm : Module Term -> Term .
-endfm
-
-
 --- a default indexing 
 fmod DEFAULT-INDEX is
     including INDEX .
@@ -33,13 +26,4 @@ fmod DEFAULT-INDEX is
 
     eq createIndex(F[NETL]) = F .
     eq createIndex(F) = F . *** constant
-endfm
-
-
-fmod DEFAULT-TERM-TRANSFORMER is
-    extending TERM-TRANSFORMER .
-
-    var M : Module . var T : Term .
-
-    eq trTerm(M, T) = T .
 endfm

@@ -25,11 +25,12 @@ endm
 
 fmod MESSAGE-CONTENT is
     protecting FVP-NAT .
-    protecting VALUE .
-
+    protecting SORTS .
     sort MsgContent . 
+
     op vote : Value Natural -> MsgContent [ctor] .
 endfm
+
 
 
 mod MULTICAST is 
@@ -37,10 +38,7 @@ mod MULTICAST is
   including MESSAGE-CONTENT .
 
   op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
-
-  var MC : MsgContent . 
-  var SENDER : Oid .
-
+  var MC : MsgContent . var SENDER : Oid .
   eq multicast MC from SENDER to none = none [variant] .
   eq multicast MC from SENDER to none = none .
 endm
@@ -57,10 +55,13 @@ mod GLOBAL is
 endm
 
 
-mod CONST-BASE is
-    protecting ALT-CONFIGURATION .
-    protecting SET{Natural} .
+mod ONETHIRDRULE-BASE is
+    including GLOBAL .
+    protecting VALUE .
+    protecting MULTICAST .
     protecting BOOL .
+    protecting SET{Natural} .
+    protecting FVP-BOOL .
 
     vars N N' R : Natural . 
     var Z : FZero .  
@@ -84,7 +85,7 @@ mod CONST-BASE is
     eq isHalfThreshold(N, Z) = false .
 
     op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : Node | ATTS:U1234S > CONF) = O ; getOids(CONF) .
+    eq getOids(< O : C | ATTS:U1234S > CONF) = O ; getOids(CONF) .
     eq getOids(MSG CONF) =  getOids(CONF) .
     eq getOids(none) =  none .
 
@@ -101,8 +102,7 @@ endm
 
 
 mod INV-BASE is
-    including GLOBAL .
-    including CONST-BASE .
+    including ONETHIRDRULE-BASE .
     including INVARIANT .
 
     var S : State .
@@ -117,8 +117,7 @@ endm
 
 
 mod INV-HALF is
-    including GLOBAL .
-    including CONST-BASE .
+    including ONETHIRDRULE-BASE .
     including INVARIANT .
 
     var S : State .
@@ -128,6 +127,6 @@ mod INV-HALF is
 
     eq inv(S) = true .
     eq initCond({N, OS, CONF})
-     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) and 
-       isHalfThreshold(numObjs(CONF), N) .
+     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF))
+       and isHalfThreshold(numObjs(CONF), N) .
 endm

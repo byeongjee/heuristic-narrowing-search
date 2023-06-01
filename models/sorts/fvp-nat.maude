@@ -1,9 +1,24 @@
 --- set based natural number encoding
 
 fmod FVP-NAT is
+    protecting FVP-BOOL .
+
     sort FZero Natural .
     subsort FZero < Natural .
     op 0 : -> FZero [ctor] .
     op s : -> Natural [ctor] .
     op __ : Natural Natural -> Natural [ctor assoc comm id: 0].
+
+    vars N N' : Natural .
+
+    ops _<=_ _<_ : Natural Natural -> Boolean .
+    eq N <= N N' = true [variant] .
+    eq N < N' = s N <= N' [variant] .
+    eq N <= N N' = true .
+    eq N < N' = s N <= N' .
 endfm
+
+
+view Natural from TRIV to FVP-NAT is
+    sort Elt to Natural .
+endv

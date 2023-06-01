@@ -7,6 +7,7 @@ fmod FVP-BOOL is
     op _and_ : Boolean Boolean -> Boolean [assoc comm] .
 
     var B : Boolean .
+
     eq true and B = B [variant] .
     eq false and B = false [variant] .
     eq B and B = B [variant] .
