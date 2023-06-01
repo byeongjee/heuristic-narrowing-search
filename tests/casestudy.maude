@@ -4,24 +4,40 @@ load aux-functions/onethirdrule-index.maude
 load aux-functions/onethirdrule-scoring-functions.maude
 load aux-functions/onethirdrule-term-transformer.maude
 
-
+load ../heuristic-search/constraint.maude
 load ../heuristic-search/tool.maude
-
-mod DRIVER4 is
-    protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-TERM-TRANSFORMER .
-    protecting ONETHIRDRULE-SCORE4 .
-    protecting HEURISTIC-NARROWING .
-endm
-
 
 load ../models/onethirdrule.maude
 
+mod DRIVER4 is
+    protecting ONETHIRDRULE-WITH-INV-HALF .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-TERM-TRANSFORMER .
+    protecting ONETHIRDRULE-SCORE4 .
+    protecting HEURISTIC-NARROWING-DRIVER .
 
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CONF : Configuration .
+endm
+
+
+---(
 red in DRIVER4 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
     '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
+    'initCond['`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration]],
     delay filter) .
+---)
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-WITH-INV-HALF : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CONF}
+  such that initCond({N, OS, INITIAL}) .

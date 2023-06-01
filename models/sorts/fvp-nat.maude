@@ -1,9 +1,9 @@
 --- set based natural number encoding
 
 fmod FVP-NAT is
-    sort Zero Natural .
-    subsort Zero < Natural .
-    op 0 : -> Zero [ctor] .
+    sort FZero Natural .
+    subsort FZero < Natural .
+    op 0 : -> FZero [ctor] .
     op s : -> Natural [ctor] .
     op __ : Natural Natural -> Natural [ctor assoc comm id: 0].
 endfm

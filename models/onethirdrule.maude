@@ -9,7 +9,7 @@ mod ONETHIRDRULE is
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
     var R N N' VT VF VA : Natural .
-    var Z : Zero .
+    var Z : FZero .
     vars V V' : Value .
 
     rl [vote] : 

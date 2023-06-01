@@ -61,7 +61,7 @@ fmod FOLDING-APPLICATION is
     = if subsumedBy(M, {T, I, createIndex(T), D}, ITS)
       then applyFolding(M, TIS, ITS, TIS')
       else applyFolding(M, TIS, rename({T, I, createIndex(T), D}) ; ITS, 
-                                       [T, I, Q, S, D] ; TIS') fi .
+                        [T, I, Q, S, D] ; TIS') fi .
     eq applyFolding(M, empty, ITS, TIS') = {TIS', ITS} .
 
     --- rename variables
@@ -121,15 +121,15 @@ fmod NARROWING-TRANSITION is
 endfm
 
 
-fmod HEURISTIC-NARROWING is
+fmod HEURISTIC-NARROWING-SEARCH is
     protecting SCORE .
     protecting LEFTIST-TREES{TermItem<=} .
     protecting NARROWING-TRANSITION .
     protecting FOLDING-APPLICATION .
 
-    sort HeuristicNarrowingSearchResult .
-    op noSolution : Nat -> HeuristicNarrowingSearchResult [ctor] .
-    op sol : Term Term Score Nat Nat -> HeuristicNarrowingSearchResult [ctor] .
+    sort MetaHNarrowingSearchResult .
+    op failure : Nat -> MetaHNarrowingSearchResult [ctor] .
+    op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNarrowingSearchResult [ctor] .
 
     var M : Module .
     vars T T' T'' I : Term .
@@ -142,16 +142,17 @@ fmod HEURISTIC-NARROWING is
     vars Q : Qid .
     vars QUEUE QUEUE' : LTree{TermItem<=} .
 
-    op metaHeuristicNarrowingSearch : Module Term Term VariantOptionSet -> HeuristicNarrowingSearchResult .
-    eq metaHeuristicNarrowingSearch(M, T, T', OPTION)
-     = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, insert([T, 'initCond[T], '@, score(T, 0), 0], empty), empty) .
+    op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNarrowingSearchResult .
+    eq metaHeuristicNarrowingSearch(M, T, T', T'', OPTION)
+     = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, insert([T, T'', '@, score(T, 0), 0], empty), empty) .
 
 
-    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> HeuristicNarrowingSearchResult .
+    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNarrowingSearchResult .
 
-    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) = createSol(TI, ITS) 
-     if TI := findMin(QUEUE)
-     /\ checkSol(M, TI, T') .
+    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) 
+      = {T, I, S, D, | ITS |}
+     if [T'', I, Q, S, D] := findMin(QUEUE)
+     /\ checkSol(M, [T'', I, Q, S, D], T') .
 
     ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE,  ITS)
       = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE', ITS') 
@@ -160,11 +161,7 @@ fmod HEURISTIC-NARROWING is
      /\ QUEUE' := insert(TIS', deleteMin(QUEUE)) 
        [owise print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, empty, ITS)
-     = noSolution(| ITS |) .
-
-    op createSol : TermItem Set{IndexedTerm} -> HeuristicNarrowingSearchResult .
-    eq createSol([T, I, Q, S, D], ITS) = sol(T, I, S, D, | ITS |) .
+    eq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, empty, ITS) = failure(| ITS |) .
 
     --- remove invalid states
     op filter : Module Set{TermItem} -> Set{TermItem} .
@@ -176,3 +173,43 @@ fmod HEURISTIC-NARROWING is
     eq insert(empty, QUEUE) = QUEUE .
     eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
 endfm
+
+
+fmod HEURISTIC-NARROWING-DRIVER is
+    including STATE .
+    protecting HEURISTIC-NARROWING-SEARCH .
+
+    var M : Module .
+    var OPTION : VariantOptionSet .
+    var Q : Qid .
+    vars ST ST' : State .
+    var B : Bool .
+    vars N D : Nat . 
+    var S : Score .
+
+    sort State? .
+    subsort State < State? .
+    op errS : -> State? [ctor] .
+
+    sort Bool? .
+    subsort Bool < Bool? .
+    op errB : -> Bool? [ctor] .
+
+    vars T T' : Term .
+
+    sort HNarrowingSearchResult .
+    op <_,_,_,_> : State Bool Nat Nat -> HNarrowingSearchResult [ctor] .
+    op noSolution : Nat -> HNarrowingSearchResult [ctor] .
+
+
+    op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNarrowingSearchResult .
+    eq heuristic-narrow {OPTION} in Q : ST =>* ST' such that B
+     = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPTION)) .
+
+    op prettyPrint : Module MetaHNarrowingSearchResult -> HNarrowingSearchResult .
+    eq prettyPrint(M, {T, T', S, N, D})
+     = < downTerm(T,errS), downTerm(T',errB), N, D > .
+
+    eq prettyPrint(M, failure(N)) = noSolution(N) .
+endfm
+

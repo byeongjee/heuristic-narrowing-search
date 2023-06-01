@@ -1,6 +1,5 @@
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
-load ../heuristic-search/constraint.maude
 
 set include BOOL off .
 
@@ -76,7 +75,7 @@ mod ONETHIRDRULE-BASE is
     eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
     eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
 
-    vars R : Natural . var Z : Zero .  
+    vars R : Natural . var Z : FZero .  
     var S : Step .
     var CONF : Configuration . var M : Msg . 
     vars O O' : Oid . var C : Cid .  var OS : OidSet .

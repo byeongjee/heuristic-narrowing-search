@@ -44,7 +44,7 @@ fmod VOTE is
     sorts Vote InitVote .
     subsort InitVote < Vote .
 
-    op [_,_,_] : Zero Zero Zero -> InitVote [ctor] .
+    op [_,_,_] : FZero FZero FZero -> InitVote [ctor] .
     op [_,_,_] : Natural Natural Natural -> Vote [ctor] .
 endfm
 

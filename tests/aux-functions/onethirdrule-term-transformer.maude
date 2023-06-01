@@ -17,7 +17,7 @@ mod ONETHIRDRULE-TERM-TRANSFORMER is
     eq trTerm(M, (T, NETL)) = trTerm(M, T), trTerm(M, NETL) .
     eq trTerm(M, empty) = empty .
 
-    ceq trTerm(M, V) = '0.Zero if leastSort(M, V) == 'Zero .
+    ceq trTerm(M, V) = '0.FZero if leastSort(M, V) == 'FZero .
 
     eq trTerm(M, T) = T [owise] .
 endm

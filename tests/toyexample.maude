@@ -5,13 +5,13 @@ load ../heuristic-search/tool.maude
 mod EXAMPLE-SYSTEM is
     including STATE .
 
-    sort Nat .
-    op 0 : -> Nat [ctor] .
-    op s : Nat -> Nat [ctor] .
+    sort Natural .
+    op 0 : -> Natural [ctor] .
+    op s : Natural -> Natural [ctor] .
 
-    ops f g : Nat -> State .
+    ops f g : Natural -> State .
 
-    var N : Nat .
+    var N : Natural .
 
     rl [l1]: f(s(N)) => f(N) [narrowing] .
     rl [l2]: g(s(N)) => g(N) [narrowing] .
@@ -22,7 +22,7 @@ mod EXAMPLE-SYSTEM-WITH-INV is
     protecting EXAMPLE-SYSTEM .
     including INVARIANT .
 
-    var N : Nat .
+    var N : Natural .
 
     eq initCond(S:State) = true .
     eq inv(g(s(s(s(N))))) = false .
@@ -48,14 +48,23 @@ fmod EXAMPLE-2-SCORE is
 endfm
 
 mod MAIN is
-    protecting HEURISTIC-NARROWING .
+    protecting EXAMPLE-SYSTEM-WITH-INV .
+    protecting HEURISTIC-NARROWING-DRIVER .
     protecting EXAMPLE-2-SCORE .
     protecting DEFAULT-INDEX .
     protecting DEFAULT-TERM-TRANSFORMER .
+
+    vars X Y : Natural .
 endm
 
+---(
 red in MAIN : metaHeuristicNarrowingSearch(
     upModule('EXAMPLE-SYSTEM-WITH-INV, false),
-    'f['X:Nat],
-    'g['Y:Nat],
+    'f['X:Natural],
+    'g['Y:Natural],
+    'initCond['f['X:Natural]],
     delay filter) .
+---)
+
+red heuristic-narrow {filter delay} in 'EXAMPLE-SYSTEM-WITH-INV : 
+    f(X) =>* g(X) such that initCond(f(X)) .
