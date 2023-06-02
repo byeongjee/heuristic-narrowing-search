@@ -9,10 +9,10 @@ load ../heuristic-search/tool.maude
 load ../models/onethirdrule.maude
 
 
-mod DRIVER4 is
+mod MAIN is
     protecting ONETHIRDRULE-WITH-INV-HALF .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE4 .
+    protecting ONETHIRDRULE-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .

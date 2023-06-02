@@ -71,4 +71,4 @@ red in MAIN : metaHeuristicNarrowingSearch(
 ---)
 
 red heuristic-narrow {filter delay} in 'EXAMPLE-SYSTEM-WITH-INV : 
-    f(X) =>* g(X) such that initCond(f(X)) .
+    f(X) =>* g(X) such that true .

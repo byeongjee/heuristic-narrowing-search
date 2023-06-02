@@ -11,7 +11,7 @@ load ../../models/no-message-loss.maude
 mod DRIVER1 is
     protecting NO-MESSAGE-LOSS-WITH-INV .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE1 .
+    protecting ONETHIRDRULE-SCORE-BFS .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .
@@ -25,7 +25,7 @@ endm
 mod DRIVER2 is
     protecting NO-MESSAGE-LOSS-WITH-INV .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE2 .
+    protecting ONETHIRDRULE-SCORE-G .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .
@@ -39,7 +39,7 @@ endm
 mod DRIVER3 is
     protecting NO-MESSAGE-LOSS-WITH-INV .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE3 .
+    protecting ONETHIRDRULE-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .
@@ -53,7 +53,7 @@ endm
 mod DRIVER4 is
     protecting NO-MESSAGE-LOSS-WITH-INV .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE4 .
+    protecting ONETHIRDRULE-SCORE-2 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .
@@ -67,7 +67,7 @@ endm
 mod DRIVER5 is
     protecting NO-MESSAGE-LOSS-WITH-INV .
     protecting ONETHIRDRULE-INDEX .
-    protecting ONETHIRDRULE-SCORE5 .
+    protecting ONETHIRDRULE-SCORE-3 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     var N : Natural .
