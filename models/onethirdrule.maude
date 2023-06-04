@@ -5,7 +5,7 @@ mod ONETHIRDRULE is
     including GLOBAL .
     protecting MULTICAST .
 
-    vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
+    vars O O' : Oid . vars CF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
     var R N N' VT VF VA : Natural .
     var Z : FZero .
@@ -14,13 +14,13 @@ mod ONETHIRDRULE is
     rl [vote] : 
     {N, O ; OS,
         < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
-        CONF
+        CF
     }
     =>
     {N, O ; OS,
         < O : Node | status : [R, wait], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
         (multicast vote(V, R) from O to OS)
-        CONF
+        CF
     } [narrowing] .
 
 
@@ -28,125 +28,104 @@ mod ONETHIRDRULE is
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         (multicast vote(V, R) from O' to (O ; OS'))
-        CONF
+        CF
     } =>
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : update([VT, VF, VA], V), ATTS:U2S > 
         (multicast vote(V, R) from O' to OS')  
-        CONF
+        CF
     } [narrowing] .
 
 
     rl [decide-1-true] :
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
-        CONF
+        CF
     }
     =>
     decide?(true, N <= VT, N, OS, 
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
-        CONF
+        CF
     ) [narrowing] .
 
     rl [decide-1-true] :
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
-        CONF
+        CF
     }
     =>
     decide?(false, N <= VF, N, OS, 
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
-        CONF
+        CF
     ) [narrowing] .
 
 
     rl [decide-2] :
     decide?(V, true, N, OS,
         < O : Node | status : [R, wait], decision : nil, ATTS:U24S >,
-        CONF)
+        CF)
     =>
     {N, OS,
         < O : Node | status : [R, done], decision : V, ATTS:U24S >
-        CONF
+        CF
     } [narrowing] .
 
 
     rl [update-1-true] : 
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >
-        CONF
+        CF
     }
     =>
     update?(true, (VT <  N) and (N <= VA) and (VF <= VT),
         N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
-        CONF
+        CF
     ) [narrowing] .
 
     rl [update-1-false] : 
     {N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >
-        CONF
+        CF
     }
     =>
     update?(false, (VF < N) and (N <= VA) and (VT < VF),
         N, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >,
-        CONF
+        CF
     ) [narrowing] .
 
     rl [update-2] : 
     update?(V', true, N, OS,
         < O : Node | status : [R, wait], value : V, decision : nil, votes : [VT, VF, VA] >,
-        CONF
+        CF
     )
     =>
     {N, OS,
         < O : Node | status : [s R, init], value : V', decision : nil, votes : [0, 0, 0] >
-        CONF
+        CF
     } [narrowing] .
 
     rl [loss] : 
-    {N, OS, M CONF}
+    {N, OS, M CF}
     =>
-    {N, OS, CONF} [narrowing] .
+    {N, OS, CF} [narrowing] .
 endm
 
 
-mod ONETHIRDRULE-WITH-INV is
+mod ONETHIRDRULE-NO-THRESHOLD is
     protecting ONETHIRDRULE .
-    including CONST-BASE .
+    including CONST-NO-THRESHOLD .
     including STATE .
     subsort Global < State .
-
-    var S : State .
-    var N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S) = true .
-
-    op initCond : State -> Bool .
-    eq initCond({N, OS, CONF})
-     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) .
+    eq inv(S:State) = true .
 endm
 
 
-mod ONETHIRDRULE-WITH-INV-HALF is
+mod ONETHIRDRULE-HALF-THRESHOLD is
     protecting ONETHIRDRULE .
-    including CONST-BASE .
+    including CONST-HALF-THRESHOLD .
     including STATE .
     subsort Global < State .
-
-    var S : State .
-    var N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S) = true .
-
-    op initCond : State -> Bool .
-    eq initCond({N, OS, CONF})
-     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) and 
-       isHalfThreshold(numObjs(CONF), N) .
+    eq inv(S:State) = true .
 endm

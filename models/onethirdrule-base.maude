@@ -6,7 +6,7 @@ load ./sorts/sorts.maude
 set include BOOL off .
 
 
-mod ALT-CONFIGURATION is
+mod ALT-CFIGURATION is
     protecting NODE .
     protecting INITIAL-SORTS .
 
@@ -33,7 +33,7 @@ endfm
 
 
 mod MULTICAST is 
-  including ALT-CONFIGURATION .
+  including ALT-CFIGURATION .
   including MESSAGE-CONTENT .
 
   op multicast_from_to_ : MsgContent Oid OidSet -> Msg [ctor] .
@@ -47,7 +47,7 @@ endm
 
 
 mod GLOBAL is
-    protecting ALT-CONFIGURATION .
+    protecting ALT-CFIGURATION .
     protecting FVP-NAT .
 
     sort Global .
@@ -58,14 +58,13 @@ endm
 
 
 mod CONST-BASE is
-    protecting ALT-CONFIGURATION .
+    protecting ALT-CFIGURATION .
     protecting SET{Natural} .
     protecting BOOL .
 
     vars N N' R : Natural . 
-    var Z : FZero .  
     var S : Step .
-    var CONF : Configuration . 
+    var CF : Configuration . 
     var MSG : Msg . 
     var O : Oid . 
     var OS : OidSet .
@@ -78,26 +77,53 @@ mod CONST-BASE is
     eq sameRound((R, s R N, NS)) = false .
     eq sameRound((R, R, NS)) = sameRound((R, NS)) .
 
+    op getOids : Configuration -> OidSet [memo] .
+    eq getOids(< O : Node | ATTS:U1234S > CF) = O ; getOids(CF) .
+    eq getOids(MSG CF) =  getOids(CF) .
+    eq getOids(none) =  none .
+
+    op numObjs : Configuration -> Natural .
+    eq numObjs(< O : Node | ATTS:U1234S > CF) = s numObjs(CF) .
+    eq numObjs(MSG CF) = numObjs(CF) .
+    eq numObjs(none) = 0 .
+
+    op getRounds : Configuration -> Set{Natural} .
+    eq getRounds(< O : Node | status : [R, S], ATTS:U234S > CF) = R, getRounds(CF) .
+    eq getRounds(MSG CF) = getRounds(CF) .
+    eq getRounds(none) = 0 .
+endm
+
+
+mod CONST-NO-THRESHOLD is
+    protecting CONST-BASE .
+    including GLOBAL .
+
+    var N : Natural .
+    var OS : OidSet .
+    var CF : Configuration .
+
+    op initCond : Global -> Bool .
+    eq initCond({N, OS, CF})
+     = noDupl(OS) and noDupl(getOids(CF)) and sameRound(getRounds(CF)) .
+endm
+
+
+mod CONST-HALF-THRESHOLD is
+    protecting CONST-BASE .
+    including GLOBAL .
+
+    vars N N' : Natural .
+    var Z : FZero .  
+    var OS : OidSet .
+    var CF : Configuration .
+
     op isHalfThreshold  : Natural Natural -> Bool .
     eq isHalfThreshold(s s N, s N') 
      = isHalfThreshold(N, N') .
     eq isHalfThreshold(N, Z) = false .
 
-    op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : Node | ATTS:U1234S > CONF) = O ; getOids(CONF) .
-    eq getOids(MSG CONF) =  getOids(CONF) .
-    eq getOids(none) =  none .
-
-    op numObjs : Configuration -> Natural .
-    eq numObjs(< O : Node | ATTS:U1234S > CONF) = s numObjs(CONF) .
-    eq numObjs(MSG CONF) = numObjs(CONF) .
-    eq numObjs(none) = 0 .
-
-    op getRounds : Configuration -> Set{Natural} .
-    eq getRounds(< O : Node | status : [R, S], ATTS:U234S > CONF) = R, getRounds(CONF) .
-    eq getRounds(MSG CONF) = getRounds(CONF) .
-    eq getRounds(none) = 0 .
+    op initCond : Global -> Bool .
+    eq initCond({N, OS, CF})
+     = noDupl(OS) and noDupl(getOids(CF)) and sameRound(getRounds(CF)) and 
+       isHalfThreshold(numObjs(CF), N) .
 endm
-
-
-

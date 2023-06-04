@@ -10,7 +10,7 @@ load ../models/onethirdrule.maude
 
 
 mod MAIN is
-    protecting ONETHIRDRULE-WITH-INV-HALF .
+    protecting ONETHIRDRULE-HALF-THRESHOLD .
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
@@ -20,7 +20,7 @@ mod MAIN is
     var OS : OidSet .
     var INITIAL : InitConfiguration .
     vars ATTS ATTS' : U124S .
-    var CONF : Configuration .
+    var CF : Configuration .
 endm
 
 
@@ -28,15 +28,15 @@ endm
 red in DRIVER4 : metaHeuristicNarrowingSearch(
     upModule('ONETHIRDRULE-WITH-INV-HALF, false),
     '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CONF:Configuration,'<_:_|_>[
+    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CF:Configuration,'<_:_|_>[
     'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
     'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
     'initCond['`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration]],
     delay filter) .
 ---)
 
-red heuristic-narrow {filter delay} in 'ONETHIRDRULE-WITH-INV-HALF : 
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-HALF-THRESHOLD : 
       {N, OS, INITIAL} 
   =>* {N, OS, < O  : Node | decision : true,  ATTS  >
-              < O' : Node | decision : false, ATTS' > CONF}
+              < O' : Node | decision : false, ATTS' > CF}
   such that initCond({N, OS, INITIAL}) .
