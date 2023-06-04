@@ -48,7 +48,7 @@ fmod FOLDING-APPLICATION is
     vars Q F : Qid .
     var V : Variable . 
     var C : Constant .
-    var NETL : NeTermList .
+    var NTL : NeTermList .
 
     --- filtered, new most general so far
     sort FoldingResult .
@@ -59,19 +59,19 @@ fmod FOLDING-APPLICATION is
     eq applyFolding(M, [T, I, Q, S, D] ; TIS, ITS, TIS') 
     = if subsumedBy(M, {T, I, index(T), D}, ITS)
       then applyFolding(M, TIS, ITS, TIS')
-      else applyFolding(M, TIS, rename({T, I, index(T), D}) ; ITS, 
+      else applyFolding(M, TIS, {rename(T,D), rename(I,D), index(T), D} ; ITS, 
                         [T, I, Q, S, D] ; TIS') fi .
     eq applyFolding(M, empty, ITS, TIS') = {TIS', ITS} .
 
     --- rename variables
-    op rename : IndexedTerm -> IndexedTerm .
-    eq rename({T, I, IDX, D}) = {rename(T, D), rename(I, D), IDX, D} .
-
     op rename : NeTermList Nat -> NeTermList .
-    eq rename(V, D) = qid("$" + string(D, 10) + string(V)) . 
+    eq rename(V, D) = renameVar(V, D) .
     eq rename(C, D) = C .
-    eq rename(F[NETL], D) = F[rename(NETL, D)] .
-    eq rename((T, NETL), D) = rename(T, D) , rename(NETL, D) .
+    eq rename(F[NTL], D) = F[rename(NTL, D)] .
+    eq rename((T, NTL), D) = rename(T, D) , rename(NTL, D) .
+
+    op renameVar : Variable Nat -> Variable [memo] .
+    eq renameVar(V, D) = qid("$" + string(D, 10) + string(V)) . 
 endfm
 
 
@@ -83,7 +83,7 @@ fmod NARROWING-TRANSITION is
 
     var M : Module .
     var TI : TermItem . 
-    var OPTION : VariantOptionSet .
+    var OPT : VariantOptionSet .
     vars T T' I : Term .
     var S : Score .
     vars D N : Nat .
@@ -95,16 +95,16 @@ fmod NARROWING-TRANSITION is
     var UP : UnificationPair .
 
     --- obtain the set of next symbolic states
-    op next : Module TermItem VariantOptionSet -> Set{TermItem} [memo] .
-    eq next(M, TI, OPTION) = nextAux(M, TI, OPTION, 0) .
+    op next : Module TermItem VariantOptionSet -> Set{TermItem} .
+    eq next(M, TI, OPT) = nextAux(M, TI, OPT, 0) .
 
     op nextAux : Module TermItem VariantOptionSet Nat -> Set{TermItem} .
-    ceq nextAux(M, [T, I, Q, S, D], OPTION, N) 
+    ceq nextAux(M, [T, I, Q, S, D], OPT, N) 
       = [T', getTerm(RP), Q', score(T', s(D)), s(D)] ; 
-        nextAux(M, [T, I, Q, S, D], OPTION, s(N)) 
-     if {T',TY,CXT,L,S1,S2,Q'} := metaNarrowingApply(M,T,empty,Q,OPTION,N) 
+        nextAux(M, [T, I, Q, S, D], OPT, s(N)) 
+     if {T',TY,CXT,L,S1,S2,Q'} := metaNarrowingApply(M,T,empty,Q,OPT,N) 
      /\ RP := metaReduce(M, '_and_[applySubstitution(M,I,S1), 'inv[T']]) .
-    eq nextAux(M, TI, OPTION, N) = empty [owise] .
+    eq nextAux(M, TI, OPT, N) = empty [owise] .
 
     --- check if a goal is reached
     op checkSol : Module TermItem Term -> Bool .
@@ -134,33 +134,36 @@ fmod HEURISTIC-NARROWING-SEARCH is
     vars T T' T'' I : Term .
     vars N D D' : Nat . 
     var S : Score .
-    var OPTION : VariantOptionSet .
+    var OPT : VariantOptionSet .
     vars ITS ITS' ITS'' : Set{IndexedTerm} .
     vars TI SOL : TermItem .
     vars TIS TIS' : Set{TermItem} .
     vars Q : Qid .
-    vars QUEUE QUEUE' : LTree{TermItem<=} .
+    var QUE : LTree{TermItem<=} .
+    var NQUE : NeLTree{TermItem<=} .
 
     op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNSResult .
-    eq metaHeuristicNarrowingSearch(M, T, T', T'', OPTION)
-     = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, insert([T, T'', '@, score(T, 0), 0], empty), empty) .
+    eq metaHeuristicNarrowingSearch(M, T, T', T'', OPT)
+     = metaHNSAux(M, T, T', OPT, insert([T, T'', '@, score(T, 0), 0], empty), empty) .
 
+    op metaHNSAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNSResult .
 
-    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNSResult .
+    ceq metaHNSAux(M, T, T', OPT, NQUE, ITS)
+      = if checkSol(M, TI, T') then success(TI, | ITS |)
+        else metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI) fi
+     if TI := findMin(NQUE) .
 
-    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) 
-      = {T'', I, S, D, | ITS |}
-     if [T'', I, Q, S, D] := findMin(QUEUE)
-     /\ checkSol(M, [T'', I, Q, S, D], T') .
-
-    ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE,  ITS)
-      = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE', ITS') 
-     if TI := findMin(QUEUE)
-     /\ {TIS', ITS'} := applyFolding(M, filter(M, next(M, TI, OPTION)), ITS, empty)
-     /\ QUEUE' := insert(TIS', deleteMin(QUEUE)) 
+    eq metaHNSAux(M, T, T', OPT, empty, ITS) = failure(| ITS |) .
+ 
+    op metaHNSAux2 : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} TermItem -> MetaHNSResult .
+    ceq metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI)
+      = metaHNSAux(M, T, T', OPT, insert(TIS, deleteMin(NQUE)), ITS')
+     if {TIS, ITS'} := applyFolding(M, filter(M, next(M, TI, OPT)), ITS, empty)
        [owise print "current term item: " TI] .
 
-    eq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, empty, ITS) = failure(| ITS |) .
+    ---
+    op success : TermItem Nat -> MetaHNSResult .
+    eq success([T, I, Q, S, D], N) = {T, I, S, D, N} .
 
     --- remove invalid states
     op filter : Module Set{TermItem} -> Set{TermItem} .
@@ -169,8 +172,8 @@ fmod HEURISTIC-NARROWING-SEARCH is
 
     --- insert a set of items into the queue
     op insert : Set{TermItem} LTree{TermItem<=} -> LTree{TermItem<=} .
-    eq insert(empty, QUEUE) = QUEUE .
-    eq insert(TI ; TIS, QUEUE) = insert(TIS, insert(TI, QUEUE)) .
+    eq insert(empty, QUE) = QUE .
+    eq insert(TI ; TIS, QUE) = insert(TIS, insert(TI, QUE)) .
 endfm
 
 
@@ -179,7 +182,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     protecting HEURISTIC-NARROWING-SEARCH .
 
     var M : Module .
-    var OPTION : VariantOptionSet .
+    var OPT : VariantOptionSet .
     var Q : Qid .
     vars ST ST' : State .
     var B : Bool .
@@ -200,8 +203,8 @@ fmod HEURISTIC-NARROWING-DRIVER is
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
-    eq heuristic-narrow {OPTION} in Q : ST =>* ST' such that B
-     = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPTION)) .
+    eq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
+     = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPT)) .
 
     op prettyPrint : Module MetaHNSResult -> HNSResult .
     eq prettyPrint(M, {T, T', S, N, D})
