@@ -41,17 +41,12 @@ fmod ONETHIRDRULE-SCORE-BASE is
     eq scoreL((T, TL)) = score(T) + scoreL(TL) .
     eq scoreL(empty) = 0 .
 
-    *** auxiliary functions
-    op toNumber : Term -> Int .
-    eq toNumber('0.Natural) = 0 .
+    *** auxiliary function
+    op toNumber : NeTermList -> Int .
     eq toNumber('s.Natural) = 1 .
-    eq toNumber('__[TL]) = countS(TL) .
+    eq toNumber('__[TL]) = toNumber(TL) .
+    eq toNumber((T, NETL)) = toNumber(T) + toNumber(NETL) .
     eq toNumber(T) = 0 [owise] .
-
-    op countS : NeTermList -> Int .
-    eq countS('s.Natural) = 1 .
-    eq countS(T) = 0 [owise] .
-    eq countS((T, NETL)) = countS(T) + countS(NETL) .
 endfm
 
 fmod ONETHIRDRULE-SCORE-G is
