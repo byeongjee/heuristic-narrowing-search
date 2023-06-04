@@ -21,29 +21,31 @@ fmod ONETHIRDRULE-SCORE-BASE is
     subsort Int < Score .
 
     vars N N' : Int .
-    vars T BT NT OST OT CT ST : Term .
+    vars T TN TOS TV TB TOBJ TCF : Term .
     var D : Nat .
+    var F : Qid .
     var NETL : NeTermList .
+    var TL : TermList .
 
     eq le(N, N') = N <= N' .
 
-    eq score(
-        '`{_`,_`,_`}[T, OST, NETL], D
-    ) = score(NETL) .
+    eq score(F[TN,TOS,TCF], D) = score(TCF) .
 
-    op score : NeTermList -> Score .
-
-    eq score('__[NETL]) = score(NETL) .
-    eq score((T, NETL)) 
-    = score(T) + score(NETL) .
-
+    op score : Term -> Score .
+    eq score('__[TL]) = scoreL(TL) .
+    eq score('decide?[TV, TB, TN, TOS, TOBJ, TCF], D) = scoreL((TOBJ, TCF)) .
+    eq score('update?[TV, TB, TN, TOS, TOBJ, TCF], D) = scoreL((TOBJ, TCF)) .
     eq score(T) = 0 [owise] .
+
+    op scoreL : TermList -> Score .
+    eq scoreL((T, TL)) = score(T) + scoreL(TL) .
+    eq scoreL(empty) = 0 .
 
     *** auxiliary functions
     op toNumber : Term -> Int .
     eq toNumber('0.Natural) = 0 .
     eq toNumber('s.Natural) = 1 .
-    eq toNumber('__[NETL]) = countS(NETL) .
+    eq toNumber('__[TL]) = countS(TL) .
     eq toNumber(T) = 0 [owise] .
 
     op countS : NeTermList -> Int .
@@ -55,89 +57,46 @@ endfm
 fmod ONETHIRDRULE-SCORE-G is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OST OT CT ST : Term .
-    var D : Nat .
+    var TL : TermList .
 
-    eq score(
-        'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
-    eq score(
-        'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
-
-    var NETL : NeTermList .
-
-    eq score('<_:_|_>[NETL]) =  1 . 
-
-    eq score('multicast_from_to_[NETL]) = 0 .
+    eq score('<_:_|_>[TL]) =  1 . 
+    eq score('multicast_from_to_[TL]) = 0 .
 endfm
 
 
 fmod ONETHIRDRULE-SCORE-1 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OST OT CT ST DT RT : Term .
-    var D : Nat .
+    vars OT CT ST RT : Term .
+    vars TL : TermList .
 
-    eq score(
-        'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
-    eq score(
-        'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
+    eq score('<_:_|_>[OT, CT, '_`,_['status`:_['`[_`,_`][RT, ST]], TL]])
+     = (if ST == 'done.Step then 1 else 10 fi) + max(1, toNumber(RT)) .
 
-    vars NETL NETL' : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, '_`,_[
-        'status`:_['`[_`,_`][RT, ST]], NETL]])
-    = (if ST == 'done.Step then 1 else 10 fi)
-    + max(1, toNumber(RT)) .
-
-    eq score('multicast_from_to_[NETL]) = 0 .
+    eq score('multicast_from_to_[TL]) = 0 .
 endfm
 
 fmod ONETHIRDRULE-SCORE-2 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OST OT CT ST DT RT : Term .
-    var D : Nat .
+    vars OT CT ST RT : Term .
+    vars TL : TermList .
 
-    eq score(
-        'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
-    eq score(
-        'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
+    eq score('<_:_|_>[OT, CT, '_`,_['status`:_['`[_`,_`][RT, ST]], TL]])
+     = (if ST == 'done.Step then 9 else 10 fi) + max(1, toNumber(RT)) .
 
-    vars NETL NETL' : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, '_`,_[
-        'status`:_['`[_`,_`][RT, ST]], NETL]])
-    = (if ST == 'done.Step then 9 else 10 fi)
-    + max(1, toNumber(RT)) .
-
-    eq score('multicast_from_to_[NETL]) = 0 .
+    eq score('multicast_from_to_[TL]) = 0 .
 endfm
 
 
 fmod ONETHIRDRULE-SCORE-3 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars T VT BT NT OST OT CT ST DT RT : Term .
-    var D : Nat .
+    vars OT CT ST RT : Term .
+    vars TL : TermList .
 
-    eq score(
-        'decide?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
-    eq score(
-        'update?[VT, BT, NT, OST, OT, CT], D
-    ) = score((OT, CT)) .
+    eq score('<_:_|_>[OT, CT, '_`,_['status`:_['`[_`,_`][RT, ST]], TL]])
+     = 100 + 10 * max(1, toNumber(RT)) .
 
-    vars NETL NETL' : NeTermList .
-
-    eq score('<_:_|_>[OT, CT, '_`,_[
-        'status`:_['`[_`,_`][RT, ST]], NETL]])
-    = 100 + 10 * max(1, toNumber(RT)) .
-
-    eq score('multicast_from_to_[NETL]) = -1 .
+    eq score('multicast_from_to_[TL]) = -1 .
 endfm
