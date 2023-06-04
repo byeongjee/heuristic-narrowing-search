@@ -115,11 +115,38 @@ endm
 
 mod ONETHIRDRULE-WITH-INV is
     protecting ONETHIRDRULE .
-    protecting INV-BASE .
+    including CONST-BASE .
+    including STATE .
+    subsort Global < State .
+
+    var S : State .
+    var N : Natural .
+    var OS : OidSet .
+    var CONF : Configuration .
+
+    eq inv(S) = true .
+
+    op initCond : State -> Bool .
+    eq initCond({N, OS, CONF})
+     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) .
 endm
 
 
 mod ONETHIRDRULE-WITH-INV-HALF is
     protecting ONETHIRDRULE .
-    protecting INV-HALF .
+    including CONST-BASE .
+    including STATE .
+    subsort Global < State .
+
+    var S : State .
+    var N : Natural .
+    var OS : OidSet .
+    var CONF : Configuration .
+
+    eq inv(S) = true .
+
+    op initCond : State -> Bool .
+    eq initCond({N, OS, CONF})
+     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) and 
+       isHalfThreshold(numObjs(CONF), N) .
 endm

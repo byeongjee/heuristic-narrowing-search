@@ -4,13 +4,12 @@ load ../heuristic-search/tool.maude
 
 
 mod EXAMPLE-SYSTEM is
-    including STATE .
-
     sort Natural .
     op 0 : -> Natural [ctor] .
     op s : Natural -> Natural [ctor] .
 
-    ops f g : Natural -> State .
+    sort Global .
+    ops f g : Natural -> Global .
 
     var N : Natural .
 
@@ -22,6 +21,9 @@ endm
 
 mod EXAMPLE-SYSTEM-WITH-INV is
     protecting EXAMPLE-SYSTEM .
+    including STATE .
+
+    subsort Global < State .
 
     var N : Natural .
 
@@ -58,15 +60,6 @@ mod MAIN is
     vars X Y : Natural .
 endm
 
-
----(
-red in MAIN : metaHeuristicNarrowingSearch(
-    upModule('EXAMPLE-SYSTEM-WITH-INV, false),
-    'f['X:Natural],
-    'g['Y:Natural],
-    'initCond['f['X:Natural]],
-    delay filter) .
----)
 
 red heuristic-narrow {filter delay} in 'EXAMPLE-SYSTEM-WITH-INV : 
     f(X) =>* g(X) such that true .

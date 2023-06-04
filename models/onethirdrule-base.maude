@@ -49,11 +49,11 @@ endm
 mod GLOBAL is
     protecting ALT-CONFIGURATION .
     protecting FVP-NAT .
-    including STATE .
 
-    op {_,_,_} : Natural OidSet Configuration -> State [ctor] .
-    op decide? :  Value Boolean Natural OidSet Object Configuration -> State [ctor] .
-    op update? :  Value Boolean Natural OidSet Object Configuration -> State [ctor] .
+    sort Global .
+    op {_,_,_} : Natural OidSet Configuration -> Global [ctor] .
+    op decide? :  Value Boolean Natural OidSet Object Configuration -> Global [ctor] .
+    op update? :  Value Boolean Natural OidSet Object Configuration -> Global [ctor] .
 endm
 
 
@@ -100,38 +100,4 @@ mod CONST-BASE is
 endm
 
 
-mod INV-BASE is
-    including GLOBAL .
-    including CONST-BASE .
-    including STATE .
 
-    var S : State .
-    var N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S) = true .
-
-    op initCond : State -> Bool .
-    eq initCond({N, OS, CONF})
-     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) .
-endm
-
-
-mod INV-HALF is
-    including GLOBAL .
-    including CONST-BASE .
-    including STATE .
-
-    var S : State .
-    var N : Natural .
-    var OS : OidSet .
-    var CONF : Configuration .
-
-    eq inv(S) = true .
-
-    op initCond : State -> Bool .
-    eq initCond({N, OS, CONF})
-     = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) and 
-       isHalfThreshold(numObjs(CONF), N) .
-endm
