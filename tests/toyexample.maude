@@ -1,4 +1,4 @@
-load ../heuristic-search/constraint.maude
+load ../heuristic-search/state.maude
 load ../heuristic-search/param.maude
 load ../heuristic-search/tool.maude
 
@@ -22,11 +22,9 @@ endm
 
 mod EXAMPLE-SYSTEM-WITH-INV is
     protecting EXAMPLE-SYSTEM .
-    including INVARIANT .
 
     var N : Natural .
 
-    eq initCond(S:State) = true .
     eq inv(g(s(s(s(N))))) = false .
     eq inv(f(s(s(s(N))))) = false .
 endm

@@ -3,7 +3,7 @@ load ../heuristic-search/param.maude
 load aux-functions/onethirdrule-index.maude
 load aux-functions/onethirdrule-scoring-functions.maude
 
-load ../heuristic-search/constraint.maude
+load ../heuristic-search/state.maude
 load ../heuristic-search/tool.maude
 
 load ../models/onethirdrule.maude

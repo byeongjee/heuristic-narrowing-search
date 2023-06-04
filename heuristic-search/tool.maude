@@ -57,9 +57,9 @@ fmod FOLDING-APPLICATION is
     *** module, children, most general so far, resulting children
     op applyFolding : Module Set{TermItem} Set{IndexedTerm} Set{TermItem} -> FoldingResult .
     eq applyFolding(M, [T, I, Q, S, D] ; TIS, ITS, TIS') 
-    = if subsumedBy(M, {T, I, createIndex(T), D}, ITS)
+    = if subsumedBy(M, {T, I, index(T), D}, ITS)
       then applyFolding(M, TIS, ITS, TIS')
-      else applyFolding(M, TIS, rename({T, I, createIndex(T), D}) ; ITS, 
+      else applyFolding(M, TIS, rename({T, I, index(T), D}) ; ITS, 
                         [T, I, Q, S, D] ; TIS') fi .
     eq applyFolding(M, empty, ITS, TIS') = {TIS', ITS} .
 
@@ -126,9 +126,9 @@ fmod HEURISTIC-NARROWING-SEARCH is
     protecting NARROWING-TRANSITION .
     protecting FOLDING-APPLICATION .
 
-    sort MetaHNarrowingSearchResult .
-    op failure : Nat -> MetaHNarrowingSearchResult [ctor] .
-    op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNarrowingSearchResult [ctor] .
+    sort MetaHNSResult .
+    op failure : Nat -> MetaHNSResult [ctor] .
+    op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNSResult [ctor] .
 
     var M : Module .
     vars T T' T'' I : Term .
@@ -141,12 +141,12 @@ fmod HEURISTIC-NARROWING-SEARCH is
     vars Q : Qid .
     vars QUEUE QUEUE' : LTree{TermItem<=} .
 
-    op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNarrowingSearchResult .
+    op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNSResult .
     eq metaHeuristicNarrowingSearch(M, T, T', T'', OPTION)
      = metaHeuristicNarrowingSearchAux(M, T, T', OPTION, insert([T, T'', '@, score(T, 0), 0], empty), empty) .
 
 
-    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNarrowingSearchResult .
+    op metaHeuristicNarrowingSearchAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNSResult .
 
     ceq metaHeuristicNarrowingSearchAux(M, T, T', OPTION, QUEUE, ITS) 
       = {T'', I, S, D, | ITS |}
@@ -195,15 +195,15 @@ fmod HEURISTIC-NARROWING-DRIVER is
     subsort Bool < Bool? .
     op errB : -> Bool? [ctor] .
 
-    sort HNarrowingSearchResult .
-    op <_,_,_,_> : State Bool Nat Nat -> HNarrowingSearchResult [ctor] .
-    op noSolution : Nat -> HNarrowingSearchResult [ctor] .
+    sort HNSResult .
+    op <_,_,_,_> : State Bool Nat Nat -> HNSResult [ctor] .
+    op noSolution : Nat -> HNSResult [ctor] .
 
-    op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNarrowingSearchResult .
+    op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
     eq heuristic-narrow {OPTION} in Q : ST =>* ST' such that B
      = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPTION)) .
 
-    op prettyPrint : Module MetaHNarrowingSearchResult -> HNarrowingSearchResult .
+    op prettyPrint : Module MetaHNSResult -> HNSResult .
     eq prettyPrint(M, {T, T', S, N, D})
      = < downTerm(T,errS), downTerm(T',errB), N, D > .
     eq prettyPrint(M, failure(N)) = noSolution(N) .

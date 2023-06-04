@@ -8,7 +8,7 @@ fmod ONETHIRDRULE-INDEX is
     vars NETL NETL' : NeTermList .
     vars Q F : Qid .
 
-    eq createIndex(T) = createNumMsgsAndObjs(getTopSymbol(T), getConfig(T)) .
+    eq index(T) = createNumMsgsAndObjs(getTopSymbol(T), getConfig(T)) .
 
     op createNumMsgsAndObjs : Qid NeTermList -> Index .
     eq createNumMsgsAndObjs(Q, NETL) = index(Q, getNumMsgs(NETL), getNumObjs(NETL)) .
@@ -42,7 +42,7 @@ mod ONETHIRDRULE-VU-NARROW-INDEX is
     vars NETL NETL' : NeTermList .
     vars Q F F' : Qid .
 
-    ceq createIndex(F[F'[NETL]])
+    ceq index(F[F'[NETL]])
     = index(F, F', getNumMsgs(NETL'), getNumObjs(NETL')) 
     if NETL' := getConfig(F[F'[NETL]]).
 

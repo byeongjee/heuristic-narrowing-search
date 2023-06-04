@@ -11,7 +11,7 @@ endfm
 fmod INDEX is
     protecting META-TERM .
     sort Index .
-    op createIndex : Term -> Index .
+    op index : Term -> Index .
 endfm
 
 
@@ -21,9 +21,10 @@ fmod DEFAULT-INDEX is
 
     subsort Qid < Index .
 
-    var F : Qid . *** function symbol
-    var NETL : NeTermList . *** list of arguments
+    var F : Qid . 
+    var TL : NeTermList . 
+    var C : Constant .
 
-    eq createIndex(F[NETL]) = F .
-    eq createIndex(F) = F . *** constant
+    eq index(F[TL]) = F .
+    eq index(C) = C . 
 endfm

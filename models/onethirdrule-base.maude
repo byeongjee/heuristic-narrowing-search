@@ -103,7 +103,7 @@ endm
 mod INV-BASE is
     including GLOBAL .
     including CONST-BASE .
-    including INVARIANT .
+    including STATE .
 
     var S : State .
     var N : Natural .
@@ -111,6 +111,8 @@ mod INV-BASE is
     var CONF : Configuration .
 
     eq inv(S) = true .
+
+    op initCond : State -> Bool .
     eq initCond({N, OS, CONF})
      = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) .
 endm
@@ -119,7 +121,7 @@ endm
 mod INV-HALF is
     including GLOBAL .
     including CONST-BASE .
-    including INVARIANT .
+    including STATE .
 
     var S : State .
     var N : Natural .
@@ -127,6 +129,8 @@ mod INV-HALF is
     var CONF : Configuration .
 
     eq inv(S) = true .
+
+    op initCond : State -> Bool .
     eq initCond({N, OS, CONF})
      = noDupl(OS) and noDupl(getOids(CONF)) and sameRound(getRounds(CONF)) and 
        isHalfThreshold(numObjs(CONF), N) .
