@@ -1,7 +1,6 @@
 
 fmod ONETHIRDRULE-SCORE-BFS is
     including SCORE .
-    protecting INT .
 
     subsort Nat < Score .
 
@@ -16,34 +15,33 @@ endfm
 --- for SCORE-G and SCORE-1
 fmod ONETHIRDRULE-SCORE-BASE is
     including SCORE .
-    protecting INT .
+    protecting META-MODULE .
 
     vars N N' : Nat .
-    vars T TN TOS TV TB TOBJ TCF : Term .
+    vars T TN TO TV TB TOBJ TCF : Term .
+    vars F Q : Qid .
     var D : Nat .
-    var F : Qid .
     var V : Variable .
     var TL : TermList .
+    var NTL : NeTermList .
 
     subsort Nat < Score .
 
     eq le(N, N') = N <= N' .
 
-    eq score(F[TN,TOS,TCF], D) = score(TCF) .
+    eq score(F[TN, TO, TCF], D) = scoreAux(TCF) .
+    eq score(F[TV, TB, TN, TO, TOBJ, TCF], D) = scoreAux((TOBJ, TCF)) .
 
-    op score : Term -> Score .
-    eq score('__[T, TL]) = score(T) + score('__[TL]) .
-    eq score('__[empty]) = 0 .
-    eq score('decide?[TV, TB, TN, TOS, TOBJ, TCF], D) = score('__[TOBJ, TCF]) .
-    eq score('update?[TV, TB, TN, TOS, TOBJ, TCF], D) = score('__[TOBJ, TCF]) .
-    eq score(V) = 0 .
+    op scoreAux : NeTermList -> Score .
+    eq scoreAux('__[NTL]) = scoreAux(NTL) .
+    eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
+    eq scoreAux(T) = 0 [owise] .
 
     *** auxiliary function
-    op toNumber : Term -> Nat .
-    eq toNumber('s.Natural) = 1 .
-    eq toNumber('__[T, TL]) = toNumber(T) + toNumber('__[TL]) .
-    eq toNumber('__[empty]) = 0 .
-    eq toNumber(V) = 0 .
+    op toNumber : TermList -> Nat .
+    eq toNumber(('s.Natural, TL)) = s(toNumber(TL)) .
+    eq toNumber('__[TL]) = toNumber(TL) . 
+    eq toNumber(TL) = 0 [owise] .
 endfm
 
 fmod ONETHIRDRULE-SCORE-G is
@@ -51,8 +49,7 @@ fmod ONETHIRDRULE-SCORE-G is
 
     var TL : TermList .
 
-    eq score('<_:_|_>[TL]) =  1 . 
-    eq score('multicast_from_to_[TL]) = 0 .
+    eq scoreAux('<_:_|_>[TL]) =  1 . 
 endfm
 
 
@@ -62,10 +59,8 @@ fmod ONETHIRDRULE-SCORE-1 is
     vars TO TC TS TR : Term .
     vars TL : TermList .
 
-    eq score('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
+    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
      = (if TS == 'done.Step then 1 else 10 fi) + max(1, toNumber(TR)) .
-
-    eq score('multicast_from_to_[TL]) = 0 .
 endfm
 
 fmod ONETHIRDRULE-SCORE-2 is
@@ -74,23 +69,22 @@ fmod ONETHIRDRULE-SCORE-2 is
     vars TO TC TS TR : Term .
     vars TL : TermList .
 
-    eq score('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
+    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
      = (if TS == 'done.Step then 9 else 10 fi) + max(1, toNumber(TR)) .
-
-    eq score('multicast_from_to_[TL]) = 0 .
 endfm
 
 
 fmod ONETHIRDRULE-SCORE-3 is
     including ONETHIRDRULE-SCORE-BASE .
+    protecting INT .
 
     subsort Int < Score .
 
     vars TO TC TS TR : Term .
     vars TL : TermList .
 
-    eq score('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
+    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
      = 100 + 10 * max(1, toNumber(TR)) .
 
-    eq score('multicast_from_to_[TL]) = -1 .
+    eq scoreAux('multicast_from_to_[TL]) = -1 .
 endfm

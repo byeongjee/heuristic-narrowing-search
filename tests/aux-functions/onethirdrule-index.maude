@@ -1,29 +1,20 @@
 fmod ONETHIRDRULE-INDEX-AUX is
-    including META-TERM .
+    including META-MODULE .
 
-    vars T TN TO TV TB TOBJ TCF : Term .
-    vars TL TL' : TermList .
+    vars T : Term .
+    var NTL : NeTermList .
     vars N N' : Nat .
-    var F : Qid .
-    var V : Variable .
+    var CI : ConfigInfo .
 
     sort ConfigInfo .
-    op #msgs_#objs_ : Nat Nat -> ConfigInfo [ctor] .
+    op {_,_} : Nat Nat -> ConfigInfo [ctor] .
 
-    op getInfo : TermList Nat Nat -> ConfigInfo .
-    eq getInfo(('multicast_from_to_[TL'], TL), N, N') = getInfo(TL, s(N), N') .
-    eq getInfo(('<_:_|_>[TL'], TL), N, N') = getInfo(TL, N, s(N')) .
-    eq getInfo((V, TL), N, N') = getInfo(TL, N, N') .
-    eq getInfo(empty, N, N') = #msgs N #objs N' .
-
-    op getConfig : Term -> TermList .
-    eq getConfig('decide?[TV, TB, TN, TO, TOBJ, TCF]) = TOBJ, getItems(TCF) .
-    eq getConfig('update?[TV, TB, TN, TO, TOBJ, TCF]) = TOBJ, getItems(TCF) .
-    eq getConfig('`{_`,_`,_`}[TN, TO, TCF]) = getItems(TCF) .
-
-    op getItems : Term -> TermList .
-    eq getItems('__[TL]) = TL .
-    eq getItems(T) = T [owise] .
+    op getInfo : NeTermList ConfigInfo -> ConfigInfo .
+    eq getInfo('__[NTL], CI) = getInfo(NTL, CI) .
+    eq getInfo((T, NTL), CI) = getInfo(NTL, getInfo(T, CI)) .
+    eq getInfo('multicast_from_to_[NTL], {N, N'}) = {s(N), N'} .
+    eq getInfo('<_:_|_>[NTL], {N, N'}) = {N, s(N')} .
+    eq getInfo(T, CI) = CI [owise] .
 endfm
 
 
@@ -31,16 +22,14 @@ fmod ONETHIRDRULE-INDEX is
     including INDEX .
     including ONETHIRDRULE-INDEX-AUX .
 
-    op index : Qid ConfigInfo -> Index [ctor] .
+    op [_:_] : Qid ConfigInfo -> Index [ctor] .
 
-    var T : Term .
-    var TL : TermList .
+    vars T TN TO TV TB TOBJ TCF : Term .
     var F : Qid .
+    var TL : TermList .
 
-    eq index(T) = index(getTopSymbol(T), getInfo(getConfig(T),0,0)) .
-
-    op getTopSymbol : Term -> Qid .
-    eq getTopSymbol(F[TL]) = F .
+    eq index(F[TV, TB, TN, TO, TOBJ, TCF]) = [F : getInfo((TOBJ, TCF), {0,0})] .
+    eq index(F[TN, TO, TCF]) = [F : getInfo(TCF, {0,0})] .
 endfm
 
 
@@ -48,12 +37,13 @@ mod ONETHIRDRULE-VU-NARROW-INDEX is
     including INDEX .
     including ONETHIRDRULE-INDEX-AUX .
 
-    op index : Qid Qid ConfigInfo -> Index [ctor] .
+    op [_,_:_] : Qid Qid ConfigInfo -> Index [ctor] .
 
-    vars TL : TermList .
+    vars T TN TO TV TB TOBJ TCF : Term .
     vars F F' : Qid .
+    vars TL : TermList .
 
-    eq index(F[F'[TL]])
-     = index(F, F', getInfo(getConfig(F[F'[TL]]),0,0)) .
-
+    ---FIXME: The following seems incorrect. Where is _||_ ?
+    eq index(F'[F[TV, TB, TN, TO, TOBJ, TCF]]) = [F', F : getInfo((TOBJ, TCF), {0,0})] .
+    eq index(F'[F[TN, TO, TCF]]) = [F', F : getInfo(TCF, {0,0})] .
 endm
