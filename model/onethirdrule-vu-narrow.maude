@@ -2,10 +2,11 @@
 --- which can be tested using the "vu-narrow" command."
 --- static invisible transition-based reduction is applied
 
+load ./sorts/fvp-bool.maude
 load ./sorts/fvp-nat.maude
 load ./sorts/sorts.maude
+
 load ../heuristic-search/state.maude
-load ../heuristic-search/invariant.maude
 
 
 mod CONFIGURATION is
@@ -91,14 +92,14 @@ endm
 mod ONETHIRDRULE-VU-NARROW is
     including ONETHIRDRULE-BASE .
 
-    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
+    op [_,_] : Natural InitStep -> InitStatus [ctor ditto] . 
 
     op inv : InternalState -> Bool .
 
     vars O O' : Oid . vars CONF : Configuration . var M : Msg . var C : Cid .
     vars OS OS' : OidSet . 
     var R N N' VT VF VA : Natural .
-    var Z : Zero .
+    var Z : FZero .
     vars V V' : Value .
     var B : [Bool] .
 
@@ -201,7 +202,7 @@ mod ONETHIRDRULE-VU-NARROW-HALF is
     including ONETHIRDRULE-VU-NARROW .
 
     var B : Boolean . var V : Value . vars N N' R : Natural .
-    var S : Step . var Z : Zero .
+    var S : Step . var Z : FZero .
     var OS : OidSet . var OBJ : Object . vars O O' : Oid .
     var C : Cid . var CONF : Configuration . var M : Msg .
 
@@ -244,7 +245,7 @@ mod ONETHIRDRULE-VU-NARROW-ONE is
     including ONETHIRDRULE-VU-NARROW .
 
     var B : Boolean . var V : Value . vars N N' R : Natural .
-    var S : Step . var Z : Zero .
+    var S : Step . var Z : FZero .
     var OS : OidSet . var OBJ : Object . vars O O' : Oid .
     var C : Cid . var CONF : Configuration . var M : Msg .
 

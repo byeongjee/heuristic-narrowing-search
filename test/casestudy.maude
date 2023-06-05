@@ -1,12 +1,12 @@
 
-load ../heuristic-search/param.maude
+load ../tool/param.maude
 load aux-functions/onethirdrule-index.maude
 load aux-functions/onethirdrule-scoring-functions.maude
 
-load ../heuristic-search/state.maude
-load ../heuristic-search/tool.maude
+load ../tool/state.maude
+load ../tool/tool.maude
 
-load ../models/onethirdrule.maude
+load ../model/onethirdrule.maude
 
 
 mod MAIN is

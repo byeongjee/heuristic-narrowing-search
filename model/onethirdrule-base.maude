@@ -51,7 +51,7 @@ mod GLOBAL is
     protecting FVP-NAT .
 
     sort Global .
-    op {_,_,_} : Natural OidSet Configuration -> Global [ctor] .
+    op {_,_,_} : Natural OidSet Configuration -> Global [ctor format (d d d s d s d d)] .
     op decide? :  Value Boolean Natural OidSet Object Configuration -> Global [ctor] .
     op update? :  Value Boolean Natural OidSet Object Configuration -> Global [ctor] .
 endm
@@ -117,13 +117,13 @@ mod CONST-HALF-THRESHOLD is
     var OS : OidSet .
     var CF : Configuration .
 
-    op isHalfThreshold  : Natural Natural -> Bool .
-    eq isHalfThreshold(s s N, s N') 
-     = isHalfThreshold(N, N') .
-    eq isHalfThreshold(N, Z) = false .
+    op valid1/2  : Natural Natural -> Bool .
+    eq valid1/2(s s N, s N') 
+     = valid1/2(N, N') .
+    eq valid1/2(N, Z) = false .
 
     op initCond : Global -> Bool .
     eq initCond({N, OS, CF})
      = noDupl(OS) and noDupl(getOids(CF)) and sameRound(getRounds(CF)) and 
-       isHalfThreshold(numObjs(CF), N) .
+       valid1/2(numObjs(CF), N) .
 endm

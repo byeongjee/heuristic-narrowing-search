@@ -32,8 +32,8 @@ fmod STATUS is
     subsort InitStatus < Status .
     sort InitialRound .
 
-    op [_,_] : Natural Step -> Status [ctor] . 
-    op [_,_] : Natural InitStep -> InitStatus [ctor] . 
+    op [_,_] : Natural Step -> Status [ctor format (d d d s d d)] . 
+    op [_,_] : Natural InitStep -> InitStatus [ctor ditto] . 
 endfm
 
 
@@ -44,8 +44,8 @@ fmod VOTE is
     sorts Vote InitVote .
     subsort InitVote < Vote .
 
-    op [_,_,_] : FZero FZero FZero -> InitVote [ctor] .
-    op [_,_,_] : Natural Natural Natural -> Vote [ctor] .
+    op [_,_,_] : FZero FZero FZero -> InitVote [ctor format (d d d s d s d d)] .
+    op [_,_,_] : Natural Natural Natural -> Vote [ctor ditto] .
 
     vars VT VF VA : Natural .
 

@@ -199,7 +199,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     op errB : -> Bool? [ctor] .
 
     sort HNSResult .
-    op <_,_,_,_> : State Bool Nat Nat -> HNSResult [ctor] .
+    op _||_states:_(depth:_) : State Bool Nat Nat -> HNSResult [ctor format (d d d n d s d d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
@@ -207,8 +207,8 @@ fmod HEURISTIC-NARROWING-DRIVER is
      = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPT)) .
 
     op prettyPrint : Module MetaHNSResult -> HNSResult .
-    eq prettyPrint(M, {T, T', S, N, D})
-     = < downTerm(T,errS), downTerm(T',errB), N, D > .
+    eq prettyPrint(M, {T, T', S, D, N})
+     = downTerm(T,errS) || downTerm(T',errB) states: N (depth: D) .
     eq prettyPrint(M, failure(N)) = noSolution(N) .
 endfm
 

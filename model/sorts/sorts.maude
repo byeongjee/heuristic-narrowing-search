@@ -9,11 +9,11 @@ fmod SORTS is
 
   sorts StatusAttr ValueAttr DecisionAttr VoteAttr NeighborsAttr .
 
-  op status`:_ : Status -> StatusAttr [ctor] .
-  op value`:_ : Value -> ValueAttr [ctor] .
-  op decision`:_ : Value? -> DecisionAttr [ctor] .
-  op votes`:_ : Vote -> VoteAttr [ctor] .
-  op neighbors`:_ : OidSet -> NeighborsAttr [ctor] .
+  op status`:_ : Status -> StatusAttr [ctor prec 15 gather (&)] .
+  op value`:_ : Value -> ValueAttr [ctor prec 15 gather (&)] .
+  op decision`:_ : Value? -> DecisionAttr [ctor prec 15 gather (&)] .
+  op votes`:_ : Vote -> VoteAttr [ctor prec 15 gather (&)] .
+  op neighbors`:_ : OidSet -> NeighborsAttr [ctor prec 15 gather (&)] .
 
 --- {}
 
@@ -29,7 +29,7 @@ fmod SORTS is
 
   sort U12S .
   subsort U1S U2S < U12S .
-  op _,_ : U1S U2S -> U12S [ctor assoc comm] .
+  op _,_ : U1S U2S -> U12S [ctor assoc comm format (d d s d)] .
 
 --- {1, 2, 3}
   sort U3S .
@@ -223,9 +223,9 @@ fmod INITIAL-SORTS is
   subsort InitialDecisionAttr < DecisionAttr .
   subsort InitVoteAttr < VoteAttr .
 
-  op status`:_ : InitStatus -> InitStatusAttr [ctor] .
-  op decision`:_ : InitValue? -> InitialDecisionAttr [ctor] .
-  op votes`:_ : InitVote -> InitVoteAttr [ctor] .
+  op status`:_ : InitStatus -> InitStatusAttr [ctor ditto] .
+  op decision`:_ : InitValue? -> InitialDecisionAttr [ctor ditto] .
+  op votes`:_ : InitVote -> InitVoteAttr [ctor ditto] .
 
   sort IU1S .
   subsort InitStatusAttr < IU1S < U1S .

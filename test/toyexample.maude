@@ -1,6 +1,6 @@
-load ../heuristic-search/state.maude
-load ../heuristic-search/param.maude
-load ../heuristic-search/tool.maude
+load ../tool/state.maude
+load ../tool/param.maude
+load ../tool/tool.maude
 
 
 mod EXAMPLE-SYSTEM is
