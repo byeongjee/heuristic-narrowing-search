@@ -1,5 +1,5 @@
 fmod ONETHIRDRULE-INDEX-AUX is
-    including META-MODULE .
+    including META-TERM .
 
     vars T : Term .
     var NTL : NeTermList .

@@ -15,13 +15,12 @@ endfm
 --- for SCORE-G and SCORE-1
 fmod ONETHIRDRULE-SCORE-BASE is
     including SCORE .
-    protecting META-MODULE .
+    protecting INT .
 
     vars N N' : Nat .
-    vars T TN TO TV TB TOBJ TCF : Term .
-    vars F Q : Qid .
+    vars T T1 T2 T3 T4 T5 : Term .
+    vars F : Qid .
     var D : Nat .
-    var V : Variable .
     var TL : TermList .
     var NTL : NeTermList .
 
@@ -29,8 +28,8 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     eq le(N, N') = N <= N' .
 
-    eq score(F[TN, TO, TCF], D) = scoreAux(TCF) .
-    eq score(F[TV, TB, TN, TO, TOBJ, TCF], D) = scoreAux((TOBJ, TCF)) .
+    eq score(F[T, T1, T2], D) = scoreAux(T2) .
+    eq score(F[T, T1, T2, T3, T4, T5], D) = scoreAux((T4, T5)) .
 
     op scoreAux : NeTermList -> Score .
     eq scoreAux('__[NTL]) = scoreAux(NTL) .
@@ -56,11 +55,11 @@ endfm
 fmod ONETHIRDRULE-SCORE-1 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars TO TC TS TR : Term .
+    vars T1 T2 T3 T4 : Term .
     vars TL : TermList .
 
-    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
-     = (if TS == 'done.Step then 1 else 10 fi) + max(1, toNumber(TR)) .
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_['status`:_['`[_`,_`][T3, T4]], TL]])
+     = 10 + (if T4 == 'done.Step then -9 else 0 fi) + max(1, toNumber(T3)) .
 endfm
 
 fmod ONETHIRDRULE-SCORE-2 is
@@ -76,7 +75,6 @@ endfm
 
 fmod ONETHIRDRULE-SCORE-3 is
     including ONETHIRDRULE-SCORE-BASE .
-    protecting INT .
 
     subsort Int < Score .
 
