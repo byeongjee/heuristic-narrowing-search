@@ -23,7 +23,6 @@ fmod ONETHIRDRULE-SCORE-BASE is
     var D : Nat .
     var F : Qid .
     var V : Variable .
-    var NTL : NeTermList .
     var TL : TermList .
 
     subsort Nat < Score .

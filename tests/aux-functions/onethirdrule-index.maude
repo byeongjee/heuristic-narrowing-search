@@ -1,64 +1,59 @@
+fmod ONETHIRDRULE-INDEX-AUX is
+    including META-TERM .
+
+    vars T TN TO TV TB TOBJ TCF : Term .
+    vars TL TL' : TermList .
+    vars N N' : Nat .
+    var F : Qid .
+    var V : Variable .
+
+    sort ConfigInfo .
+    op #msgs_#objs_ : Nat Nat -> ConfigInfo [ctor] .
+
+    op getInfo : TermList Nat Nat -> ConfigInfo .
+    eq getInfo(('multicast_from_to_[TL'], TL), N, N') = getInfo(TL, s(N), N') .
+    eq getInfo(('<_:_|_>[TL'], TL), N, N') = getInfo(TL, N, s(N')) .
+    eq getInfo((V, TL), N, N') = getInfo(TL, N, N') .
+    eq getInfo(empty, N, N') = #msgs N #objs N' .
+
+    op getConfig : Term -> TermList .
+    eq getConfig('decide?[TV, TB, TN, TO, TOBJ, TCF]) = TOBJ, getItems(TCF) .
+    eq getConfig('update?[TV, TB, TN, TO, TOBJ, TCF]) = TOBJ, getItems(TCF) .
+    eq getConfig('`{_`,_`,_`}[TN, TO, TCF]) = getItems(TCF) .
+
+    op getItems : Term -> TermList .
+    eq getItems('__[TL]) = TL .
+    eq getItems(T) = T [owise] .
+endfm
+
 
 fmod ONETHIRDRULE-INDEX is
     including INDEX .
+    including ONETHIRDRULE-INDEX-AUX .
 
-    op index : Qid Nat Nat -> Index [ctor] .
+    op index : Qid ConfigInfo -> Index [ctor] .
 
-    vars T T' T'' NT OT  : Term .
-    vars NETL NETL' : NeTermList .
-    vars Q F : Qid .
+    var T : Term .
+    var TL : TermList .
+    var F : Qid .
 
-    eq index(T) = createNumMsgsAndObjs(getTopSymbol(T), getConfig(T)) .
-
-    op createNumMsgsAndObjs : Qid NeTermList -> Index .
-    eq createNumMsgsAndObjs(Q, NETL) = index(Q, getNumMsgs(NETL), getNumObjs(NETL)) .
+    eq index(T) = index(getTopSymbol(T), getInfo(getConfig(T),0,0)) .
 
     op getTopSymbol : Term -> Qid .
-    eq getTopSymbol(F[NETL]) = F .
-
-    ops getNumMsgs getNumObjs : NeTermList -> Nat .
-    eq getNumMsgs('multicast_from_to_[NETL]) = 1 .
-    eq getNumMsgs(T) = 0 [owise] .
-    eq getNumMsgs((T,  NETL')) = getNumMsgs(T) + getNumMsgs(NETL') .
-    eq getNumObjs('<_:_|_>[NETL]) = 1 .
-    eq getNumObjs(T) = 0 [owise] .
-    eq getNumObjs((T,  NETL')) = getNumObjs(T) + getNumObjs(NETL') .
-
-    op getConfig : Term -> NeTermList .
-    eq getConfig('decideTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('decideFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('`{_`,_`,_`}[NT, OT, T]) = getConfig(T) .
-    eq getConfig('__[NETL]) = NETL .
+    eq getTopSymbol(F[TL]) = F .
 endfm
+
 
 mod ONETHIRDRULE-VU-NARROW-INDEX is
     including INDEX .
+    including ONETHIRDRULE-INDEX-AUX .
 
-    op index : Qid Qid Nat Nat -> Index [ctor] .
+    op index : Qid Qid ConfigInfo -> Index [ctor] .
 
-    vars T T' T'' NT OT  : Term .
-    vars NETL NETL' : NeTermList .
-    vars Q F F' : Qid .
+    vars TL : TermList .
+    vars F F' : Qid .
 
-    ceq index(F[F'[NETL]])
-    = index(F, F', getNumMsgs(NETL'), getNumObjs(NETL')) 
-    if NETL' := getConfig(F[F'[NETL]]).
+    eq index(F[F'[TL]])
+     = index(F, F', getInfo(getConfig(F[F'[TL]]),0,0)) .
 
-    ops getNumMsgs getNumObjs : NeTermList -> Nat .
-    eq getNumMsgs('multicast_from_to_[NETL]) = 1 .
-    eq getNumMsgs(T) = 0 [owise] .
-    eq getNumMsgs((T,  NETL')) = getNumMsgs(T) + getNumMsgs(NETL') .
-    eq getNumObjs('<_:_|_>[NETL]) = 1 .
-    eq getNumObjs(T) = 0 [owise] .
-    eq getNumObjs((T,  NETL')) = getNumObjs(T) + getNumObjs(NETL') .
-
-    op getConfig : Term -> NeTermList .
-    eq getConfig('decideTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('decideFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateTrue[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('updateFalse[T, NT, OT, T', T'']) = (T', getConfig(T'')) .
-    eq getConfig('`{_`,_`,_`}[NT, OT, T]) = getConfig(T) .
-    eq getConfig('__[NETL]) = NETL .
 endm
