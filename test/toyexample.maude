@@ -40,7 +40,9 @@ fmod EXAMPLE-2-SCORE is
 
     vars N N' : Nat .
 
-    eq le(N, N') = N <= N' .
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
 
     var F : Qid .
     var T : Term .

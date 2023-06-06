@@ -7,7 +7,9 @@ fmod ONETHIRDRULE-SCORE-BFS is
     vars N N' D : Nat .
     vars T : Term .
 
-    eq le(N, N') = N <= N' .
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
 
     eq score(T, D) = D .
 endfm
@@ -27,7 +29,9 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     subsort Nat < Score .
 
-    eq le(N, N') = N <= N' .
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
 
     eq score(F[T, T1, T2], D) =  scoreAux(T2) .
     eq score(F[T, T1, T2, T3, T4, T5], D) =  scoreAux((T4, T5)) .

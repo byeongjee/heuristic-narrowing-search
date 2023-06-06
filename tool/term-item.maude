@@ -1,25 +1,37 @@
 load data-structures/priority-queue.maude
 
+--- Terms maintained for folding purposes
+fmod INDEXED-TERM is
+    protecting INDEX .
+
+    sort IdxTerm . 
+    op [_,_] : Term Index -> IdxTerm .
+endfm
+
+
+view IdxTerm from TRIV to INDEXED-TERM is
+  sort Elt to IdxTerm .
+endv
+
+
 --- Items in the priority queue
 fmod QUEUE-ITEM is
     protecting SCORE .
+    protecting INDEXED-TERM .
 
     sort QItem .
-    op [_,_,_,_] : Term Qid Score Nat -> QItem [ctor] .
+    op [_,_,_,_] : IdxTerm Qid Score Nat -> QItem [ctor] .
 
-    var T : Term .
-    var N D : Nat .
+    var IT : IdxTerm .
+    var D : Nat .
     var S : Score .
     var Q : Qid .
 
-    op getTerm : QItem -> Term .
-    eq getTerm([T, Q, S, D]) = T .
-
     op getDepth : QItem -> Nat .
-    eq getDepth([T, Q, S, D]) = D .
+    eq getDepth([IT, Q, S, D]) = D .
  
     op getScore : QItem -> Score .
-    eq getScore([T, Q, S, D]) = S .
+    eq getScore([IT, Q, S, D]) = S .
 endfm
 
 
@@ -31,19 +43,20 @@ endv
 fmod QUEUE-ITEM<= is
     protecting QUEUE-ITEM .
 
-    vars T T' : Term .
-    vars N N' D D' : Nat .
-    vars S S' : Score .
+    vars IT IT' : IdxTerm .
     vars Q Q' : Qid .
-
-    op _<_ : QItem QItem -> Bool .
-    eq [T, Q, S, D] < [T', Q', S', D'] = le(S, S') .
+    vars S S' : Score .
+    vars D D' : Nat .
 
     op _>_ : QItem QItem -> Bool .
-    eq [T, Q, S, D] > [T', Q', S', D'] = le(S, S') .
+    eq [IT, Q, S, D] > [IT', Q', S', D'] = S gt S' .
+
+    ---FIXME: < vs le ?
+    op _<_ : QItem QItem -> Bool .
+    eq [IT, Q, S, D] < [IT', Q', S', D'] = S le S' .
 
     op _<=_ : QItem QItem -> Bool .
-    eq [T, Q, S, D] <= [T', Q', S', D'] = le(S, S') .
+    eq [IT, Q, S, D] <= [IT', Q', S', D'] = S le S' .
 endfm
 
 
@@ -51,18 +64,4 @@ view QItem<= from TOSET<= to QUEUE-ITEM<= is
   sort Elt to QItem .
 endv
 
-
---- Terms maintained for folding purposes
-fmod INDEXED-TERM is
-    protecting INDEX .
-
-    *** Nat: depth for debugging purpose
-    sort IdxTerm . 
-    op [_,_,_] : Term Index Nat -> IdxTerm .
-endfm
-
-
-view IdxTerm from TRIV to INDEXED-TERM is
-  sort Elt to IdxTerm .
-endv
 

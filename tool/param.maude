@@ -3,7 +3,7 @@ fmod SCORE is
     protecting META-TERM .
     sort Score .
     op score : Term Nat -> Score .
-    op le : Score Score -> Bool .
+    ops _gt_ _lt_ _le_ : Score Score -> Bool .
 endfm
 
 
