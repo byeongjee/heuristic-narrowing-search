@@ -23,13 +23,14 @@ fmod ONETHIRDRULE-SCORE-BASE is
     var D : Nat .
     var TL : TermList .
     var NTL : NeTermList .
+    var SS : Score .
 
     subsort Nat < Score .
 
     eq le(N, N') = N <= N' .
 
-    eq score(F[T, T1, T2], D) = scoreAux(T2) .
-    eq score(F[T, T1, T2, T3, T4, T5], D) = scoreAux((T4, T5)) .
+    eq score(F[T, T1, T2], D) =  scoreAux(T2) .
+    eq score(F[T, T1, T2, T3, T4, T5], D) =  scoreAux((T4, T5)) .
 
     op scoreAux : NeTermList -> Score .
     eq scoreAux('__[NTL]) = scoreAux(NTL) .
@@ -56,20 +57,22 @@ fmod ONETHIRDRULE-SCORE-1 is
     including ONETHIRDRULE-SCORE-BASE .
 
     vars T1 T2 T3 T4 : Term .
-    vars TL : TermList .
+    vars TL TL' : TermList .
 
-    eq scoreAux('<_:_|_>[T1, T2, '_`,_['status`:_['`[_`,_`][T3, T4]], TL]])
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
      = 10 + (if T4 == 'done.Step then -9 else 0 fi) + max(1, toNumber(T3)) .
 endfm
 
 fmod ONETHIRDRULE-SCORE-2 is
     including ONETHIRDRULE-SCORE-BASE .
 
-    vars TO TC TS TR : Term .
-    vars TL : TermList .
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
 
-    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
-     = (if TS == 'done.Step then 9 else 10 fi) + max(1, toNumber(TR)) .
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -1 else 0 fi) + max(1, toNumber(T3)) .
 endfm
 
 
@@ -78,11 +81,12 @@ fmod ONETHIRDRULE-SCORE-3 is
 
     subsort Int < Score .
 
-    vars TO TC TS TR : Term .
-    vars TL : TermList .
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
 
-    eq scoreAux('<_:_|_>[TO, TC, '_`,_['status`:_['`[_`,_`][TR, TS]], TL]])
-     = 100 + 10 * max(1, toNumber(TR)) .
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 100 + 10 * max(1, toNumber(T3)) .
 
     eq scoreAux('multicast_from_to_[TL]) = -1 .
 endfm

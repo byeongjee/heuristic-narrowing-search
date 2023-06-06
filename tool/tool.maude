@@ -8,7 +8,7 @@ fmod SUBSUMPTION is
     protecting META-LEVEL .
 
     var M : Module .
-    vars T T' I I' COND : Term . 
+    vars T T' TC TC' COND : Term . 
     var IDX : Index . 
     vars D D' N : Nat .
     var IT : IndexedTerm . 
@@ -16,17 +16,17 @@ fmod SUBSUMPTION is
     var SUB : Substitution . 
 
     op subsumedBy : Module IndexedTerm Set{IndexedTerm} -> Bool  .
-    ceq subsumedBy(M, {T, I ,IDX, D}, {T', I', IDX, D'} ; ITS) = true
-     if checkImpl(M, T, I, T', I', 0) .
+    ceq subsumedBy(M, {T, TC ,IDX, D}, {T', TC', IDX, D'} ; ITS) = true
+     if checkImpl(M, T, TC, T', TC', 0) .
     eq subsumedBy(M, IT, ITS) = false [owise] .
 
     op checkImpl : Module Term Term Term Term Nat -> Bool .
-    ceq checkImpl(M, T, I, T', I', N) = 
+    ceq checkImpl(M, T, TC, T', TC', N) = 
        if getTerm(metaReduce(M, COND)) == 'true.Bool then true
-       else checkImpl(M, T, I, T', I', s(N)) fi 
+       else checkImpl(M, T, TC, T', TC', s(N)) fi 
      if SUB := metaMatch(M, T', T, nil, N) 
-     /\ COND := '_or_['not_[I], applySubstitution(M, I', SUB)] .
-    eq checkImpl(M, T, I, T', I', N) = false [owise] .
+     /\ COND := '_or_['not_[TC], applySubstitution(M, TC', SUB)] .
+    eq checkImpl(M, T, TC, T', TC', N) = false [owise] .
 endfm
 
 
@@ -42,7 +42,7 @@ fmod FOLDING-APPLICATION is
     vars ITS ITS' ITS'' : Set{IndexedTerm} .
     var TI : TermItem .
     vars TIS TIS' : Set{TermItem} .
-    vars T I : Term .
+    vars T TC : Term .
     var S : Score .
     var D : Nat .
     vars Q F : Qid .
@@ -56,11 +56,11 @@ fmod FOLDING-APPLICATION is
 
     *** module, children, most general so far, resulting children
     op applyFolding : Module Set{TermItem} Set{IndexedTerm} Set{TermItem} -> FoldingResult .
-    eq applyFolding(M, [T, I, Q, S, D] ; TIS, ITS, TIS') 
-    = if subsumedBy(M, {T, I, index(T), D}, ITS)
+    eq applyFolding(M, [T, TC, Q, S, D] ; TIS, ITS, TIS') 
+    = if subsumedBy(M, {T, TC, index(T), D}, ITS)
       then applyFolding(M, TIS, ITS, TIS')
-      else applyFolding(M, TIS, {rename(T,D), rename(I,D), index(T), D} ; ITS, 
-                        [T, I, Q, S, D] ; TIS') fi .
+      else applyFolding(M, TIS, {rename(T,D), rename(TC,D), index(T), D} ; ITS, 
+                        [T, TC, Q, S, D] ; TIS') fi .
     eq applyFolding(M, empty, ITS, TIS') = {TIS', ITS} .
 
     --- rename variables
@@ -84,38 +84,35 @@ fmod NARROWING-TRANSITION is
     var M : Module .
     var TI : TermItem . 
     var OPT : VariantOptionSet .
-    vars T T' I : Term .
+    vars T T' TC : Term .
     var S : Score .
     vars D N : Nat .
     var TY : Type . 
     var CXT : Context . 
-    vars Q Q' F L : Qid . 
+    vars Q Q' L : Qid . 
     vars S1 S2 : Substitution .
     var RP : ResultPair .
     var UP : UnificationPair .
 
     --- obtain the set of next symbolic states
-    op next : Module TermItem VariantOptionSet -> Set{TermItem} .
-    eq next(M, TI, OPT) = nextAux(M, TI, OPT, 0) .
-
-    op nextAux : Module TermItem VariantOptionSet Nat -> Set{TermItem} .
-    ceq nextAux(M, [T, I, Q, S, D], OPT, N) 
+    op next : Module TermItem VariantOptionSet Nat -> Set{TermItem} .
+    ceq next(M, [T, TC, Q, S, D], OPT, N) 
       = [T', getTerm(RP), Q', score(T', s(D)), s(D)] ; 
-        nextAux(M, [T, I, Q, S, D], OPT, s(N)) 
+        next(M, [T, TC, Q, S, D], OPT, s(N)) 
      if {T',TY,CXT,L,S1,S2,Q'} := metaNarrowingApply(M,T,empty,Q,OPT,N) 
-     /\ RP := metaReduce(M, '_and_[applySubstitution(M,I,S1), 'inv[T']]) .
-    eq nextAux(M, TI, OPT, N) = empty [owise] .
+     /\ RP := metaReduce(M, '_and_[applySubstitution(M,TC,S1), 'inv[T']]) .
+    eq next(M, TI, OPT, N) = empty [owise] .
 
     --- check if a goal is reached
     op checkSol : Module TermItem Term -> Bool .
     eq checkSol(M, TI, T) = checkSol(M, TI, T, 0) .
 
     op checkSol : Module TermItem Term Nat -> Bool .
-    ceq checkSol(M, [T, I, Q, S, D], T', N) 
+    ceq checkSol(M, [T, TC, Q, S, D], T', N) 
       = if getTerm(RP) =/= 'false.Bool then true
-        else checkSol(M, [T, I, Q, S, D], T', s(N)) fi 
+        else checkSol(M, [T, TC, Q, S, D], T', s(N)) fi 
      if UP := metaUnify(M, T =? T', Q, 0) 
-     /\ RP := metaReduce(M, applySubstitution(M, I, getSubstitution(UP))) .
+     /\ RP := metaReduce(M, applySubstitution(M, TC, getSubstitution(UP))) .
     eq checkSol(M, TI, T', N) = false [owise] .
 endfm
 
@@ -131,7 +128,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNSResult [ctor] .
 
     var M : Module .
-    vars T T' T'' I : Term .
+    vars T T' T'' TC : Term .
     vars N D D' : Nat . 
     var S : Score .
     var OPT : VariantOptionSet .
@@ -158,12 +155,12 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op metaHNSAux2 : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} TermItem -> MetaHNSResult .
     ceq metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI)
       = metaHNSAux(M, T, T', OPT, insert(TIS, deleteMin(NQUE)), ITS')
-     if {TIS, ITS'} := applyFolding(M, filter(M, next(M, TI, OPT)), ITS, empty)
+     if {TIS, ITS'} := applyFolding(M, filter(M, next(M, TI, OPT, 0)), ITS, empty)
        [owise print "current term item: " TI] .
 
     ---
     op success : TermItem Nat -> MetaHNSResult .
-    eq success([T, I, Q, S, D], N) = {T, I, S, D, N} .
+    eq success([T, TC, Q, S, D], N) = {T, TC, S, D, N} .
 
     --- remove invalid states
     op filter : Module Set{TermItem} -> Set{TermItem} .
@@ -204,7 +201,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
     eq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
-     = prettyPrint(upModule(Q,false), metaHeuristicNarrowingSearch(upModule(Q,false), upTerm(ST), upTerm(ST'), upTerm(B), OPT)) .
+     = prettyPrint([Q], metaHeuristicNarrowingSearch([Q], upTerm(ST), upTerm(ST'), upTerm(B), OPT)) .
 
     op prettyPrint : Module MetaHNSResult -> HNSResult .
     eq prettyPrint(M, {T, T', S, D, N})
