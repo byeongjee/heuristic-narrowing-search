@@ -82,38 +82,49 @@ fmod NARROWING-TRANSITION is
 
 
     var M : Module .
-    var TI : TermItem . 
     var OPT : VariantOptionSet .
-    vars T T' TC : Term .
+    vars TG TT T TC TC' : Term .
     var S : Score .
     vars D N : Nat .
     var TY : Type . 
     var CXT : Context . 
     vars Q Q' L : Qid . 
-    vars S1 S2 : Substitution .
+    vars SUB SUB' : Substitution .
     var RP : ResultPair .
-    var UP : UnificationPair .
+    var NAR : NarrowingApplyResult .
 
     --- obtain the set of next symbolic states
-    op next : Module TermItem VariantOptionSet Nat -> Set{TermItem} .
-    ceq next(M, [T, TC, Q, S, D], OPT, N) 
-      = [T', getTerm(RP), Q', score(T', s(D)), s(D)] ; 
-        next(M, [T, TC, Q, S, D], OPT, s(N)) 
-     if {T',TY,CXT,L,S1,S2,Q'} := metaNarrowingApply(M,T,empty,Q,OPT,N) 
-     /\ RP := metaReduce(M, '_and_[applySubstitution(M,TC,S1), 'inv[T']]) .
-    eq next(M, TI, OPT, N) = empty [owise] .
+    op next : Module TermItem VariantOptionSet -> Set{TermItem} .
+    op next : Module Term Qid Nat VariantOptionSet Nat -> Set{TermItem} .
+    op next : Module Term Qid Nat VariantOptionSet Nat NarrowingApplyResult? -> Set{TermItem} .
+
+    eq next(M, [T,TC,Q,S,D], OPT) = next(M, '_||_[T,TC], Q, D, OPT, 0) .
+    eq next(M, TT, Q, D, OPT, N) 
+     = next(M, TT, Q, D, OPT, N, metaNarrowingApply(M,TT,empty,Q,OPT,N)) .
+    eq next(M, TT, Q, D, OPT, N, NAR) 
+     = filter(M, NAR, D) ; next(M, TT, Q, D, OPT, s(N)) .
+    eq next(M, TT, Q, D, OPT, N, failure) = empty .
+
+    --- remove invalid states
+    op filter : Module NarrowingApplyResult Nat -> Set{TermItem} .
+    ceq filter(M, {'_||_[T,TC],TY,CXT,L,SUB,SUB',Q}, D) 
+      = if getTerm(RP) == 'bot.Top then empty
+        else [T, getTerm(RP), Q, score(T,s(D)), s(D)] fi
+     if RP := metaReduce(M, '_and_[TC,'inv[T]]) .
+    eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
 
     --- check if a goal is reached
-    op checkSol : Module TermItem Term -> Bool .
-    eq checkSol(M, TI, T) = checkSol(M, TI, T, 0) .
+    op checkSol : Module TermItem Term -> TermList .
+    op checkSol : Module Term Term Qid Term Nat -> TermList .
+    op checkSol : Module Term Term Qid Term Nat UnificationPair? -> TermList .
 
-    op checkSol : Module TermItem Term Nat -> Bool .
-    ceq checkSol(M, [T, TC, Q, S, D], T', N) 
-      = if getTerm(RP) =/= 'false.Bool then true
-        else checkSol(M, [T, TC, Q, S, D], T', s(N)) fi 
-     if UP := metaUnify(M, T =? T', Q, 0) 
-     /\ RP := metaReduce(M, applySubstitution(M, TC, getSubstitution(UP))) .
-    eq checkSol(M, TI, T', N) = false [owise] .
+    eq checkSol(M, [T,TC,Q,S,D], TG) = checkSol(M, T, TC, Q, TG, 0) .
+    eq checkSol(M, T, TC, Q, TG, N) 
+     = checkSol(M, T, TC, Q, TG, N, metaUnify(M, '_||_[T,TC] =? '_||_[TG,'$PHI:Bool], Q, 0)) .
+    eq checkSol(M, T, TC, Q, TG, N, {'$PHI:Bool <- TC' ; SUB, Q'})
+     = if TC' =/= 'false.Bool then '_||_[applySubstitution(M,T,SUB), TC']
+       else checkSol(M, T, TC, Q, TG, s(N)) fi .
+    eq checkSol(M, T, TC, Q, TG, N, noUnifier) = empty .
 endfm
 
 
@@ -128,7 +139,8 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNSResult [ctor] .
 
     var M : Module .
-    vars T T' T'' TC : Term .
+    vars T T' TC TC' : Term .
+    var TR : TermList .
     vars N D D' : Nat . 
     var S : Score .
     var OPT : VariantOptionSet .
@@ -140,37 +152,47 @@ fmod HEURISTIC-NARROWING-SEARCH is
     var NQUE : NeLTree{TermItem<=} .
 
     op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNSResult .
-    eq metaHeuristicNarrowingSearch(M, T, T', T'', OPT)
-     = metaHNSAux(M, T, T', OPT, insert([T, T'', '@, score(T, 0), 0], empty), empty) .
+    eq metaHeuristicNarrowingSearch(M, T, T', TC, OPT)
+     = metaHNSAux(trMod(M), T, T', OPT, insert([T, TC, '@, score(T, 0), 0], empty), empty) .
 
     op metaHNSAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNSResult .
 
     ceq metaHNSAux(M, T, T', OPT, NQUE, ITS)
-      = if checkSol(M, TI, T') then success(TI, | ITS |)
+      = if TR =/= empty then success(TR, TI, | ITS |)
         else metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI) fi
-     if TI := findMin(NQUE) .
+     if TI := findMin(NQUE)  
+     /\ TR := checkSol(M, TI, T') .
 
     eq metaHNSAux(M, T, T', OPT, empty, ITS) = failure(| ITS |) .
  
     op metaHNSAux2 : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} TermItem -> MetaHNSResult .
     ceq metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI)
       = metaHNSAux(M, T, T', OPT, insert(TIS, deleteMin(NQUE)), ITS')
-     if {TIS, ITS'} := applyFolding(M, filter(M, next(M, TI, OPT, 0)), ITS, empty)
+     if {TIS, ITS'} := applyFolding(M, next(M, TI, OPT), ITS, empty)
        [owise print "current term item: " TI] .
 
     ---
-    op success : TermItem Nat -> MetaHNSResult .
-    eq success([T, TC, Q, S, D], N) = {T, TC, S, D, N} .
-
-    --- remove invalid states
-    op filter : Module Set{TermItem} -> Set{TermItem} .
-    eq filter(M, [T, 'false.Bool, Q, S, D] ; TIS) = filter(M, TIS) .
-    eq filter(M, TIS) = TIS [owise] .
+    op success : Term TermItem Nat -> MetaHNSResult .
+    eq success('_||_[T', TC'], [T,TC,Q,S,D], N) = {T', TC', S, D, N} .
 
     --- insert a set of items into the queue
     op insert : Set{TermItem} LTree{TermItem<=} -> LTree{TermItem<=} .
     eq insert(empty, QUE) = QUE .
     eq insert(TI ; TIS, QUE) = insert(TIS, insert(TI, QUE)) .
+
+    --- 
+    op trMod : Module -> Module .
+    eq trMod(M)
+     = (mod qid("#NEW#" + string(getName(M))) is 
+          including getName(M) .
+          sorts 'Top .  
+          none 
+          (op 'bot : nil -> 'Top [ctor] .)
+          (op '_||_ : 'State 'Bool -> 'Top [ctor] .) 
+          none 
+          (eq '_||_['S:State, 'false.Bool] = 'bot.Top [none] .)
+          none 
+        endm) .
 endfm
 
 

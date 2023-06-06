@@ -76,6 +76,8 @@ mod CONST-BASE is
     op sameRound : Set{Natural} -> Bool .
     eq sameRound((R, s R N, NS)) = false .
     eq sameRound((R, R, NS)) = sameRound((R, NS)) .
+    eq sameRound(R) = true .
+    eq sameRound(empty) = true .
 
     op getOids : Configuration -> OidSet [memo] .
     eq getOids(< O : Node | ATTS:U1234S > CF) = O ; getOids(CF) .
@@ -121,6 +123,7 @@ mod CONST-HALF-THRESHOLD is
     eq valid1/2(s s N, s N') 
      = valid1/2(N, N') .
     eq valid1/2(N, Z) = false .
+    eq valid1/2(s, s) = true .
 
     op initCond : Global -> Bool .
     eq initCond({N, OS, CF})
