@@ -1,55 +1,54 @@
 load data-structures/priority-queue.maude
 
 --- Items in the priority queue
-fmod TERM-ITEM is
+fmod QUEUE-ITEM is
     protecting SCORE .
 
-    --- resulting term, label, term, constraint, variable prefix, score, depth
-    sort TermItem .
-    op [_,_,_,_,_] : Term Term Qid Score Nat -> TermItem [ctor] .
+    sort QItem .
+    op [_,_,_,_] : Term Qid Score Nat -> QItem [ctor] .
 
-    var T I : Term .
+    var T : Term .
     var N D : Nat .
     var S : Score .
     var Q : Qid .
 
-    op getTerm : TermItem -> Term .
-    eq getTerm([T, I, Q, S, D]) = T .
+    op getTerm : QItem -> Term .
+    eq getTerm([T, Q, S, D]) = T .
 
-    op getDepth : TermItem -> Nat .
-    eq getDepth([T, I, Q, S, D]) = D .
+    op getDepth : QItem -> Nat .
+    eq getDepth([T, Q, S, D]) = D .
  
-    op getScore : TermItem -> Score .
-    eq getScore([T, I, Q, S, D]) = S .
+    op getScore : QItem -> Score .
+    eq getScore([T, Q, S, D]) = S .
 endfm
 
 
-view TermItem from TRIV to TERM-ITEM is
-  sort Elt to TermItem .
+view QItem from TRIV to QUEUE-ITEM is
+  sort Elt to QItem .
 endv
 
 
-fmod TERM-ITEM<= is
-    protecting TERM-ITEM .
+fmod QUEUE-ITEM<= is
+    protecting QUEUE-ITEM .
 
-    vars T T' I I' : Term .
+    vars T T' : Term .
     vars N N' D D' : Nat .
     vars S S' : Score .
     vars Q Q' : Qid .
 
-    op _<_ : TermItem TermItem -> Bool .
-    eq [T, I, Q, S, D] < [T', I', Q', S', D'] = le(S, S') .
+    op _<_ : QItem QItem -> Bool .
+    eq [T, Q, S, D] < [T', Q', S', D'] = le(S, S') .
 
-    op _>_ : TermItem TermItem -> Bool .
-    eq [T, I, Q, S, D] > [T', I', Q', S', D'] = le(S, S') .
+    op _>_ : QItem QItem -> Bool .
+    eq [T, Q, S, D] > [T', Q', S', D'] = le(S, S') .
 
-    op _<=_ : TermItem TermItem -> Bool .
-    eq [T, I, Q, S, D] <= [T', I', Q', S', D'] = le(S, S') .
+    op _<=_ : QItem QItem -> Bool .
+    eq [T, Q, S, D] <= [T', Q', S', D'] = le(S, S') .
 endfm
 
 
-view TermItem<= from TOSET<= to TERM-ITEM<= is
-  sort Elt to TermItem .
+view QItem<= from TOSET<= to QUEUE-ITEM<= is
+  sort Elt to QItem .
 endv
 
 
@@ -58,12 +57,12 @@ fmod INDEXED-TERM is
     protecting INDEX .
 
     *** Nat: depth for debugging purpose
-    sort IndexedTerm . 
-    op {_,_,_,_} : Term Term Index Nat -> IndexedTerm .
+    sort IdxTerm . 
+    op [_,_,_] : Term Index Nat -> IdxTerm .
 endfm
 
 
-view IndexedTerm from TRIV to INDEXED-TERM is
-  sort Elt to IndexedTerm .
+view IdxTerm from TRIV to INDEXED-TERM is
+  sort Elt to IdxTerm .
 endv
 
