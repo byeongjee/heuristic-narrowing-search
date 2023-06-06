@@ -2,6 +2,15 @@
 load term-item.maude
 
 
+fmod HNR-TOP is
+    including STATE .
+    sort Top .
+    op _||_ : State Bool -> Top [ctor] .
+    op bot : -> Top [ctor] .
+    eq S:State || false = bot .
+endfm
+
+
 fmod SUBSUMPTION is
     protecting SET{IndexedTerm} * 
     (op _,_ : Set{IndexedTerm} Set{IndexedTerm} -> Set{IndexedTerm} to _;_) .
@@ -83,12 +92,12 @@ fmod NARROWING-TRANSITION is
 
     var M : Module .
     var OPT : VariantOptionSet .
-    vars TG TT T TC TC' : Term .
+    vars TT T TC : Term .
     var S : Score .
     vars D N : Nat .
     var TY : Type . 
     var CXT : Context . 
-    vars Q Q' L : Qid . 
+    vars Q L : Qid . 
     vars SUB SUB' : Substitution .
     var RP : ResultPair .
     var NAR : NarrowingApplyResult .
@@ -112,19 +121,6 @@ fmod NARROWING-TRANSITION is
         else [T, getTerm(RP), Q, score(T,s(D)), s(D)] fi
      if RP := metaReduce(M, '_and_[TC,'inv[T]]) .
     eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
-
-    --- check if a goal is reached
-    op checkSol : Module TermItem Term -> TermList .
-    op checkSol : Module Term Term Qid Term Nat -> TermList .
-    op checkSol : Module Term Term Qid Term Nat UnificationPair? -> TermList .
-
-    eq checkSol(M, [T,TC,Q,S,D], TG) = checkSol(M, T, TC, Q, TG, 0) .
-    eq checkSol(M, T, TC, Q, TG, N) 
-     = checkSol(M, T, TC, Q, TG, N, metaUnify(M, '_||_[T,TC] =? '_||_[TG,'$PHI:Bool], Q, 0)) .
-    eq checkSol(M, T, TC, Q, TG, N, {'$PHI:Bool <- TC' ; SUB, Q'})
-     = if TC' =/= 'false.Bool then '_||_[applySubstitution(M,T,SUB), TC']
-       else checkSol(M, T, TC, Q, TG, s(N)) fi .
-    eq checkSol(M, T, TC, Q, TG, N, noUnifier) = empty .
 endfm
 
 
@@ -136,32 +132,32 @@ fmod HEURISTIC-NARROWING-SEARCH is
 
     sort MetaHNSResult .
     op failure : Nat -> MetaHNSResult [ctor] .
-    op {_,_,_,_,_} : Term Term Score Nat Nat -> MetaHNSResult [ctor] .
+    op {_,_,_,_} : Term Score Nat Nat -> MetaHNSResult [ctor] .
 
     var M : Module .
-    vars T T' TC TC' : Term .
-    var TR : TermList .
+    vars TT TG T T' TC : Term .
     vars N D D' : Nat . 
     var S : Score .
     var OPT : VariantOptionSet .
     vars ITS ITS' ITS'' : Set{IndexedTerm} .
     vars TI SOL : TermItem .
     vars TIS TIS' : Set{TermItem} .
-    vars Q : Qid .
+    vars Q Q' : Qid .
+    var SUB : Substitution . 
     var QUE : LTree{TermItem<=} .
     var NQUE : NeLTree{TermItem<=} .
 
     op metaHeuristicNarrowingSearch : Module Term Term Term VariantOptionSet -> MetaHNSResult .
     eq metaHeuristicNarrowingSearch(M, T, T', TC, OPT)
-     = metaHNSAux(trMod(M), T, T', OPT, insert([T, TC, '@, score(T, 0), 0], empty), empty) .
+     = metaHNSAux(trMod(M), T, T', OPT, insert([T, TC, '@, score(T,0), 0], empty), empty) .
 
     op metaHNSAux : Module Term Term VariantOptionSet LTree{TermItem<=} Set{IndexedTerm} -> MetaHNSResult .
 
     ceq metaHNSAux(M, T, T', OPT, NQUE, ITS)
-      = if TR =/= empty then success(TR, TI, | ITS |)
+      = if TT =/= 'bot.Top then {TT, getScore(TI), getDepth(TI), | ITS |}
         else metaHNSAux2(M, T, T', OPT, NQUE, ITS, TI) fi
      if TI := findMin(NQUE)  
-     /\ TR := checkSol(M, TI, T') .
+     /\ TT := checkSol(M, TI, T') .
 
     eq metaHNSAux(M, T, T', OPT, empty, ITS) = failure(| ITS |) .
  
@@ -171,9 +167,19 @@ fmod HEURISTIC-NARROWING-SEARCH is
      if {TIS, ITS'} := applyFolding(M, next(M, TI, OPT), ITS, empty)
        [owise print "current term item: " TI] .
 
-    ---
-    op success : Term TermItem Nat -> MetaHNSResult .
-    eq success('_||_[T', TC'], [T,TC,Q,S,D], N) = {T', TC', S, D, N} .
+    --- check if a goal is reached
+    op checkSol : Module TermItem Term -> Term .
+    op checkSol : Module Term Qid Term Nat -> Term .
+    op checkSol : Module Term Qid Term Nat UnificationPair? -> Term .
+
+    eq checkSol(M, [T,TC,Q,S,D], T') 
+     = checkSol(M, '_||_[T,TC], Q, '_||_[T','$PHI:Bool], 0) .
+    eq checkSol(M, TT, Q, TG, N) 
+     = checkSol(M, TT, Q, TG, N, metaUnify(M, TT =? TG, Q, 0)) .
+    eq checkSol(M, TT, Q, TG, N, {'$PHI:Bool <- TC ; SUB, Q'})
+     = if TC =/= 'false.Bool then applySubstitution(M,TT,SUB) 
+       else checkSol(M, TT, Q, TG, s(N)) fi .
+    eq checkSol(M, TT, Q, TG, N, noUnifier) = 'bot.Top .
 
     --- insert a set of items into the queue
     op insert : Set{TermItem} LTree{TermItem<=} -> LTree{TermItem<=} .
@@ -185,19 +191,14 @@ fmod HEURISTIC-NARROWING-SEARCH is
     eq trMod(M)
      = (mod qid("#NEW#" + string(getName(M))) is 
           including getName(M) .
-          sorts 'Top .  
-          none 
-          (op 'bot : nil -> 'Top [ctor] .)
-          (op '_||_ : 'State 'Bool -> 'Top [ctor] .) 
-          none 
-          (eq '_||_['S:State, 'false.Bool] = 'bot.Top [none] .)
-          none 
+          including 'HNR-TOP .
+          sorts none .  none none none none none 
         endm) .
 endfm
 
 
 fmod HEURISTIC-NARROWING-DRIVER is
-    including STATE .
+    including HNR-TOP .
     protecting HEURISTIC-NARROWING-SEARCH .
 
     var M : Module .
@@ -207,18 +208,10 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var B : Bool .
     vars N D : Nat . 
     var S : Score .
-    vars T T' : Term .
-
-    sort State? .
-    subsort State < State? .
-    op errS : -> State? [ctor] .
-
-    sort Bool? .
-    subsort Bool < Bool? .
-    op errB : -> Bool? [ctor] .
+    vars T : Term .
 
     sort HNSResult .
-    op _||_states:_(depth:_) : State Bool Nat Nat -> HNSResult [ctor format (d d d n d s d d d d)] .
+    op _states:_(depth:_) : Top Nat Nat -> HNSResult [ctor format (d n d s d d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
@@ -226,8 +219,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
      = prettyPrint([Q], metaHeuristicNarrowingSearch([Q], upTerm(ST), upTerm(ST'), upTerm(B), OPT)) .
 
     op prettyPrint : Module MetaHNSResult -> HNSResult .
-    eq prettyPrint(M, {T, T', S, D, N})
-     = downTerm(T,errS) || downTerm(T',errB) states: N (depth: D) .
+    eq prettyPrint(M, {T, S, D, N}) = downTerm(T,bot) states: N (depth: D) .
     eq prettyPrint(M, failure(N)) = noSolution(N) .
 endfm
 
