@@ -11,15 +11,26 @@ fmod HNR-TOP is
 endfm
 
 
-fmod FOLDING-APPLICATION is
-    protecting SET{QItem} *
-    (op _,_ : Set{QItem} Set{QItem} -> Set{QItem} to _;_) .
+fmod HNS-CONFIG is
+    protecting META-LEVEL .
+    protecting LEFTIST-TREES{QItem<=} .
     protecting SET{IdxTerm} * 
     (op _,_ : Set{IdxTerm} Set{IdxTerm} -> Set{IdxTerm} to _;_) .
+
+    sorts HNSContext HNSState .
+    op {_,_} : Module VariantOptionSet -> HNSContext [ctor] .
+    op {_,_} : LTree{QItem<=} Set{IdxTerm} -> HNSState [ctor] .
+endfm
+
+
+fmod FOLDING-APPLICATION is
+    protecting HNS-CONFIG .
+    protecting SET{QItem} *
+    (op _,_ : Set{QItem} Set{QItem} -> Set{QItem} to _;_) .
     protecting CONVERSION .
-    protecting META-LEVEL .
 
     var M : Module .
+    var OPT : VariantOptionSet .
     var IT : IdxTerm .
     var ITS : Set{IdxTerm} .
     var TIS : Set{QItem} .
@@ -37,8 +48,8 @@ fmod FOLDING-APPLICATION is
     op {_,_} : Set{QItem} Set{IdxTerm} -> FoldingState [ctor] .
 
     --- remove all subsumed items
-    op folding : Module Set{QItem} Set{IdxTerm} -> FoldingState .
-    eq folding(M, TIS, ITS) = folding(M, {folding(M, TIS), ITS}) .
+    op folding : HNSContext Set{QItem} Set{IdxTerm} -> FoldingState .
+    eq folding({M,OPT}, TIS, ITS) = folding(M, {folding(M, TIS), ITS}) .
 
     op folding : Module FoldingState -> FoldingState .
     ceq folding(M, {[[T',IDX], Q, S, D] ; TIS, [T,IDX] ; ITS}) 
@@ -52,7 +63,7 @@ fmod FOLDING-APPLICATION is
      if subsume(M, T, T') .
     eq folding(M, TIS) = TIS [owise] .
 
-    --- addall remaining items (renaming is not needed for matching)
+    --- add all remaining items (renaming is not needed for matching)
     op toIdx : Set{QItem} Set{IdxTerm} -> Set{IdxTerm} .
     eq toIdx([IT, Q, S, D] ; TIS, ITS)
      = toIdx(TIS, ITS ; IT) .
@@ -60,29 +71,27 @@ fmod FOLDING-APPLICATION is
 
     op subsume : Module Term Term -> Bool [memo] .
     op subsume : Module Term Term Nat -> Bool .
-    op subsume : Module Term Term Nat Substitution? -> Bool .
     eq subsume(M, T, T') = subsume(M, T, T', 0) .
-    eq subsume(M, '_||_[T,TC], '_||_[T',TC'], N) 
-     = subsume(M, '_||_[T,TC], '_||_[T',TC'], N, metaMatch(M,T,T',nil,N)) .
-    eq subsume(M, T, T', N, SUB)
-     = if checkCond(M,T,T',SUB)  == 'true.Bool then true
-       else subsume(M, T, T', s(N)) fi .
-    eq subsume(M, T, T', N, noMatch) = false .
+    ceq subsume(M, '_||_[T,TC], '_||_[T',TC'], N) 
+      = if checkCond(M, TC, TC', SUB)  == 'true.Bool then true
+        else subsume(M, T, T', s(N)) fi
+     if SUB := metaMatch(M,T,T',nil,N) .
+    eq subsume(M, T, T', N) = false [owise] .
 
     op checkCond : Module Term Term Substitution -> Term .
-    eq checkCond(M, '_||_[T,TC], '_||_[T',TC'], SUB)
+    eq checkCond(M, TC, TC', SUB)
      = getTerm(metaReduce(M, '_or_['not_[TC'],applySubstitution(M,TC,SUB)])) .
 endfm
 
 
 fmod NARROWING-TRANSITION is
-    protecting META-LEVEL .
+    protecting HNS-CONFIG .
     protecting SET{QItem} *
     (op _,_ : Set{QItem} Set{QItem} -> Set{QItem} to _;_) .
 
     var M : Module .
     var OPT : VariantOptionSet .
-    vars T TC : Term .
+    vars T T' T1 : Term .
     var IDX : Index . 
     var S : Score .
     vars D N : Nat .
@@ -93,49 +102,41 @@ fmod NARROWING-TRANSITION is
     var RP : ResultPair .
     var NAR : NarrowingApplyResult .
     var TIS : Set{QItem} .
+    var HC : HNSContext .
 
     --- obtain the set of next symbolic states
-    op next : Module QItem VariantOptionSet -> Set{QItem} .
-    op next : Module Term Qid Nat VariantOptionSet Nat Set{QItem} -> Set{QItem} .
-    op next : Module Term Qid Nat VariantOptionSet Nat Set{QItem} NarrowingApplyResult? -> Set{QItem} .
+    op next : HNSContext QItem -> Set{QItem} .
+    eq next(HC, [[T,IDX],Q,S,D]) = next(HC, T, Q, D, 0, empty) .
 
-    eq next(M, [[T,IDX],Q,S,D], OPT) = next(M, T, Q, D, OPT, 0, empty) .
-    eq next(M, T, Q, D, OPT, N, TIS) 
-     = next(M, T, Q, D, OPT, N, TIS, metaNarrowingApply(M,T,empty,Q,OPT,N)) .
-    eq next(M, T, Q, D, OPT, N, TIS, NAR) 
-     = next(M, T, Q, D, OPT, s(N), TIS ; filter(M,NAR,D)) .
-    eq next(M, T, Q, D, OPT, N, TIS, failure) = TIS .
+    op next : HNSContext Term Qid Nat Nat Set{QItem} -> Set{QItem} .
+    ceq next({M,OPT}, T, Q, D, N, TIS) 
+      = next({M,OPT}, T, Q, D, s(N), TIS ; filter(M,NAR,D))
+     if NAR := metaNarrowingApply(M, T, empty, Q, OPT, N) .
+    eq next(HC, T, Q, D, N, TIS) = TIS [owise] .
 
     --- remove invalid states
     op filter : Module NarrowingApplyResult Nat -> Set{QItem} .
-    ceq filter(M, {'_||_[T,TC],TY,CXT,L,SUB,SUB',Q}, D) 
-      = if getTerm(RP) == 'bot.Top then empty
-        else [idxTerm('_||_[T, getTerm(RP)]), Q, score(T,s(D)), s(D)] fi
-     if RP := metaReduce(M, '_and_[TC,'inv[T]]) .
+    ceq filter(M, {'_||_[T,T'],TY,CXT,L,SUB,SUB',Q}, D) 
+      = if T1 == 'bot.Top then empty
+        else [['_||_[T,T1], index(T)], Q, score(T,s(D)), s(D)] fi
+     if T1 := getTerm(metaReduce(M, '_and_[T','inv[T]])) .
     eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
-
-    ---
-    op idxTerm : Term -> IdxTerm .
-    eq idxTerm('_||_[T,TC]) = ['_||_[T,TC], index(T)] .
-
 endfm
 
 
 fmod HEURISTIC-NARROWING-SEARCH is
     protecting SCORE .
-    protecting LEFTIST-TREES{QItem<=} .
     protecting NARROWING-TRANSITION .
     protecting FOLDING-APPLICATION .
 
     var M : Module .
     vars T T' TC : Term .
-    vars TG : TermList .
     vars N D : Nat . 
     var S : Score .
     var IDX : Index . 
     var OPT : VariantOptionSet .
     vars ITS ITS' : Set{IdxTerm} .
-    vars TI SOL : QItem .
+    var TI : QItem .
     vars TIS TIS' : Set{QItem} .
     vars Q Q' : Qid .
     var SUB : Substitution . 
@@ -143,55 +144,45 @@ fmod HEURISTIC-NARROWING-SEARCH is
     var NQUE : NeLTree{QItem<=} .
     var HC : HNSContext .
 
-    sorts HNSContext HNSState .
-    op {_,_,_} : Module Term VariantOptionSet -> HNSContext [ctor] .
-    op {_,_} : LTree{QItem<=} Set{IdxTerm} -> HNSState [ctor] .
+    --- hns result
+    sorts MetaHNSResult .
+    op hnsFailure : Nat -> MetaHNSResult [ctor] .
+    op hnsSuccess : Term QItem Nat -> MetaHNSResult [ctor] .
 
-    op hns : HNSContext Term -> MetaHNSResult .
-    eq hns(HC, T) = hnsOuter(HC, {insert(hnsInit(T),empty), empty}) .
+    op hns : HNSContext Term Term -> MetaHNSResult .
+    eq hns(HC, T, T') = hnsOuter(HC, T', {insert(hnsInit(T),empty), empty}) .
 
-    op hnsOuter : HNSContext HNSState -> MetaHNSResult .
-    ceq hnsOuter(HC, {NQUE, ITS})
-      = if findSol(HC,TI) :: Term 
-        then hnsSuccess(findSol(HC,TI), TI, | ITS |) 
-        else hnsOuter(HC, hnsInner(HC, {deleteMin(NQUE), ITS}, TI)) fi
+    op hnsOuter : HNSContext Term HNSState -> MetaHNSResult .
+    ceq hnsOuter(HC, T', {NQUE, ITS})
+      = if findSol(HC,T',TI) :: Term 
+        then hnsSuccess(findSol(HC,T',TI), TI, | ITS |) 
+        else hnsOuter(HC, T', hnsInner(HC, {deleteMin(NQUE), ITS}, TI)) fi
      if TI := findMin(NQUE) [print "current term item: " TI] .
-    eq hnsOuter(HC, {empty, ITS}) = hnsFailure(| ITS |) .
+    eq hnsOuter(HC, T', {empty, ITS}) = hnsFailure(| ITS |) .
 
     op hnsInner : HNSContext HNSState QItem -> HNSState .
-   ceq hnsInner({M, T', OPT}, {QUE, ITS}, TI) = {insert(TIS', QUE), ITS'} 
-     if {TIS', ITS'} := folding(M, next(M, TI, OPT), ITS) .
+   ceq hnsInner(HC, {QUE, ITS}, TI) = {insertAll(TIS', QUE), ITS'} 
+     if {TIS', ITS'} := folding(HC, next(HC, TI), ITS) .
 
     --- initial queue item
     op hnsInit : Term -> QItem .
-    eq hnsInit('_||_[T,TC]) = [idxTerm('_||_[T,TC]), '@, score(T,0) ,0] .
-
-    --- hns result
-    sorts MetaHNSResult .
-    op {_,_,_,_} : Term Score Nat Nat -> MetaHNSResult [ctor] .
-    op hnsFailure : Nat -> MetaHNSResult [ctor] .
-    op hnsSuccess : Term QItem Nat -> MetaHNSResult .
-    eq hnsSuccess(T, TI, N) = {T, getScore(TI), getDepth(TI), N} .
+    eq hnsInit('_||_[T,TC]) = [['_||_[T,TC], index(T)], '@, score(T,0) ,0] .
 
     --- insert a set of items into the queue
-    op insert : Set{QItem} LTree{QItem<=} -> LTree{QItem<=} .
-    eq insert(empty, QUE) = QUE .
-    eq insert(TI ; TIS, QUE) = insert(TIS, insert(TI, QUE)) .
+    op insertAll : Set{QItem} LTree{QItem<=} -> LTree{QItem<=} .
+    eq insertAll(empty, QUE) = QUE .
+    eq insertAll(TI ; TIS, QUE) = insertAll(TIS, insert(TI, QUE)) .
 
 --- check if a goal is reached
-    op findSol : HNSContext QItem -> TermList .
+    op findSol : HNSContext Term QItem -> TermList .
     op findSol : Module Term Qid Term Nat -> TermList .
-    op findSol : Module Term Qid Term Nat UnificationPair? -> TermList .
 
-    eq findSol({M, T', OPT}, [[T,IDX],Q,S,D]) 
-     = findSol(M, T, Q, '_||_[T','$PHI:Bool], 0) .
-    eq findSol(M, T, Q, TG, N) 
-     = findSol(M, T, Q, TG, N, metaUnify(M, T =? TG, Q, 0)) .
-    eq findSol(M, T, Q, TG, N, {'$PHI:Bool <- TC ; SUB, Q'})
-     = if TC =/= 'false.Bool then applySubstitution(M,T,SUB) 
-       else findSol(M, T, Q, TG, s(N)) fi .
-    eq findSol(M, T, Q, TG, N, noUnifier) = empty .
-
+    eq findSol({M,OPT}, T', [[T,IDX],Q,S,D]) = findSol(M, T, Q, T', 0) .
+    ceq findSol(M, T, Q, T', N) 
+      = if TC =/= 'false.Bool then applySubstitution(M,T,SUB) 
+        else findSol(M, T, Q, T', s(N)) fi
+     if {'PHI:Bool <- TC ; SUB, Q'} := metaUnify(M, T =? T', Q, N) .
+    eq findSol(M, T, Q, T', N) = empty [owise] .
 endfm
 
 
@@ -206,27 +197,38 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var B : Bool .
     vars N D : Nat . 
     var S : Score .
-    vars T : Term .
+    vars T T' T1 : Term .
+    var TI : QItem .
+    var HC : HNSContext .
+    var H : Header .
+    vars IL IL' : ImportList .
+    var SS : SortSet .
+    var SSDS : SubsortDeclSet .
+    var OPDS : OpDeclSet .
+    var MAS : MembAxSet .
+    var EQS : EquationSet .
+    var RLS : RuleSet .
 
     sort HNSResult .
     op _states:_(depth:_) : Top Nat Nat -> HNSResult [ctor format (d n d s d d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
-    eq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
-     = prettyPrint([Q], hns({trMod([Q]), upTerm(ST'), OPT}, '_||_[upTerm(ST), upTerm(B)])) .
+   ceq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
+     = prettyPrint(hns(HC, T, T'))
+     if HC := {addImports((including 'HNR-TOP .), upModule(Q,false)), OPT}
+     /\ T  := '_||_[upTerm(ST),  upTerm(B)]
+     /\ T' := '_||_[upTerm(ST'), 'PHI:Bool] .
 
-    op prettyPrint : Module MetaHNSResult -> HNSResult .
-    eq prettyPrint(M, {T, S, D, N}) = downTerm(T,bot) states: N (depth: D) .
-    eq prettyPrint(M, hnsFailure(N)) = noSolution(N) .
+    ---
+    op prettyPrint : MetaHNSResult -> HNSResult .
+    eq prettyPrint(hnsSuccess(T,TI,N)) 
+     = downTerm(T,bot) states: N (depth: getDepth(TI)) .
+    eq prettyPrint(hnsFailure(N)) = noSolution(N) .
 
-    --- a utility module
-    op trMod : Module -> Module .
-    eq trMod(M)
-     = (mod qid("#NEW#" + string(getName(M))) is 
-          including getName(M) .
-          including 'HNR-TOP .
-          sorts none .  none none none none none 
-        endm) .
+    ---
+    op addImports : ImportList Module -> Module .
+    eq addImports(IL', mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm)
+     = (mod H is IL IL' sorts SS . SSDS OPDS MAS EQS RLS endm) .
 endfm
 
