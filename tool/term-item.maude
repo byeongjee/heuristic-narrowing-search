@@ -20,7 +20,7 @@ fmod QUEUE-ITEM is
     protecting INDEXED-TERM .
 
     sort QItem .
-    op [_,_,_,_] : IdxTerm Qid Score Nat -> QItem [ctor] .
+    op [_,_,_,_] : IdxTerm Score Qid Nat -> QItem [ctor] .
 
     var IT : IdxTerm .
     var D : Nat .
@@ -28,10 +28,10 @@ fmod QUEUE-ITEM is
     var Q : Qid .
 
     op getDepth : QItem -> Nat .
-    eq getDepth([IT, Q, S, D]) = D .
+    eq getDepth([IT, S, Q, D]) = D .
  
     op getScore : QItem -> Score .
-    eq getScore([IT, Q, S, D]) = S .
+    eq getScore([IT, S, Q, D]) = S .
 endfm
 
 
@@ -49,14 +49,14 @@ fmod QUEUE-ITEM<= is
     vars D D' : Nat .
 
     op _>_ : QItem QItem -> Bool .
-    eq [IT, Q, S, D] > [IT', Q', S', D'] = S gt S' .
+    eq [IT, S, Q, D] > [IT', S', Q', D'] = S gt S' .
 
     ---FIXME: < vs le ?
     op _<_ : QItem QItem -> Bool .
-    eq [IT, Q, S, D] < [IT', Q', S', D'] = S le S' .
+    eq [IT, S, Q, D] < [IT', S', Q', D'] = S le S' .
 
     op _<=_ : QItem QItem -> Bool .
-    eq [IT, Q, S, D] <= [IT', Q', S', D'] = S le S' .
+    eq [IT, S, Q, D] <= [IT', S', Q', D'] = S le S' .
 endfm
 
 

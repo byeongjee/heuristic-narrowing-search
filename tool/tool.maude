@@ -42,20 +42,20 @@ fmod FOLDING-APPLICATION is
     eq folding(M, TIS, ITS) = folding(M, {folding(M, TIS), ITS}) .
 
     op folding : Module FoldingState -> FoldingState .
-    ceq folding(M, {[[T',IDX], Q, S, D] ; TIS, [T,IDX] ; ITS}) 
+    ceq folding(M, {[[T',IDX], S, Q, D] ; TIS, [T,IDX] ; ITS}) 
       = folding(M, {TIS, [T,IDX] ; ITS})
      if subsume(M, T, T') .
     eq folding(M, {TIS, ITS}) = {TIS, toIdx(TIS,ITS)} [owise] .
 
     op folding : Module Set{QItem} -> Set{QItem} .
-    ceq folding(M, TIS ; [[T,IDX],Q,S,D] ; [[T',IDX],Q',S',D'])
-      = folding(M, TIS ; [[T,IDX],Q,S,D])
+    ceq folding(M, TIS ; [[T,IDX],S,Q,D] ; [[T',IDX],S',Q',D'])
+      = folding(M, TIS ; [[T,IDX],S,Q,D])
      if subsume(M, T, T') .
     eq folding(M, TIS) = TIS [owise] .
 
     --- add all remaining items (renaming is not needed for matching)
     op toIdx : Set{QItem} Set{IdxTerm} -> Set{IdxTerm} .
-    eq toIdx([IT, Q, S, D] ; TIS, ITS)
+    eq toIdx([IT, S, Q, D] ; TIS, ITS)
      = toIdx(TIS, ITS ; IT) .
     eq toIdx(empty, ITS) = ITS .
 
@@ -95,7 +95,7 @@ fmod NARROWING-TRANSITION is
 
     --- obtain the set of next symbolic states
     op next : Module VariantOptionSet QItem -> Set{QItem} .
-    eq next(M, OPT, [[T,IDX],Q,S,D]) = next(M, OPT, T, Q, D, 0, empty) .
+    eq next(M, OPT, [[T,IDX],S,Q,D]) = next(M, OPT, T, Q, D, 0, empty) .
 
     op next : Module VariantOptionSet Term Qid Nat Nat Set{QItem} -> Set{QItem} .
     ceq next(M, OPT, T, Q, D, N, TIS) 
@@ -107,12 +107,16 @@ fmod NARROWING-TRANSITION is
     op filter : Module NarrowingApplyResult Nat -> Set{QItem} .
     ceq filter(M, {'_||_[T,T'],TY,CXT,L,SUB,SUB',Q}, D) 
       = if T1 == 'bot.Top then empty
-        else [idxState('_||_[T,T1]), Q, score(T,s(D)), s(D)] fi
+        else makeItem(idxState('_||_[T,T1]), Q, s(D)) fi
      if T1 := getTerm(metaReduce(M, '_and_[T','inv[T]])) .
     eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
 
     op idxState : Term -> IdxTerm .
     eq idxState('_||_[T,T1]) = ['_||_[T,T1], index(T)] .
+
+    op makeItem : IdxTerm Qid Nat -> QItem .
+    eq makeItem(['_||_[T,T1], IDX], Q, D) 
+     = [['_||_[T,T1], IDX], score(T,D), Q, D] .
 endfm
 
 
@@ -146,7 +150,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
 
     op hns : Module VariantOptionSet Term Term -> MetaHNSResult .
     eq hns(M, OPT, T, T') 
-     = hnsOuter(M, OPT, T', {insert(hnsInit(idxState(T)),empty), idxState(T)}) .
+     = hnsOuter(M, OPT, T', {insert(makeItem(idxState(T),'@,0),empty), idxState(T)}) .
 
     op hnsOuter : Module VariantOptionSet Term HNSState -> MetaHNSResult .
     ceq hnsOuter(M, OPT, T', {NQUE, ITS})
@@ -160,10 +164,6 @@ fmod HEURISTIC-NARROWING-SEARCH is
    ceq hnsInner(M, OPT, {QUE, ITS}, TI) = {insertAll(TIS', QUE), ITS'} 
      if {TIS', ITS'} := folding(M, next(M, OPT, TI), ITS) .
 
-    --- initial queue item
-    op hnsInit : IdxTerm -> QItem .
-    eq hnsInit(['_||_[T,TC], IDX]) = [['_||_[T,TC], IDX], '@, score(T,0) ,0] .
-
     --- insert a set of items into the queue
     op insertAll : Set{QItem} LTree{QItem<=} -> LTree{QItem<=} .
     eq insertAll(empty, QUE) = QUE .
@@ -173,7 +173,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op findSol : Module Term QItem -> TermList .
     op findSol : Module Term Qid Term Nat -> TermList .
 
-    eq findSol(M, T', [[T,IDX],Q,S,D]) = findSol(M, T, Q, T', 0) .
+    eq findSol(M, T', [[T,IDX],S,Q,D]) = findSol(M, T, Q, T', 0) .
     ceq findSol(M, T, Q, T', N) 
       = if TC =/= 'false.Bool then applySubstitution(M,T,SUB) 
         else findSol(M, T, Q, T', s(N)) fi
