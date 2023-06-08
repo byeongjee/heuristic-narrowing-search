@@ -1,4 +1,3 @@
-
 load term-item.maude
 
 
@@ -23,54 +22,48 @@ fmod FOLDING-APPLICATION is
     var M : Module .
     var IT : IdxTerm .
     var ITS : Set{IdxTerm} .
-    var TIS : Set{QItem} .
-    vars T T' TC TC' COND : Term . 
+    var ITEMS : Set{QItem} .
+    vars T T' T1 T2 T3 T4 T5 : Term . 
     var IDX : Index . 
-    vars S S' : Score .
+    vars SC SC' : Score .
     vars D D' N : Nat .
-    vars Q Q' F : Qid .
-    var V : Variable . 
-    var C : Constant .
-    var NTL : NeTermList .
+    vars Q Q' : Qid .
     var SUB : Substitution . 
 
     sort FoldingState .
-    op {_,_} : Set{QItem} Set{IdxTerm} -> FoldingState [ctor] .
+    op {_,_} : Set{IdxTerm} Set{QItem} -> FoldingState [ctor] .
 
     --- remove all subsumed items
     op folding : Module Set{QItem} Set{IdxTerm} -> FoldingState .
-    eq folding(M, TIS, ITS) = folding(M, {folding(M, TIS), ITS}) .
+    eq folding(M, ITEMS, ITS) = foldingS(M, {ITS, foldingT(M, ITEMS)}) .
 
-    op folding : Module FoldingState -> FoldingState .
-    ceq folding(M, {[[T',IDX], S, Q, D] ; TIS, [T,IDX] ; ITS}) 
-      = folding(M, {TIS, [T,IDX] ; ITS})
+    op foldingT : Module Set{QItem} -> Set{QItem} .
+    ceq foldingT(M, ITEMS ; [[T,IDX],SC,Q,D] ; [[T',IDX],SC',Q',D'])
+      = foldingT(M, ITEMS ; [[T,IDX],SC,Q,D])
      if subsume(M, T, T') .
-    eq folding(M, {TIS, ITS}) = {TIS, toIdx(TIS,ITS)} [owise] .
+    eq foldingT(M, ITEMS) = ITEMS [owise] .
 
-    op folding : Module Set{QItem} -> Set{QItem} .
-    ceq folding(M, TIS ; [[T,IDX],S,Q,D] ; [[T',IDX],S',Q',D'])
-      = folding(M, TIS ; [[T,IDX],S,Q,D])
+    op foldingS : Module FoldingState -> FoldingState .
+    ceq foldingS(M, {[T,IDX] ; ITS, ITEMS ; [[T',IDX], SC, Q, D]}) 
+      = foldingS(M, {[T,IDX] ; ITS, ITEMS})
      if subsume(M, T, T') .
-    eq folding(M, TIS) = TIS [owise] .
+    eq foldingS(M, {ITS, ITEMS}) = {insertAll(ITEMS,ITS), ITEMS} [owise] .
 
     --- add all remaining items (renaming is not needed for matching)
-    op toIdx : Set{QItem} Set{IdxTerm} -> Set{IdxTerm} .
-    eq toIdx([IT, S, Q, D] ; TIS, ITS)
-     = toIdx(TIS, ITS ; IT) .
-    eq toIdx(empty, ITS) = ITS .
+    op insertAll : Set{QItem} Set{IdxTerm} -> Set{IdxTerm} .
+    eq insertAll([IT, SC, Q, D] ; ITEMS, ITS)
+     = insertAll(ITEMS, ITS ; IT) .
+    eq insertAll(empty, ITS) = ITS .
 
     op subsume : Module Term Term -> Bool [memo] .
     op subsume : Module Term Term Nat -> Bool .
     eq subsume(M, T, T') = subsume(M, T, T', 0) .
-    ceq subsume(M, '_||_[T,TC], '_||_[T',TC'], N) 
-      = if checkCond(M, TC, TC', SUB)  == 'true.Bool then true
-        else subsume(M, T, T', s(N)) fi
-     if SUB := metaMatch(M,T,T',nil,N) .
+    ceq subsume(M, '_||_[T1,T2], '_||_[T3,T4], N) 
+      = if T5  == 'true.Bool then true
+        else subsume(M, '_||_[T1,T2], '_||_[T3,T4], s(N)) fi
+     if SUB := metaMatch(M,T1,T3,nil,N) 
+     /\ T5 := getTerm(metaReduce(M, '_implies_[T4,applySubstitution(M,T2,SUB)])) .
     eq subsume(M, T, T', N) = false [owise] .
-
-    op checkCond : Module Term Term Substitution -> Term .
-    eq checkCond(M, TC, TC', SUB)
-     = getTerm(metaReduce(M, '_or_['not_[TC'],applySubstitution(M,TC,SUB)])) .
 endfm
 
 
@@ -81,42 +74,41 @@ fmod NARROWING-TRANSITION is
 
     var M : Module .
     var OPT : VariantOptionSet .
-    vars T T' T1 : Term .
+    vars T T' T1 T2 : Term .
     var IDX : Index . 
-    var S : Score .
+    var SC : Score .
+    var ITEMS : Set{QItem} .
     vars D N : Nat .
     var TY : Type . 
     var CXT : Context . 
     vars Q L : Qid . 
     vars SUB SUB' : Substitution .
-    var RP : ResultPair .
     var NAR : NarrowingApplyResult .
-    var TIS : Set{QItem} .
 
     --- obtain the set of next symbolic states
     op next : Module VariantOptionSet QItem -> Set{QItem} .
-    eq next(M, OPT, [[T,IDX],S,Q,D]) = next(M, OPT, T, Q, D, 0, empty) .
+    eq next(M, OPT, [[T,IDX],SC,Q,D]) = next(M, OPT, T, Q, D, 0, empty) .
 
     op next : Module VariantOptionSet Term Qid Nat Nat Set{QItem} -> Set{QItem} .
-    ceq next(M, OPT, T, Q, D, N, TIS) 
-      = next(M, OPT, T, Q, D, s(N), TIS ; filter(M,NAR,D))
+    ceq next(M, OPT, T, Q, D, N, ITEMS) 
+      = next(M, OPT, T, Q, D, s(N), ITEMS ; filter(M,NAR,D))
      if NAR := metaNarrowingApply(M, T, empty, Q, OPT, N) .
-    eq next(M, OPT, T, Q, D, N, TIS) = TIS [owise] .
+    eq next(M, OPT, T, Q, D, N, ITEMS) = ITEMS [owise] .
 
     --- remove invalid states
     op filter : Module NarrowingApplyResult Nat -> Set{QItem} .
-    ceq filter(M, {'_||_[T,T'],TY,CXT,L,SUB,SUB',Q}, D) 
-      = if T1 == 'bot.Top then empty
-        else makeItem(idxState('_||_[T,T1]), Q, s(D)) fi
-     if T1 := getTerm(metaReduce(M, '_and_[T','inv[T]])) .
+    ceq filter(M, {'_||_[T1,T2],TY,CXT,L,SUB,SUB',Q}, D) 
+      = if T' == 'bot.Top then empty
+        else makeItem(idxState(T'), Q, s(D)) fi
+     if T' := getTerm(metaReduce(M, '_||_[T1,'_and_[T2,'inv[T1]]])) .
     eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
 
     op idxState : Term -> IdxTerm .
-    eq idxState('_||_[T,T1]) = ['_||_[T,T1], index(T)] .
+    eq idxState('_||_[T1,T2]) = ['_||_[T1,T2], index(T1)] .
 
     op makeItem : IdxTerm Qid Nat -> QItem .
-    eq makeItem(['_||_[T,T1], IDX], Q, D) 
-     = [['_||_[T,T1], IDX], score(T,D), Q, D] .
+    eq makeItem(['_||_[T1,T2], IDX], Q, D) 
+     = [['_||_[T1,T2], IDX], score(T1,D), Q, D] .
 endfm
 
 
@@ -127,14 +119,14 @@ fmod HEURISTIC-NARROWING-SEARCH is
     protecting LEFTIST-TREES{QItem<=} .
 
     var M : Module .
-    vars T T' TC : Term .
+    vars T T' T1 : Term .
     vars N D : Nat . 
-    var S : Score .
+    var SC : Score .
     var IDX : Index . 
     var OPT : VariantOptionSet .
     vars ITS ITS' : Set{IdxTerm} .
-    var TI : QItem .
-    vars TIS TIS' : Set{QItem} .
+    var ITEM : QItem .
+    vars ITEMS ITEMS' : Set{QItem} .
     vars Q Q' : Qid .
     var SUB : Substitution . 
     var QUE : LTree{QItem<=} .
@@ -148,37 +140,37 @@ fmod HEURISTIC-NARROWING-SEARCH is
     op hnsFailure : Nat -> MetaHNSResult [ctor] .
     op hnsSuccess : Term QItem Nat -> MetaHNSResult [ctor] .
 
-    op hns : Module VariantOptionSet Term Term -> MetaHNSResult .
-    eq hns(M, OPT, T, T') 
+    op hnSearch : Module VariantOptionSet Term Term -> MetaHNSResult .
+    eq hnSearch(M, OPT, T, T') 
      = hnsOuter(M, OPT, T', {insert(makeItem(idxState(T),'@,0),empty), idxState(T)}) .
 
     op hnsOuter : Module VariantOptionSet Term HNSState -> MetaHNSResult .
     ceq hnsOuter(M, OPT, T', {NQUE, ITS})
-      = if findSol(M,T',TI) :: Term 
-        then hnsSuccess(findSol(M,T',TI), TI, | ITS |) 
-        else hnsOuter(M, OPT, T', hnsInner(M, OPT, {deleteMin(NQUE), ITS}, TI)) fi
-     if TI := findMin(NQUE) [print "current term item: " TI] .
+      = if checkSol(M,T',ITEM) :: Term 
+        then hnsSuccess(checkSol(M,T',ITEM), ITEM, | ITS |) 
+        else hnsOuter(M, OPT, T', hnsInner(M, OPT, {deleteMin(NQUE), ITS}, ITEM)) fi
+     if ITEM := findMin(NQUE) [print "current term item: " ITEM] .
     eq hnsOuter(M, OPT, T', {empty, ITS}) = hnsFailure(| ITS |) .
 
     op hnsInner : Module VariantOptionSet HNSState QItem -> HNSState .
-   ceq hnsInner(M, OPT, {QUE, ITS}, TI) = {insertAll(TIS', QUE), ITS'} 
-     if {TIS', ITS'} := folding(M, next(M, OPT, TI), ITS) .
+   ceq hnsInner(M, OPT, {QUE, ITS}, ITEM) = {insertAll(ITEMS', QUE), ITS'} 
+     if {ITS', ITEMS'} := folding(M, next(M, OPT, ITEM), ITS) .
 
     --- insert a set of items into the queue
     op insertAll : Set{QItem} LTree{QItem<=} -> LTree{QItem<=} .
     eq insertAll(empty, QUE) = QUE .
-    eq insertAll(TI ; TIS, QUE) = insertAll(TIS, insert(TI, QUE)) .
+    eq insertAll(ITEM ; ITEMS, QUE) = insertAll(ITEMS, insert(ITEM, QUE)) .
 
 --- check if a goal is reached
-    op findSol : Module Term QItem -> TermList .
-    op findSol : Module Term Qid Term Nat -> TermList .
+    op checkSol : Module Term QItem -> TermList .
+    op checkSol : Module Term Term Qid Nat -> TermList .
 
-    eq findSol(M, T', [[T,IDX],S,Q,D]) = findSol(M, T, Q, T', 0) .
-    ceq findSol(M, T, Q, T', N) 
-      = if TC =/= 'false.Bool then applySubstitution(M,T,SUB) 
-        else findSol(M, T, Q, T', s(N)) fi
-     if {'PHI:Bool <- TC ; SUB, Q'} := metaUnify(M, T =? T', Q, N) .
-    eq findSol(M, T, Q, T', N) = empty [owise] .
+    eq checkSol(M, T', [[T,IDX],SC,Q,D]) = checkSol(M, T, T', Q, 0) .
+    ceq checkSol(M, T, T', Q, N) 
+      = if T1 =/= 'false.Bool then applySubstitution(M,T,SUB) 
+        else checkSol(M, T, T', Q, s(N)) fi
+     if {'PHI:Bool <- T1 ; SUB, Q'} := metaUnify(M, T =? T', Q, N) .
+    eq checkSol(M, T, T', Q, N) = empty [owise] .
 endfm
 
 
@@ -191,10 +183,10 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var Q : Qid .
     vars ST ST' : State .
     var B : Bool .
-    vars N D : Nat . 
-    var S : Score .
-    vars T T' T1 : Term .
-    var TI : QItem .
+    var N : Nat . 
+    var SC : Score .
+    vars T T' : Term .
+    var ITEM : QItem .
     var H : Header .
     vars IL IL' : ImportList .
     var SS : SortSet .
@@ -210,15 +202,15 @@ fmod HEURISTIC-NARROWING-DRIVER is
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
    ceq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
-     = prettyPrint(hns(M, OPT, T, T'))
+     = prettyPrint(hnSearch(M, OPT, T, T'))
      if M := addImports((including 'HNR-TOP .), upModule(Q,false))
      /\ T  := '_||_[upTerm(ST),  upTerm(B)]
      /\ T' := '_||_[upTerm(ST'), 'PHI:Bool] .
 
     ---
     op prettyPrint : MetaHNSResult -> HNSResult .
-    eq prettyPrint(hnsSuccess(T,TI,N)) 
-     = downTerm(T,bot) states: N (depth: getDepth(TI)) .
+    eq prettyPrint(hnsSuccess(T,ITEM,N)) 
+     = downTerm(T,bot) states: N (depth: getDepth(ITEM)) .
     eq prettyPrint(hnsFailure(N)) = noSolution(N) .
 
     ---

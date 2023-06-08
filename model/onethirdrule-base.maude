@@ -62,7 +62,7 @@ mod CONST-BASE is
     protecting SET{Natural} .
     protecting BOOL .
 
-    vars N N' R : Natural . 
+    vars N R : Natural . 
     var S : Step .
     var CF : Configuration . 
     var MSG : Msg . 
@@ -120,10 +120,9 @@ mod CONST-HALF-THRESHOLD is
     var CF : Configuration .
 
     op valid1/2  : Natural Natural -> Bool .
-    eq valid1/2(s s N, s N') 
-     = valid1/2(N, N') .
+    eq valid1/2(s s N', s N) = valid1/2(N', N) .
     eq valid1/2(N, Z) = false .
-    eq valid1/2(s, s) = true .
+    eq valid1/2(s N, s N N') = true .
 
     op initCond : Global -> Bool .
     eq initCond({N, OS, CF})

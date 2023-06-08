@@ -19,13 +19,12 @@ fmod ONETHIRDRULE-SCORE-BASE is
     including SCORE .
     protecting INT .
 
-    vars N N' : Nat .
+    vars N N' D : Nat .
     vars T T1 T2 T3 T4 T5 : Term .
     vars F : Qid .
-    var D : Nat .
     var TL : TermList .
     var NTL : NeTermList .
-    var SS : Score .
+    var V : Variable .
 
     subsort Nat < Score .
 
@@ -45,7 +44,8 @@ fmod ONETHIRDRULE-SCORE-BASE is
     op toNumber : TermList -> Nat .
     eq toNumber(('s.Natural, TL)) = s(toNumber(TL)) .
     eq toNumber('__[TL]) = toNumber(TL) . 
-    eq toNumber(TL) = 0 [owise] .
+    eq toNumber(V) = 0 .
+    eq toNumber(empty) = 0 .
 endfm
 
 fmod ONETHIRDRULE-SCORE-G is
