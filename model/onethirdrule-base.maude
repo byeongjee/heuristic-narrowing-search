@@ -62,7 +62,8 @@ mod CONST-BASE is
     protecting SET{Natural} .
     protecting BOOL .
 
-    vars N R : Natural . 
+    vars N N' R : Natural . 
+    var Z : FZero .  
     var S : Step .
     var CF : Configuration . 
     var MSG : Msg . 
@@ -93,10 +94,15 @@ mod CONST-BASE is
     eq getRounds(< O : Node | status : [R, S], ATTS:U234S > CF) = R, getRounds(CF) .
     eq getRounds(MSG CF) = getRounds(CF) .
     eq getRounds(none) = 0 .
+
+    op valid1/2 : Natural Natural -> Bool .
+    eq valid1/2(s s N', s N) = valid1/2(N', N) .
+    eq valid1/2(N, Z) = false .
+    eq valid1/2(s N, s N N') = true .
 endm
 
 
-mod CONST-NO-THRESHOLD is
+mod CONST-ONE-THRESHOLD is
     protecting CONST-BASE .
     including GLOBAL .
 
@@ -114,15 +120,9 @@ mod CONST-HALF-THRESHOLD is
     protecting CONST-BASE .
     including GLOBAL .
 
-    vars N N' : Natural .
-    var Z : FZero .  
+    var N : Natural .
     var OS : OidSet .
     var CF : Configuration .
-
-    op valid1/2  : Natural Natural -> Bool .
-    eq valid1/2(s s N', s N) = valid1/2(N', N) .
-    eq valid1/2(N, Z) = false .
-    eq valid1/2(s N, s N N') = true .
 
     op initCond : Global -> Bool .
     eq initCond({N, OS, CF})

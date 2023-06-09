@@ -1,0 +1,67 @@
+
+load ../tool/param.maude
+load aux-functions/onethirdrule-index.maude
+load aux-functions/onethirdrule-scoring-functions.maude
+
+load ../tool/state.maude
+load ../tool/tool.maude
+
+load ../model/onethirdrule.maude
+
+
+mod MAIN-ONE is
+    protecting ONETHIRDRULE-ONE-THRESHOLD .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    var IOBJ1 IOBJ2 IOBJ3 : InitObject .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+
+endm
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ONE-THRESHOLD : 
+      {s, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CF}
+  such that initCond({s, OS, IOBJ1 IOBJ2 IOBJ3}) .
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ONE-THRESHOLD : 
+      {s, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CF}
+  such that initCond({s, OS, INITIAL}) .
+
+
+mod MAIN-HALF is
+    protecting ONETHIRDRULE-HALF-THRESHOLD .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var N : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    var IOBJ1 IOBJ2 IOBJ3 : InitObject .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-HALF-THRESHOLD : 
+      {N, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CF}
+  such that initCond({N, OS, IOBJ1 IOBJ2 IOBJ3}) .
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-HALF-THRESHOLD : 
+      {N, OS, INITIAL} 
+  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+              < O' : Node | decision : false, ATTS' > CF}
+  such that initCond({N, OS, INITIAL}) .

@@ -113,9 +113,9 @@ mod ONETHIRDRULE is
 endm
 
 
-mod ONETHIRDRULE-NO-THRESHOLD is
+mod ONETHIRDRULE-ONE-THRESHOLD is
     protecting ONETHIRDRULE .
-    including CONST-NO-THRESHOLD .
+    including CONST-ONE-THRESHOLD .
     including STATE .
     subsort Global < State .
     eq inv(S:State) = true .
