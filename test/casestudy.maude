@@ -10,7 +10,7 @@ load ../model/onethirdrule.maude
 
 
 mod MAIN is
-    protecting ONETHIRDRULE-HALF-THRESHOLD .
+    protecting ONETHIRDRULE-ANALYSIS .
     protecting ONETHIRDRULE-INDEX .
     protecting ONETHIRDRULE-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
@@ -24,19 +24,9 @@ mod MAIN is
 endm
 
 
----(
-red in DRIVER4 : metaHeuristicNarrowingSearch(
-    upModule('ONETHIRDRULE-WITH-INV-HALF, false),
-    '`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration],
-    '`{_`,_`,_`}['N:Natural,'OS:OidSet,'__['CF:Configuration,'<_:_|_>[
-    'O:Oid,'Node.Cid,'_`,_['ATTS:U124S,'decision`:_['true.Boolean]]],'<_:_|_>[
-    'O':Oid,'Node.Cid,'_`,_['ATTS':U124S,'decision`:_['false.Boolean]]]]],
-    'initCond['`{_`,_`,_`}['N:Natural, 'OS:OidSet, 'INITIAL:InitConfiguration]],
-    delay filter) .
----)
-
-red heuristic-narrow {filter delay} in 'ONETHIRDRULE-HALF-THRESHOLD : 
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       {N, OS, INITIAL} 
   =>* {N, OS, < O  : Node | decision : true,  ATTS  >
               < O' : Node | decision : false, ATTS' > CF}
-  such that initCond({N, OS, INITIAL}) .
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), N) .

@@ -200,7 +200,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     op _states:_(depth:_) : Top Nat Nat -> HNSResult [ctor format (d n d s d d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
-    op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult .
+    op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult [prec 125] .
    ceq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
      = prettyPrint(hnSearch(M, OPT, T, T'))
      if M := addImports((including 'HNR-TOP .), upModule(Q,false))

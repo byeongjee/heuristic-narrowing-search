@@ -113,18 +113,9 @@ mod ONETHIRDRULE is
 endm
 
 
-mod ONETHIRDRULE-ONE-THRESHOLD is
+mod ONETHIRDRULE-ANALYSIS is
     protecting ONETHIRDRULE .
-    including CONST-ONE-THRESHOLD .
-    including STATE .
-    subsort Global < State .
-    eq inv(S:State) = true .
-endm
-
-
-mod ONETHIRDRULE-HALF-THRESHOLD is
-    protecting ONETHIRDRULE .
-    including CONST-HALF-THRESHOLD .
+    protecting ONETHIRDRULE-CONST .
     including STATE .
     subsort Global < State .
     eq inv(S:State) = true .

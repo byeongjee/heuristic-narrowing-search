@@ -57,7 +57,7 @@ mod GLOBAL is
 endm
 
 
-mod CONST-BASE is
+mod ONETHIRDRULE-CONST is
     protecting ALT-CFIGURATION .
     protecting SET{Natural} .
     protecting BOOL .
@@ -99,33 +99,4 @@ mod CONST-BASE is
     eq valid1/2(s s N', s N) = valid1/2(N', N) .
     eq valid1/2(N, Z) = false .
     eq valid1/2(s N, s N N') = true .
-endm
-
-
-mod CONST-ONE-THRESHOLD is
-    protecting CONST-BASE .
-    including GLOBAL .
-
-    var N : Natural .
-    var OS : OidSet .
-    var CF : Configuration .
-
-    op initCond : Global -> Bool .
-    eq initCond({N, OS, CF})
-     = noDupl(OS) and noDupl(getOids(CF)) and sameRound(getRounds(CF)) .
-endm
-
-
-mod CONST-HALF-THRESHOLD is
-    protecting CONST-BASE .
-    including GLOBAL .
-
-    var N : Natural .
-    var OS : OidSet .
-    var CF : Configuration .
-
-    op initCond : Global -> Bool .
-    eq initCond({N, OS, CF})
-     = noDupl(OS) and noDupl(getOids(CF)) and sameRound(getRounds(CF)) and 
-       valid1/2(numObjs(CF), N) .
 endm
