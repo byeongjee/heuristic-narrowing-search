@@ -1,23 +1,23 @@
 load ./onethirdrule-base.maude
 
 
-mod ONETHIRDRULE is
+mod ONETHIRDRULE-NO-MSG-LOSS is
     including GLOBAL .
     protecting MULTICAST .
 
-    vars O O' : Oid . vars CF : Configuration . var M : Msg . var C : Cid .
+    vars O O' : Oid . vars CF : Configuration . var C : Cid .
     vars OS OS' : OidSet . 
-    var R N N' VT VF VA : Natural .
+    var R TH VT VF VA : Natural .
     var Z : FZero .
     vars V V' : Value .
 
     rl [vote] : 
-    {N, O ; OS,
+    {TH, O ; OS,
         < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
         CF
     }
     =>
-    {N, O ; OS,
+    {TH, O ; OS,
         < O : Node | status : [R, wait], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
         (multicast vote(V, R) from O to OS)
         CF
@@ -25,12 +25,12 @@ mod ONETHIRDRULE is
 
 
     rl [receive] :
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         (multicast vote(V, R) from O' to (O ; OS'))
         CF
     } =>
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : update([VT, VF, VA], V), ATTS:U2S > 
         (multicast vote(V, R) from O' to OS')  
         CF
@@ -38,78 +38,96 @@ mod ONETHIRDRULE is
 
 
     rl [decide-1-true] :
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         CF
     }
     =>
-    decide?(true, N <= VT, N, OS, 
+    decide?(true, TH <= VT, TH, OS, 
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
     rl [decide-1-true] :
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
         CF
     }
     =>
-    decide?(false, N <= VF, N, OS, 
+    decide?(false, TH <= VF, TH, OS, 
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
 
     rl [decide-2] :
-    decide?(V, true, N, OS,
+    decide?(V, true, TH, OS,
         < O : Node | status : [R, wait], decision : nil, ATTS:U24S >,
         CF)
     =>
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, done], decision : V, ATTS:U24S >
         CF
     } [narrowing] .
 
 
     rl [update-1-true] : 
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >
         CF
     }
     =>
-    update?(true, (VT <  N) and (N <= VA) and (VF <= VT),
-        N, OS,
+    update?(true, (VT <  TH) and (TH <= VA) and (VF <= VT),
+        TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
     rl [update-1-false] : 
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >
         CF
     }
     =>
-    update?(false, (VF < N) and (N <= VA) and (VT < VF),
-        N, OS,
+    update?(false, (VF < TH) and (TH <= VA) and (VT < VF),
+        TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >,
         CF
     ) [narrowing] .
 
     rl [update-2] : 
-    update?(V', true, N, OS,
+    update?(V', true, TH, OS,
         < O : Node | status : [R, wait], value : V, decision : nil, votes : [VT, VF, VA] >,
         CF
     )
     =>
-    {N, OS,
+    {TH, OS,
         < O : Node | status : [s R, init], value : V', decision : nil, votes : [0, 0, 0] >
         CF
     } [narrowing] .
+endm
+
+
+mod ONETHIRDRULE is
+    including ONETHIRDRULE-NO-MSG-LOSS .
+    var TH : Natural .
+    var OS : OidSet . 
+    var CF : Configuration . 
+    var MSG : Msg .
 
     rl [loss] : 
-    {N, OS, M CF}
+    {TH, OS, MSG CF}
     =>
-    {N, OS, CF} [narrowing] .
+    {TH, OS, CF} [narrowing] .
+endm
+
+
+mod ONETHIRDRULE-NO-MSG-LOSS-ANALYSIS is
+    protecting ONETHIRDRULE-NO-MSG-LOSS .
+    protecting ONETHIRDRULE-CONST .
+    including STATE .
+    subsort Global < State .
+    eq inv(S:State) = true .
 endm
 
 

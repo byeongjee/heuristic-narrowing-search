@@ -15,7 +15,7 @@ mod MAIN is
     protecting ONETHIRDRULE-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
-    var N : Natural .
+    var TH : Natural .
     vars O O' : Oid .
     var OS : OidSet .
     var INITIAL : InitConfiguration .
@@ -27,7 +27,7 @@ endm
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       {s, OS, IOBJ1 IOBJ2 IOBJ3} 
-  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+  =>* {TH, OS, < O  : Node | decision : true,  ATTS  >
               < O' : Node | decision : false, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
             sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) .
@@ -35,24 +35,24 @@ red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       {s, OS, INITIAL} 
-  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+  =>* {TH, OS, < O  : Node | decision : true,  ATTS  >
               < O' : Node | decision : false, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) .
 
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {N, OS, IOBJ1 IOBJ2 IOBJ3} 
-  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+      {TH, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {TH, OS, < O  : Node | decision : true,  ATTS  >
               < O' : Node | decision : false, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
             sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) and 
-            valid1/2(numObjs(IOBJ1 IOBJ2 IOBJ3), N) .
+            valid1/2(numObjs(IOBJ1 IOBJ2 IOBJ3), TH) .
 
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {N, OS, INITIAL} 
-  =>* {N, OS, < O  : Node | decision : true,  ATTS  >
+      {TH, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : true,  ATTS  >
               < O' : Node | decision : false, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
-            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), N) .
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) .
