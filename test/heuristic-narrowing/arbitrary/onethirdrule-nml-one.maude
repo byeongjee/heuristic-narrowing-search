@@ -1,0 +1,51 @@
+load ../main.maude
+
+red in TEST-1 : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {s, OS, < O  : Node | decision : true, ATTS >
+               < O' : Node | decision : false, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+do clear memo .
+
+red in TEST-2 : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {s, OS, < O  : Node | decision : true, ATTS >
+               < O' : Node | decision : false, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+do clear memo .
+
+red in TEST-3 : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {s, OS, < O  : Node | decision : true, ATTS >
+               < O' : Node | decision : false, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+do clear memo .
+
+red in TEST-G : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {s, OS, < O  : Node | decision : true, ATTS >
+               < O' : Node | decision : false, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+do clear memo .
+
+red in TEST-BFS : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {s, OS, < O  : Node | decision : true, ATTS >
+               < O' : Node | decision : false, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+do clear memo .
