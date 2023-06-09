@@ -53,7 +53,7 @@ fmod QUEUE-ITEM<= is
 
     ---FIXME: < vs le ?
     op _<_ : QItem QItem -> Bool .
-    eq [IT, S, Q, D] < [IT', S', Q', D'] = S le S' .
+    eq [IT, S, Q, D] < [IT', S', Q', D'] = S lt S' .
 
     op _<=_ : QItem QItem -> Bool .
     eq [IT, S, Q, D] <= [IT', S', Q', D'] = S le S' .

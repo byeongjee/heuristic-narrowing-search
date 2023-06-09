@@ -5,5 +5,4 @@ fth TOSET<= is
 
     op _<=_ : Elt Elt -> Bool .
     vars E1 E2 : Elt .
-    ceq E1 <= E2 = true if E1 < E2 or E1 == E2 .
  endfth

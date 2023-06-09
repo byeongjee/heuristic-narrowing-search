@@ -32,10 +32,10 @@ fmod LEFTIST-TREES{T :: TOSET<=} is
 
    mb empty : LTree{T} .
    mb empty [n(1, X)] empty : NeLTree{T} .
-   cmb NeTL [n(1, X)] empty : NeLTree{T} if X < findMin(NeTL) .
+   cmb NeTL [n(1, X)] empty : NeLTree{T} if X <= findMin(NeTL) .
    cmb NeTL [n(N, X)] NeTR : NeLTree{T} if rank(NeTL) >= rank(NeTR) /\
-                                           X < findMin(NeTL) /\ 
-                                           X < findMin(NeTR) /\
+                                           X <= findMin(NeTL) /\ 
+                                           X <= findMin(NeTR) /\
                                            N = 1 + rank(NeTR) .
    eq rank(empty) = 0 .
    eq rank(TL [n(N, X)] TR) = 1 + rank(TR) .
@@ -45,7 +45,7 @@ fmod LEFTIST-TREES{T :: TOSET<=} is
    eq merge(empty, T) = T .
    eq merge(T, empty) = T .
    eq merge(TL1 [n(N1, X1)] TR1, TL2 [n(N2, X2)] TR2) =
-        if X1 < X2 then make(X1, TL1, merge(TR1, TL2 [n(N2,X2)] TR2))
+        if X1 <= X2 then make(X1, TL1, merge(TR1, TL2 [n(N2,X2)] TR2))
                    else make(X2, TL2, merge(TL1 [n(N1,X1)] TR1,TR2))
         fi .
         

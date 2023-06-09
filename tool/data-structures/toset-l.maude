@@ -7,6 +7,5 @@ fth TOSET< is
     vars E1 E2 E3 : Elt .
     eq E1 < E1 = false .
     ceq E1 < E3 = true if E1 < E2 and E2 < E3 [nonexec] .
-    ceq E1 < E2 or E2 < E1 = true if E1 =/= E2 .
     eq E1 > E2 = E2 < E1 .
  endfth
