@@ -1,21 +1,55 @@
 #!/bin/bash
 
+# heuristic-narrow
+tmux new-session -d -s heuristic-arbitrary-half \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-half.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-half.out'
+tmux new-session -d -s heuristic-arbitrary-one \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-one.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-one.out'
+tmux new-session -d -s heuristic-arbitrary-nml-half \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-nml-half.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-nml-half.out'
+tmux new-session -d -s heuristic-arbitrary-nml-one \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-nml-one.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/arbitrary/onethirdrule-nml-one.out'
+
+tmux new-session -d -s heuristic-three-objs-half \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-half.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-half.out'
+tmux new-session -d -s heuristic-three-objs-one \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-one.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-one.out'
+tmux new-session -d -s heuristic-three-objs-nml-half \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-nml-half.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-nml-half.out'
+tmux new-session -d -s heuristic-three-objs-nml-one \
+'~/Maude/maude ~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-nml-one.maude > \
+~/heuristic-narrowing/test/heuristic-narrowing/three-objs/onethirdrule-nml-one.out'
+
 # vu-narrow
-## half
+tmux new-session -d -s vu-arbitrary-half \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-half.maude > \
+~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-half.out'
+tmux new-session -d -s vu-arbitrary-one \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-one.maude > \
+~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-one.out'
+tmux new-session -d -s vu-arbitrary-nml-half \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-nml-half.maude > \
+~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-nml-half.out'
+tmux new-session -d -s vu-arbitrary-nml-one \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-nml-one.maude > \
+~/heuristic-narrowing/test/vu-narrow/arbitrary/onethirdrule-nml-one.out'
 
-tmux new-session -d -s vu-narrow-onethirdrule-half '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-half.maude > ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-half.out'
-tmux new-session -d -s vu-narrow-onethirdrule-one '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-one.maude > ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-one.out'
-
-tmux new-session -d -s vu-narrow-no-message-loss-half '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/no-message-loss-half.maude > ~/heuristic-narrowing/tests/vu-narrow/no-message-loss-half.out'
-tmux new-session -d -s vu-narrow-no-message-loss-one '~/Maude/maude ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-one.maude > ~/heuristic-narrowing/tests/vu-narrow/onethirdrule-one.out'
-
-
-tmux new-session -d -s onethirdrule-half '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-half.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-half.out'
-tmux new-session -d -s onethirdrule-one '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-one.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-one.out'
-tmux new-session -d -s no-message-loss-half '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-half.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-half.out'
-tmux new-session -d -s no-message-loss-one '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-one.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-one.out'
-
-tmux new-session -d -s onethirdrule-half-prime '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-half-prime.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-half-prime.out'
-tmux new-session -d -s onethirdrule-one-prime '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-one-prime.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/onethirdrule-one-prime.out'
-tmux new-session -d -s no-message-loss-half-prime '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-half-prime.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-half-prime.out'
-tmux new-session -d -s no-message-loss-one-prime '~/Maude/maude ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-one-prime.maude > ~/heuristic-narrowing/tests/heuristic-narrowing/no-message-loss-one-prime.out'
+tmux new-session -d -s vu-three-objs-half \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-half.maude > \
+~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-half.out'
+tmux new-session -d -s vu-three-objs-one \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-one.maude > \
+~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-one.out'
+tmux new-session -d -s vu-three-objs-nml-half \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-nml-half.maude > \
+~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-nml-half.out'
+tmux new-session -d -s vu-three-objs-nml-one \
+'~/Maude/maude ~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-nml-one.maude > \
+~/heuristic-narrowing/test/vu-narrow/three-objs/onethirdrule-nml-one.out'

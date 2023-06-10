@@ -5,7 +5,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
       init3(s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
                < O' : Node | decision : false, ATTS' > CF}
-  such that true .
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -14,7 +14,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
       init3(s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
                < O' : Node | decision : false, ATTS' > CF}
-  such that true .
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -23,7 +23,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
       init3(s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
                < O' : Node | decision : false, ATTS' > CF}
-  such that true .
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -32,7 +32,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
       init3(s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
                < O' : Node | decision : false, ATTS' > CF}
-  such that true .
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -41,7 +41,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
       init3(s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
                < O' : Node | decision : false, ATTS' > CF}
-  such that true .
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
