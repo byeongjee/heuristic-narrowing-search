@@ -4,9 +4,9 @@ load term-item.maude
 fmod HNR-TOP is
     including STATE .
     sort Top .
-    op _||_ : State Bool -> Top [ctor] .
+    op _|||_ : State Bool -> Top [ctor] .
     op bot : -> Top [ctor] .
-    eq S:State || false = bot .
+    eq S:State ||| false = bot .
 endfm
 
 
@@ -58,9 +58,9 @@ fmod FOLDING-APPLICATION is
     op subsume : Module Term Term -> Bool [memo] .
     op subsume : Module Term Term Nat -> Bool .
     eq subsume(M, T, T') = subsume(M, T, T', 0) .
-    ceq subsume(M, '_||_[T1,T2], '_||_[T3,T4], N) 
+    ceq subsume(M, '_|||_[T1,T2], '_|||_[T3,T4], N) 
       = if T5  == 'true.Bool then true
-        else subsume(M, '_||_[T1,T2], '_||_[T3,T4], s(N)) fi
+        else subsume(M, '_|||_[T1,T2], '_|||_[T3,T4], s(N)) fi
      if SUB := metaMatch(M,T1,T3,nil,N) 
      /\ T5 := getTerm(metaReduce(M, '_implies_[T4,applySubstitution(M,T2,SUB)])) .
     eq subsume(M, T, T', N) = false [owise] .
@@ -97,18 +97,18 @@ fmod NARROWING-TRANSITION is
 
     --- remove invalid states
     op filter : Module NarrowingApplyResult Nat -> Set{QItem} .
-    ceq filter(M, {'_||_[T1,T2],TY,CXT,L,SUB,SUB',Q}, D) 
+    ceq filter(M, {'_|||_[T1,T2],TY,CXT,L,SUB,SUB',Q}, D) 
       = if T' == 'bot.Top then empty
         else makeItem(idxState(T'), Q, s(D)) fi
-     if T' := getTerm(metaReduce(M, '_||_[T1,'_and_[T2,'inv[T1]]])) .
+     if T' := getTerm(metaReduce(M, '_|||_[T1,'_and_[T2,'inv[T1]]])) .
     eq filter(M, {'bot.Top,TY,CXT,L,SUB,SUB',Q}, D) = empty .
 
     op idxState : Term -> IdxTerm .
-    eq idxState('_||_[T1,T2]) = ['_||_[T1,T2], index(T1)] .
+    eq idxState('_|||_[T1,T2]) = ['_|||_[T1,T2], index(T1)] .
 
     op makeItem : IdxTerm Qid Nat -> QItem .
-    eq makeItem(['_||_[T1,T2], IDX], Q, D) 
-     = [['_||_[T1,T2], IDX], score(T1,D), Q, D] .
+    eq makeItem(['_|||_[T1,T2], IDX], Q, D) 
+     = [['_|||_[T1,T2], IDX], score(T1,D), Q, D] .
 endfm
 
 
@@ -204,8 +204,8 @@ fmod HEURISTIC-NARROWING-DRIVER is
    ceq heuristic-narrow {OPT} in Q : ST =>* ST' such that B
      = prettyPrint(hnSearch(M, OPT, T, T'))
      if M := addImports((including 'HNR-TOP .), upModule(Q,false))
-     /\ T  := '_||_[upTerm(ST),  upTerm(B)]
-     /\ T' := '_||_[upTerm(ST'), 'PHI:Bool] .
+     /\ T  := '_|||_[upTerm(ST),  upTerm(B)]
+     /\ T' := '_|||_[upTerm(ST'), 'PHI:Bool] .
 
     ---
     op prettyPrint : MetaHNSResult -> HNSResult .

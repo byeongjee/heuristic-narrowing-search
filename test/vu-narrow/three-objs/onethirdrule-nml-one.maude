@@ -5,9 +5,9 @@ load ../../../tool/state.maude
 load ../../../model/onethirdrule-vu-narrow.maude
 
 {fold} vu-narrow {filter,delay} [1] in ONETHIRDRULE-NML-VU-NARROW-ANALYSIS :
-    init3(s, O1, O2, O3, R, V1, V2, V3) || noDupl(O1 ; O2 ; O3)
+    init3(s, O1, O2, O3, R, V1, V2, V3) ||| noDupl(O1 ; O2 ; O3)
 =>* 
 {s, OS,
 < O : Node | decision : true, ATTS >
 < O' : Node | decision : false, ATTS' >
-CF} || PHI .
+CF} ||| PHI .

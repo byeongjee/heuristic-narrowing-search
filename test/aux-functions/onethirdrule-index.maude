@@ -43,7 +43,7 @@ mod ONETHIRDRULE-VU-NARROW-INDEX is
     vars F F' : Qid .
     vars TL : TermList .
 
-    ---FIXME: The following seems incorrect. Where is _||_ ?
+    ---FIXME: The following seems incorrect. Where is _|||_ ?
     eq index(F'[F[TV, TB, TN, TO, TOBJ, TCF]]) = [F', F : getInfo((TOBJ, TCF), {0,0})] .
     eq index(F'[F[TN, TO, TCF]]) = [F', F : getInfo(TCF, {0,0})] .
 endm
