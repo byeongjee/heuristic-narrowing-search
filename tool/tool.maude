@@ -146,8 +146,8 @@ fmod HEURISTIC-NARROWING-SEARCH is
 
     op hnsOuter : Module VariantOptionSet Term HNSState -> MetaHNSResult .
     ceq hnsOuter(M, OPT, T', {NQUE, ITS})
-      = if checkSol(M,T',ITEM) :: Term 
-        then hnsSuccess(checkSol(M,T',ITEM), ITEM, | ITS |) 
+      = if checkSol(M,OPT, T',ITEM) :: Term 
+        then hnsSuccess(checkSol(M,OPT, T',ITEM), ITEM, | ITS |) 
         else hnsOuter(M, OPT, T', hnsInner(M, OPT, {deleteMin(NQUE), ITS}, ITEM)) fi
      if ITEM := findMin(NQUE) [print "current term item: " ITEM] .
     eq hnsOuter(M, OPT, T', {empty, ITS}) = hnsFailure(| ITS |) .
@@ -162,15 +162,15 @@ fmod HEURISTIC-NARROWING-SEARCH is
     eq insertAll(ITEM ; ITEMS, QUE) = insertAll(ITEMS, insert(ITEM, QUE)) .
 
 --- check if a goal is reached
-    op checkSol : Module Term QItem -> TermList .
-    op checkSol : Module Term Term Qid Nat -> TermList .
+    op checkSol : Module VariantOptionSet Term QItem -> TermList .
+    op checkSol : Module VariantOptionSet Term Term Qid Nat -> TermList .
 
-    eq checkSol(M, T', [[T,IDX],SC,Q,D]) = checkSol(M, T, T', Q, 0) .
-    ceq checkSol(M, T, T', Q, N) 
+    eq checkSol(M, OPT, T', [[T,IDX],SC,Q,D]) = checkSol(M, OPT, T, T', Q, 0) .
+    ceq checkSol(M, OPT, T, T', Q, N) 
       = if T1 =/= 'false.Bool then applySubstitution(M,T,SUB) 
-        else checkSol(M, T, T', Q, s(N)) fi
-     if {'PHI:Bool <- T1 ; SUB, Q'} := metaUnify(M, T =? T', Q, N) .
-    eq checkSol(M, T, T', Q, N) = empty [owise] .
+        else checkSol(M, OPT, T, T', Q, s(N)) fi
+     if {'PHI:Bool <- T1 ; SUB, Q'} := metaVariantUnify(M, T =? T', empty, Q, OPT, N) .
+    eq checkSol(M, OPT, T, T', Q, N) = empty [owise] .
 endfm
 
 
