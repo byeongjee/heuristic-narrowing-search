@@ -2,8 +2,10 @@ fmod VALUE is
     protecting FVP-BOOL .
 
     sorts Value InitValue? Value? .
-    subsort Boolean < Value < Value? .
+    subsort  Value < Value? .
     subsort InitValue? < Value? .
+
+    ops v1 v2 : -> Value [ctor] .
 
     op nil : -> InitValue? [ctor] .
 endfm
@@ -47,13 +49,13 @@ fmod VOTE is
     op [_,_,_] : FZero FZero FZero -> InitVote [ctor format (d d d s d s d d)] .
     op [_,_,_] : Natural Natural Natural -> Vote [ctor ditto] .
 
-    vars VT VF VA : Natural .
+    vars V1 V2 VA : Natural .
 
     op update : Vote Value -> Vote .
-    eq update([VT, VF, VA], true) = [s VT, VF, s VA] [variant] .
-    eq update([VT, VF, VA], false) = [VT, s VF, s VA] [variant] .
-    eq update([VT, VF, VA], true) = [s VT, VF, s VA] .
-    eq update([VT, VF, VA], false) = [VT, s VF, s VA] .
+    eq update([V1, V2, VA], v1) = [s V1, V2, s VA] [variant] .
+    eq update([V1, V2, VA], v2) = [V1, s V2, s VA] [variant] .
+    eq update([V1, V2, VA], v1) = [s V1, V2, s VA] .
+    eq update([V1, V2, VA], v2) = [V1, s V2, s VA] .
 endfm
 
 

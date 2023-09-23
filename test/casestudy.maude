@@ -23,10 +23,11 @@ mod MAIN is
     var CF : Configuration .
 endm
 
+set print attribute on .
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       {TH, OS, INITIAL} 
-  =>* {TH, OS, < O  : Node | decision : true,  ATTS  >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) .

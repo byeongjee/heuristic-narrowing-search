@@ -7,18 +7,18 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
 
     vars O O' : Oid . vars CF : Configuration . var C : Cid .
     vars OS OS' : OidSet . 
-    var R TH VT VF VA : Natural .
+    var R TH V1 V2 VA : Natural .
     var Z : FZero .
     vars V V' : Value .
 
     rl [vote] : 
     {TH, O ; OS,
-        < O : Node | status : [R, init], value : V, decision : nil, votes : [VT, VF, VA] > 
+        < O : Node | status : [R, init], value : V, decision : nil, votes : [V1, V2, VA] > 
         CF
     }
     =>
     {TH, O ; OS,
-        < O : Node | status : [R, wait], value : V, decision : nil, votes : update([VT, VF, VA], V) > 
+        < O : Node | status : [R, wait], value : V, decision : nil, votes : update([V1, V2, VA], V) > 
         (multicast vote(V, R) from O to OS)
         CF
     } [narrowing] .
@@ -26,36 +26,36 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
 
     rl [receive] :
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S > 
         (multicast vote(V, R) from O' to (O ; OS'))
         CF
     } =>
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : update([VT, VF, VA], V), ATTS:U2S > 
+        < O : Node | status : [R, wait], decision : nil, votes : update([V1, V2, VA], V), ATTS:U2S > 
         (multicast vote(V, R) from O' to OS')  
         CF
     } [narrowing] .
 
 
-    rl [decide-1-true] :
+    rl [decide-1-v1] :
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S > 
         CF
     }
     =>
-    decide?(true, TH <= VT, TH, OS, 
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+    decide?(v1, TH <= V1, TH, OS, 
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
-    rl [decide-1-true] :
+    rl [decide-1-v1] :
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S > 
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S > 
         CF
     }
     =>
-    decide?(false, TH <= VF, TH, OS, 
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+    decide?(v2, TH <= V2, TH, OS, 
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
@@ -71,33 +71,33 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
     } [narrowing] .
 
 
-    rl [update-1-true] : 
+    rl [update-1-v2] : 
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S >
         CF
     }
     =>
-    update?(true, (VT <  TH) and (TH <= VA) and (VF <= VT),
+    update?(v1, (V1 <  TH) and (TH <= VA) and (V2 <= V1),
         TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA], ATTS:U2S >,
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
 
-    rl [update-1-false] : 
+    rl [update-1-v2] : 
     {TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA] >
         CF
     }
     =>
-    update?(false, (VF < TH) and (TH <= VA) and (VT < VF),
+    update?(v2, (V2 < TH) and (TH <= VA) and (V1 < V2),
         TH, OS,
-        < O : Node | status : [R, wait], decision : nil, votes : [VT, VF, VA] >,
+        < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA] >,
         CF
     ) [narrowing] .
 
     rl [update-2] : 
     update?(V', true, TH, OS,
-        < O : Node | status : [R, wait], value : V, decision : nil, votes : [VT, VF, VA] >,
+        < O : Node | status : [R, wait], value : V, decision : nil, votes : [V1, V2, VA] >,
         CF
     )
     =>

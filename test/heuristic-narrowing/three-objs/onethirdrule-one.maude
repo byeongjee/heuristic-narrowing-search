@@ -3,8 +3,8 @@ load ../main.maude
 red in TEST-1 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       init3(s, O1, O2, O3, R, V1, V2, V3)
-  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : v1, ATTS >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
@@ -12,8 +12,8 @@ do clear memo .
 red in TEST-2 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       init3(s, O1, O2, O3, R, V1, V2, V3)
-  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : v1, ATTS >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
@@ -21,8 +21,8 @@ do clear memo .
 red in TEST-3 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       init3(s, O1, O2, O3, R, V1, V2, V3)
-  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : v1, ATTS >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
@@ -30,8 +30,8 @@ do clear memo .
 red in TEST-G : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       init3(s, O1, O2, O3, R, V1, V2, V3)
-  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : v1, ATTS >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
@@ -39,8 +39,8 @@ do clear memo .
 red in TEST-BFS : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       init3(s, O1, O2, O3, R, V1, V2, V3)
-  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : true, ATTS >
-               < O' : Node | decision : false, ATTS' > CF}
+  =>* {s, O1 ; O2 ; O3, < O  : Node | decision : v1, ATTS >
+               < O' : Node | decision : v2, ATTS' > CF}
   such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .

@@ -9,6 +9,6 @@ load ../../../model/onethirdrule-vu-narrow.maude
             sameRound(getRounds(INITIAL)))
 =>* 
 {s, OS,
-< O : Node | decision : true, ATTS >
-< O' : Node | decision : false, ATTS' >
+< O : Node | decision : v1, ATTS >
+< O' : Node | decision : v2, ATTS' >
 CF} ||| PHI .
