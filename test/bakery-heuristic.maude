@@ -1,0 +1,80 @@
+
+load ../tool/param.maude
+load aux-functions/onethirdrule-index.maude
+load aux-functions/onethirdrule-scoring-functions.maude
+load ../tool/state.maude
+load ../tool/tool.maude
+load ../model/lamport-bakery.maude
+
+fmod BAKERY-INDEX is
+    including INDEX .
+
+    subsort Term < Index .
+
+    var T : Term .
+
+    eq index(T) = T .
+endfm
+
+fmod BAKERY-SCORE-BFS is
+    including SCORE .
+
+    subsort Nat < Score .
+    
+    vars N N' D : Nat .
+    var T : Term .
+
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
+
+    eq score(T, D) = D .
+endfm
+
+fmod BAKERY-SCORE-1 is
+    including SCORE .
+
+    subsort Nat < Score .
+    
+    vars N N' D : Nat .
+    vars T T1 T2 : Term .
+    var F : Qid .
+    var TL : TermList .
+    var NTL : NeTermList .
+
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
+
+    eq score(F[T, T1, T2], D) = scoreAux(T2) .
+
+    op scoreAux : NeTermList -> Score .
+    eq scoreAux('__[NTL]) = scoreAux(NTL) .
+    eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
+    eq scoreAux('<_:_|_>[TL]) =  1 . 
+    eq scoreAux(T) = 0 [owise] .
+endfm
+
+
+
+mod MAIN is
+    protecting BAKERY-ANALYSIS .
+    protecting BAKERY-INDEX .
+    protecting BAKERY-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    vars N M : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INIT : InitConfiguration .
+    vars ATTS ATTS' : StatusAttr .
+    var CF : Configuration .
+endm
+
+set print attribute on .
+
+red heuristic-narrow {filter delay} in 'BAKERY-ANALYSIS : 
+      {0, 0, INIT} 
+  =>* {N, M, < O  : Node | status : crit(s s s s)  >
+               < O' : Node | status : crit(s s s s) > CF}
+  such that noDupl(getOids(INIT)) .
