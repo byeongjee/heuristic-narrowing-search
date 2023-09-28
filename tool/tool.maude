@@ -197,7 +197,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var RLS : RuleSet .
 
     sort HNSResult .
-    op _states:_(depth:_) : Top Nat Nat -> HNSResult [ctor format (d n d s d d d d)] .
+    op _states:_(score:_, depth:_) : Top Nat Score Nat -> HNSResult [ctor format (d n d s d d d s d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult [prec 125] .
@@ -210,7 +210,7 @@ fmod HEURISTIC-NARROWING-DRIVER is
     ---
     op prettyPrint : MetaHNSResult -> HNSResult .
     eq prettyPrint(hnsSuccess(T,ITEM,N)) 
-     = downTerm(T,bot) states: N (depth: getDepth(ITEM)) .
+     = downTerm(T,bot) states: N (score: getScore(ITEM), depth: getDepth(ITEM)) .
     eq prettyPrint(hnsFailure(N)) = noSolution(N) .
 
     ---
