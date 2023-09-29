@@ -112,11 +112,36 @@ fmod NARROWING-TRANSITION is
 endfm
 
 
+fmod SUBSTITUTION-RESTRICTION is
+  protecting META-LEVEL .
+
+  op getVars : NeTermList -> QidSet .
+  op _|_ : Substitution QidSet -> Substitution .
+
+  var F : Qid .
+  var NETL : NeTermList .
+  var T : Term .
+  var X : Variable .
+  var SUB : Substitution .
+  var VARS : QidSet .
+
+  eq getVars(F[NETL]) = getVars(NETL) .
+  eq getVars((T, NETL)) = getVars(T) ; getVars(NETL) .
+  eq getVars(X) = X .
+  eq getVars(T) = none [owise] .
+
+  eq none | VARS = none .
+  eq (X <- T ; SUB) | (X ; VARS) = (X <- T) ; (SUB | (X ; VARS)) .
+  eq (X <- T ; SUB) | VARS = SUB | VARS [owise] .
+endfm
+
+
 fmod HEURISTIC-NARROWING-SEARCH is
     protecting SCORE .
     protecting NARROWING-TRANSITION .
     protecting FOLDING-APPLICATION .
     protecting LEFTIST-TREES{QItem<=} .
+    protecting SUBSTITUTION-RESTRICTION .
 
     var M : Module .
     vars T T' T1 : Term .
@@ -138,7 +163,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
     --- hns result
     sorts MetaHNSResult .
     op hnsFailure : Nat -> MetaHNSResult [ctor] .
-    op hnsSuccess : Term QItem Nat -> MetaHNSResult [ctor] .
+    op hnsSuccess : CheckSolResult QItem Nat -> MetaHNSResult [ctor] .
 
     op hnSearch : Module VariantOptionSet Term Term -> MetaHNSResult .
     eq hnSearch(M, OPT, T, T') 
@@ -146,7 +171,7 @@ fmod HEURISTIC-NARROWING-SEARCH is
 
     op hnsOuter : Module VariantOptionSet Term HNSState -> MetaHNSResult .
     ceq hnsOuter(M, OPT, T', {NQUE, ITS})
-      = if checkSol(M,OPT, T',ITEM) :: Term 
+      = if checkSol(M,OPT, T',ITEM) :: NeCheckSolResult
         then hnsSuccess(checkSol(M,OPT, T',ITEM), ITEM, | ITS |) 
         else hnsOuter(M, OPT, T', hnsInner(M, OPT, {deleteMin(NQUE), ITS}, ITEM)) fi
      if ITEM := findMin(NQUE) [print "current term item: " ITEM] .
@@ -162,16 +187,23 @@ fmod HEURISTIC-NARROWING-SEARCH is
     eq insertAll(ITEM ; ITEMS, QUE) = insertAll(ITEMS, insert(ITEM, QUE)) .
 
 --- check if a goal is reached
-    op checkSol : Module VariantOptionSet Term QItem -> TermList .
-    op checkSol : Module VariantOptionSet Term Term Qid Nat -> TermList .
+    sorts CheckSolResult NeCheckSolResult .
+    subsort NeCheckSolResult < CheckSolResult .
+    op [_,_] : Term Substitution -> NeCheckSolResult [ctor] .
+    op none : -> CheckSolResult [ctor] .
+
+    op checkSol : Module VariantOptionSet Term QItem -> CheckSolResult .
+    op checkSol : Module VariantOptionSet Term Term Qid Nat -> CheckSolResult .
 
     eq checkSol(M, OPT, T', [[T,IDX],SC,Q,D]) = checkSol(M, OPT, T, T', Q, 0) .
     ceq checkSol(M, OPT, T, T', Q, N) 
-      = if T1 =/= 'false.Bool then applySubstitution(M,T,SUB) 
+      = if T1 =/= 'false.Bool then [applySubstitution(M,T,SUB), SUB | getVars(T')]
         else checkSol(M, OPT, T, T', Q, s(N)) fi
      if {'PHI:Bool <- T1 ; SUB, Q'} := metaVariantUnify(M, T =? T', empty, Q, OPT, N) .
-    eq checkSol(M, OPT, T, T', Q, N) = empty [owise] .
+    eq checkSol(M, OPT, T, T', Q, N) = none [owise] .
 endfm
+
+
 
 
 fmod HEURISTIC-NARROWING-DRIVER is
@@ -195,9 +227,10 @@ fmod HEURISTIC-NARROWING-DRIVER is
     var MAS : MembAxSet .
     var EQS : EquationSet .
     var RLS : RuleSet .
+    var SUB : Substitution .
 
     sort HNSResult .
-    op _states:_(score:_, depth:_) : Top Nat Score Nat -> HNSResult [ctor format (d n d s d d d s d d d)] .
+    op _substitution:_states:_(score:_, depth:_) : Top Substitution Nat Score Nat -> HNSResult [ctor format (d n d n d s d d d s d d d)] .
     op noSolution : Nat -> HNSResult [ctor] .
 
     op heuristic-narrow{_}in_:_=>*_such`that_ : VariantOptionSet Qid State State Bool -> HNSResult [prec 125] .
@@ -209,8 +242,8 @@ fmod HEURISTIC-NARROWING-DRIVER is
 
     ---
     op prettyPrint : MetaHNSResult -> HNSResult .
-    eq prettyPrint(hnsSuccess(T,ITEM,N)) 
-     = downTerm(T,bot) states: N (score: getScore(ITEM), depth: getDepth(ITEM)) .
+    eq prettyPrint(hnsSuccess([T, SUB],ITEM,N)) 
+     = downTerm(T,bot) substitution: SUB states: N (score: getScore(ITEM), depth: getDepth(ITEM)) .
     eq prettyPrint(hnsFailure(N)) = noSolution(N) .
 
     ---
