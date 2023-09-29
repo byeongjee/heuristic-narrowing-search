@@ -1,0 +1,172 @@
+load ./sorts/fvp-bool.maude
+load ./sorts/fvp-nat.maude
+load ./sorts/base-types.maude
+
+set include BOOL off .
+
+
+mod MUTUAL-EXCLUSION-CLIENT-ATTS is
+    protecting FVP-NAT .
+
+    sorts Status InitStatus .
+    subsort InitStatus < Status .
+
+    op ready : Natural -> InitStatus [ctor] .
+    ops wait crit : Natural -> Status [ctor] .
+
+    sorts StatusAttr InitStatusAttr .
+    subsort InitStatusAttr < StatusAttr .
+
+    op status`:_ : InitStatus -> InitStatusAttr [ctor prec 15 gather (&)] .
+    op status`:_ : Status -> StatusAttr [ctor prec 15 gather (&)] .
+endm
+
+mod MUTUAL-EXCLUSION-SERVER-ATTS is
+    protecting OID-SET .
+    protecting FVP-BOOL .
+
+    sorts FlagAttr InitFlagAttr .
+    subsort InitFlagAttr < FlagAttr .
+    op nodeInCs`:_ : False -> InitFlagAttr [ctor prec 15 gather (&)] .
+    op nodeInCs`:_ : Boolean -> FlagAttr [ctor prec 15 gather (&)] .
+
+    sorts EmptyOidList OidList .
+    subsorts EmptyOidList Oid < OidList .
+    op nil : -> EmptyOidList [ctor] .
+    op _::_ : OidList OidList -> OidList [ctor assoc id: nil] .
+
+    sorts QueueAttr InitQueueAttr .
+    subsort InitQueueAttr < QueueAttr .
+    op waiting`:_ : EmptyOidList -> InitQueueAttr [ctor prec 15 gather (&)] .
+    op waiting`:_ : OidList -> QueueAttr [ctor prec 15 gather (&)] .
+
+    sorts ServerAttrSet InitServerAttrSet .
+    subsort InitServerAttrSet < ServerAttrSet .
+    subsorts InitFlagAttr InitQueueAttr < InitServerAttrSet .
+    subsorts FlagAttr QueueAttr < ServerAttrSet .
+    op _,_ : InitFlagAttr InitQueueAttr -> InitServerAttrSet [ctor assoc comm format (d d s d)] .
+    op _,_ : FlagAttr QueueAttr -> ServerAttrSet [ctor ditto] .
+endm
+
+
+mod ALT-CONFIGURATION is
+    protecting MUTUAL-EXCLUSION-CLIENT-ATTS .
+    protecting MUTUAL-EXCLUSION-SERVER-ATTS .
+
+    sorts Server Client Cid .
+    subsorts Server Client < Cid .
+    op Server : -> Server [ctor] .
+    op Client : -> Client [ctor] .
+    op server : -> Oid [ctor] .
+
+    sorts None Object Msg ObjectSet Configuration InitObject InitConfiguration .
+    subsort InitObject < Object InitConfiguration < Configuration .
+    subsort Msg < Configuration .
+
+    op none : -> InitConfiguration [ctor] .
+    op __ : InitConfiguration InitConfiguration -> InitConfiguration [ctor assoc comm id: none] .
+    op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
+
+    op <_:_|_> : Oid Server ServerAttrSet -> Object [ctor object] .
+    op <_:_|_> : Oid Client InitStatusAttr -> InitObject [ctor object] .
+    op <_:_|_> : Oid Client StatusAttr -> Object [ctor object] .
+endm
+
+mod GLOBAL is
+    protecting ALT-CONFIGURATION .
+    protecting FVP-NAT .
+
+    sort Global .
+    op {_} :  Configuration -> Global [ctor] .
+endm
+
+mod MESSAGE is
+    protecting ALT-CONFIGURATION .
+
+    sort MsgContent .
+    ops request accessGranted release : -> MsgContent [ctor] .
+
+    op msg_from_to_ : MsgContent Oid Oid -> Msg [ctor] .
+endm
+
+
+mod MUTUAL-EXCLUSION is
+    protecting GLOBAL .
+    protecting MESSAGE .
+    vars N M : Natural . 
+    vars O O' : Oid .
+    var CONF : Configuration .
+    var OL : OidList .
+
+    rl [requestAccessToCS] : 
+    {< O : Client | status : ready(N) > CONF}
+    => {< O : Client | status : wait(N) > (msg request from O to server) CONF}
+    [narrowing] .
+
+    rl [grantAccess] : 
+    {(msg request from O to server) 
+    < server : Server | nodeInCs : false, ATTS:QueueAttr > CONF}
+    => 
+    {< server : Server | nodeInCs : true, ATTS:QueueAttr > 
+    (msg accessGranted from server to O) CONF} 
+    [narrowing] .
+
+    rl [putInWaitQueue] : 
+    {(msg request from O to server) 
+    < server : Server | nodeInCs : true, waiting : OL, ATTS:FlagAttr > CONF}
+    => {< server : Server | waiting : (OL :: O), ATTS:FlagAttr > CONF} 
+    [narrowing] .
+
+
+    rl [exitCS] :
+    {< O : Client | status : crit(N) > CONF}
+    =>
+    {< O : Client | status : ready(s N) > 
+    (msg release from O to server) CONF}
+    [narrowing] .
+
+    rl [nooneWaiting] :
+    {(msg release from O to server) 
+    < server : Server | waiting : nil, ATTS:FlagAttr > CONF}
+    =>
+    {< server : Server | nodeInCs : false, waiting : nil > CONF}
+    [narrowing] .
+
+    rl [grantAccessToFirstWaiting] :
+    {(msg release from O to server)
+     < server : Server | waiting : O' :: OL, ATTS:FlagAttr > CONF}
+    =>
+    {< server : Server | waiting : OL, ATTS:FlagAttr > 
+    (msg accessGranted from server to O') CONF}
+    [narrowing] .
+
+endm
+
+mod MUTUAL-EXCLUSION-CONST is
+    protecting GLOBAL .
+    protecting BOOL .
+
+    var O : Oid . 
+    var C : Cid .
+    var OS : OidSet .
+    var CF : Configuration .
+    var PHI : Bool .
+    vars N M N' M' : Natural .
+    var INIT : InitConfiguration .
+
+    op noDupl : OidSet -> Bool .
+    eq noDupl(O ; O ; OS) = false .
+
+    op getOids : Configuration -> OidSet [memo] .
+    eq getOids(< O : C | ATTS:StatusAttr > CF) = O ; getOids(CF) .
+    eq getOids(none) =  none .
+
+endm
+
+mod MUTUAL-EXCLUSION-ANALYSIS is
+    protecting MUTUAL-EXCLUSION .
+    protecting MUTUAL-EXCLUSION-CONST .
+    including STATE .
+    subsort Global < State .
+    eq inv(S:State) = true .
+endm

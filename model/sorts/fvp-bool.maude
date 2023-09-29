@@ -2,8 +2,10 @@
 set include BOOL off . 
 
 fmod FVP-BOOL is
-    sort Boolean .
-    ops true false : -> Boolean [ctor] .
+    sort Boolean True False .
+    subsorts True False < Boolean .
+    op true : -> True [ctor] .
+    op false : -> False [ctor] .
     op _and_ : Boolean Boolean -> Boolean [assoc comm] .
 
     var B : Boolean .

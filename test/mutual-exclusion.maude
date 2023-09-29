@@ -1,0 +1,26 @@
+load ../tool/param.maude
+load ../tool/state.maude
+load ../tool/tool.maude
+load ../model/mutual-exclusion.maude
+
+mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS is
+    protecting MUTUAL-EXCLUSION .
+    protecting MUTUAL-EXCLUSION-CONST .
+    protecting HNR-TOP .
+    including STATE . 
+
+    subsort Global < State .
+
+    vars O O' : Oid . 
+    var OS : OidSet .
+    var CF : Configuration .
+    var PHI : Bool .
+    vars N M N' M' : Natural .
+    var INIT : InitConfiguration .
+
+endm 
+
+{fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS :
+{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT))
+=>* 
+{< O : Client | status : crit(s) > CF} ||| PHI .
