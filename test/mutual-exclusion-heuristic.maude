@@ -1,12 +1,10 @@
 
 load ../tool/param.maude
-load aux-functions/onethirdrule-index.maude
-load aux-functions/onethirdrule-scoring-functions.maude
 load ../tool/state.maude
 load ../tool/tool.maude
-load ../model/lamport-bakery.maude
+load ../model/mutual-exclusion.maude
 
-fmod BAKERY-INDEX is
+fmod MUTUAL-EXCLUSION-INDEX is
     including INDEX .
 
     subsort Term < Index .
@@ -16,7 +14,7 @@ fmod BAKERY-INDEX is
     eq index(T) = T .
 endfm
 
-fmod BAKERY-SCORE-BFS is
+fmod MUTUAL-EXCLUSION-SCORE-BFS is
     including SCORE .
 
     subsort Nat < Score .
@@ -31,7 +29,7 @@ fmod BAKERY-SCORE-BFS is
     eq score(T, D) = D .
 endfm
 
-fmod BAKERY-SCORE-1 is
+fmod MUTUAL-EXCLUSION-SCORE-1 is
     including SCORE .
 
     subsort Nat < Score .
@@ -46,21 +44,22 @@ fmod BAKERY-SCORE-1 is
     eq N lt N' = N <  N' .
     eq N le N' = N <= N' .
 
-    eq score(F[T, T1, T2], D) = scoreAux(T2) .
+    eq score(F[T], D) = scoreAux(T) .
 
     op scoreAux : NeTermList -> Score .
     eq scoreAux('__[NTL]) = scoreAux(NTL) .
     eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
     eq scoreAux('<_:_|_>[TL]) =  1 . 
+    eq scoreAux('msg_from_to_[NETL]) = 1 .
     eq scoreAux(T) = 0 [owise] .
 endfm
 
 
 
 mod MAIN is
-    protecting BAKERY-ANALYSIS .
-    protecting BAKERY-INDEX .
-    protecting BAKERY-SCORE-1 .
+    protecting MUTUAL-EXCLUSION-ANALYSIS .
+    protecting MUTUAL-EXCLUSION-INDEX .
+    protecting MUTUAL-EXCLUSION-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
 
     vars N M : Natural .
@@ -73,8 +72,7 @@ endm
 
 set print attribute on .
 
-red heuristic-narrow {filter delay} in 'BAKERY-ANALYSIS : 
-      {0, 0, INIT} 
-  =>* {N, M, < O  : Node | status : crit(s s s s)  >
-               < O' : Node | status : crit(s s s s) > CF}
-  such that noDupl(getOids(INIT)) .
+red heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : crit(s s) > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .

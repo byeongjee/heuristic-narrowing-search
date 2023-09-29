@@ -21,6 +21,6 @@ mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS is
 endm 
 
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS :
-{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT))
+{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
 =>* 
-{< O : Client | status : crit(s) > CF} ||| PHI .
+{< O : Client | status : crit(s s) > CF} ||| PHI .

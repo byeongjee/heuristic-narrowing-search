@@ -11,8 +11,8 @@ mod MUTUAL-EXCLUSION-CLIENT-ATTS is
     sorts Status InitStatus .
     subsort InitStatus < Status .
 
-    op ready : Natural -> InitStatus [ctor] .
-    ops wait crit : Natural -> Status [ctor] .
+    op ready : FZero -> InitStatus [ctor] .
+    ops ready wait crit : Natural -> Status [ctor] .
 
     sorts StatusAttr InitStatusAttr .
     subsort InitStatusAttr < StatusAttr .
@@ -55,8 +55,10 @@ mod ALT-CONFIGURATION is
 
     sorts Server Client Cid .
     subsorts Server Client < Cid .
+
     op Server : -> Server [ctor] .
     op Client : -> Client [ctor] .
+
     op server : -> Oid [ctor] .
 
     sorts None Object Msg ObjectSet Configuration InitObject InitConfiguration .
@@ -67,9 +69,9 @@ mod ALT-CONFIGURATION is
     op __ : InitConfiguration InitConfiguration -> InitConfiguration [ctor assoc comm id: none] .
     op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
 
-    op <_:_|_> : Oid Server ServerAttrSet -> Object [ctor object] .
     op <_:_|_> : Oid Client InitStatusAttr -> InitObject [ctor object] .
     op <_:_|_> : Oid Client StatusAttr -> Object [ctor object] .
+    op <_:_|_> : Oid Server ServerAttrSet -> Object [ctor object] .
 endm
 
 mod GLOBAL is
@@ -100,7 +102,9 @@ mod MUTUAL-EXCLUSION is
 
     rl [requestAccessToCS] : 
     {< O : Client | status : ready(N) > CONF}
-    => {< O : Client | status : wait(N) > (msg request from O to server) CONF}
+    => 
+    {< O : Client | status : wait(N) > 
+    (msg request from O to server) CONF}
     [narrowing] .
 
     rl [grantAccess] : 
@@ -113,10 +117,18 @@ mod MUTUAL-EXCLUSION is
 
     rl [putInWaitQueue] : 
     {(msg request from O to server) 
-    < server : Server | nodeInCs : true, waiting : OL, ATTS:FlagAttr > CONF}
-    => {< server : Server | waiting : (OL :: O), ATTS:FlagAttr > CONF} 
+    < server : Server | nodeInCs : true, waiting : OL > CONF}
+    => 
+    {< server : Server | nodeInCs : true, waiting : (OL :: O) > CONF} 
     [narrowing] .
 
+    rl [startExecutingInCS] :
+    {(msg accessGranted from server to O)
+     < O : Client | status : wait(N) >
+     CONF}
+   =>
+   {< O : Client | status : crit(N) > CONF} 
+   [narrowing] .
 
     rl [exitCS] :
     {< O : Client | status : crit(N) > CONF}
