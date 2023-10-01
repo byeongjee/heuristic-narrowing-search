@@ -13,6 +13,7 @@ mod MUTUAL-EXCLUSION-CLIENT-ATTS is
 
     op ready : FZero -> InitStatus [ctor] .
     ops ready wait crit : Natural -> Status [ctor] .
+    op error : -> Status [ctor] .
 
     sorts StatusAttr InitStatusAttr .
     subsort InitStatusAttr < StatusAttr .
@@ -100,14 +101,14 @@ mod MUTUAL-EXCLUSION is
     var CONF : Configuration .
     var OL : OidList .
 
-    rl [requestAccessToCS] : 
+    rl [request-access] : 
     {< O : Client | status : ready(N) > CONF}
     => 
     {< O : Client | status : wait(N) > 
     (msg request from O to server) CONF}
     [narrowing] .
 
-    rl [grantAccess] : 
+    rl [grant-access] : 
     {(msg request from O to server) 
     < server : Server | nodeInCs : false, ATTS:QueueAttr > CONF}
     => 
@@ -115,14 +116,14 @@ mod MUTUAL-EXCLUSION is
     (msg accessGranted from server to O) CONF} 
     [narrowing] .
 
-    rl [putInWaitQueue] : 
+    rl [put-in-queue] : 
     {(msg request from O to server) 
     < server : Server | nodeInCs : true, waiting : OL > CONF}
     => 
     {< server : Server | nodeInCs : true, waiting : (OL :: O) > CONF} 
     [narrowing] .
 
-    rl [startExecutingInCS] :
+    rl [start-cs] :
     {(msg accessGranted from server to O)
      < O : Client | status : wait(N) >
      CONF}
@@ -130,26 +131,32 @@ mod MUTUAL-EXCLUSION is
    {< O : Client | status : crit(N) > CONF} 
    [narrowing] .
 
-    rl [exitCS] :
+    rl [exit-cs] :
     {< O : Client | status : crit(N) > CONF}
     =>
     {< O : Client | status : ready(s N) > 
     (msg release from O to server) CONF}
     [narrowing] .
 
-    rl [nooneWaiting] :
+    rl [noone-waiting] :
     {(msg release from O to server) 
     < server : Server | waiting : nil, ATTS:FlagAttr > CONF}
     =>
     {< server : Server | nodeInCs : false, waiting : nil > CONF}
     [narrowing] .
 
-    rl [grantAccessToFirstWaiting] :
+    rl [grant-access-to-first-waiting] :
     {(msg release from O to server)
      < server : Server | waiting : O' :: OL, ATTS:FlagAttr > CONF}
     =>
     {< server : Server | waiting : OL, ATTS:FlagAttr > 
     (msg accessGranted from server to O') CONF}
+    [narrowing] .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
     [narrowing] .
 
 endm

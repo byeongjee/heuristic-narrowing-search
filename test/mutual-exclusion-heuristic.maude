@@ -29,16 +29,17 @@ fmod MUTUAL-EXCLUSION-SCORE-BFS is
     eq score(T, D) = D .
 endfm
 
-fmod MUTUAL-EXCLUSION-SCORE-1 is
+fmod MUTUAL-EXCLUSION-SCORE-BASE is
     including SCORE .
 
     subsort Nat < Score .
     
     vars N N' D : Nat .
-    vars T T1 T2 : Term .
+    var T : Term .
     var F : Qid .
-    var TL : TermList .
+    vars TL TL' : TermList .
     var NTL : NeTermList .
+    var V : Variable .
 
     eq N gt N' = N >  N' .
     eq N lt N' = N <  N' .
@@ -49,18 +50,63 @@ fmod MUTUAL-EXCLUSION-SCORE-1 is
     op scoreAux : NeTermList -> Score .
     eq scoreAux('__[NTL]) = scoreAux(NTL) .
     eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
-    eq scoreAux('<_:_|_>[TL]) =  1 . 
-    eq scoreAux('msg_from_to_[NETL]) = 1 .
+    eq scoreAux('msg_from_to_[NTL]) = 0 .
+    eq scoreAux('<_:_|_>[T, 'Server.Server]) = 0 .
     eq scoreAux(T) = 0 [owise] .
+
+    *** auxiliary function
+    op toNumber : TermList -> Nat .
+    eq toNumber(('s.Natural, TL)) = s(toNumber(TL)) .
+    eq toNumber('__[TL]) = toNumber(TL) . 
+    eq toNumber(V) = 0 .
+    eq toNumber(empty) = 0 .
 endfm
 
+fmod MUTUAL-EXCLUSION-SCORE-1 is
+    including MUTUAL-EXCLUSION-SCORE-BASE .
 
+    vars T1 T2 T3 : Term .
+    var F : Qid .
+
+    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_[F[T3]]])
+    = 10 + toNumber(T3) .
+
+    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 10 .
+
+endfm
+
+fmod MUTUAL-EXCLUSION-SCORE-2 is
+    including MUTUAL-EXCLUSION-SCORE-BASE .
+
+    vars T1 T2 T3 : Term .
+    var F : Qid .
+
+    eq scoreAux('<_:_|_>[T1, T2, 'status`:_[F[T3]]])
+    = 5 + toNumber(T3) .
+    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 5 .
+endfm
+
+fmod MUTUAL-EXCLUSION-SCORE-3 is
+    including MUTUAL-EXCLUSION-SCORE-BASE .
+
+    vars T1 T2 T3 : Term .
+    var F : Qid .
+
+    eq scoreAux('<_:_|_>[T1, T2, 'status`:_[F[T3]]])
+    = 1 + toNumber(T3) .
+    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 1 .
+endfm
 
 mod MAIN is
     protecting MUTUAL-EXCLUSION-ANALYSIS .
     protecting MUTUAL-EXCLUSION-INDEX .
-    protecting MUTUAL-EXCLUSION-SCORE-1 .
     protecting HEURISTIC-NARROWING-DRIVER .
+
+endm
+
+mod TEST-BFS is
+    protecting MAIN .
+    protecting MUTUAL-EXCLUSION-SCORE-BFS .
 
     vars N M : Natural .
     vars O O' : Oid .
@@ -70,9 +116,59 @@ mod MAIN is
     var CF : Configuration .
 endm
 
-set print attribute on .
+mod TEST-1 is
+    protecting MAIN .
+    protecting MUTUAL-EXCLUSION-SCORE-1 .
 
-red heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+    vars N M : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INIT : InitConfiguration .
+    vars ATTS ATTS' : StatusAttr .
+    var CF : Configuration .
+endm
+
+mod TEST-2 is
+    protecting MAIN .
+    protecting MUTUAL-EXCLUSION-SCORE-2 .
+
+    vars N M : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INIT : InitConfiguration .
+    vars ATTS ATTS' : StatusAttr .
+    var CF : Configuration .
+endm
+
+mod TEST-3 is
+    protecting MAIN .
+    protecting MUTUAL-EXCLUSION-SCORE-3 .
+
+    vars N M : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INIT : InitConfiguration .
+    vars ATTS ATTS' : StatusAttr .
+    var CF : Configuration .
+endm
+
+
+red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
       {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : crit(s s) > CF}
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
