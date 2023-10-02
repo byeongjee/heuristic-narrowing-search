@@ -82,7 +82,7 @@ fmod MUTUAL-EXCLUSION-SCORE-2 is
     var F : Qid .
 
     eq scoreAux('<_:_|_>[T1, T2, 'status`:_[F[T3]]])
-    = 5 + toNumber(T3) .
+    = 2 + toNumber(T3) .
     eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 5 .
 endfm
 
@@ -98,7 +98,7 @@ fmod MUTUAL-EXCLUSION-SCORE-3 is
 endfm
 
 mod MAIN is
-    protecting MUTUAL-EXCLUSION-ANALYSIS .
+    protecting MUTUAL-EXCLUSION-ANALYSIS-BASE .
     protecting MUTUAL-EXCLUSION-INDEX .
     protecting HEURISTIC-NARROWING-DRIVER .
 
@@ -153,22 +153,69 @@ mod TEST-3 is
 endm
 
 
-red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+--- error threshold 2
+red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
       {INIT < server : Server | ATTS:InitServerAttrSet >} 
   =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
 
-red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
       {INIT < server : Server | ATTS:InitServerAttrSet >} 
   =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
 
-red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
       {INIT < server : Server | ATTS:InitServerAttrSet >} 
   =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
 
-red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS : 
+
+--- error threshold 3
+red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+
+--- error threshold 4
+red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+
+--- bfs tests
+red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
+      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+  =>* {< O : Client | status : error > CF}
+  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+
+red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
       {INIT < server : Server | ATTS:InitServerAttrSet >} 
   =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .

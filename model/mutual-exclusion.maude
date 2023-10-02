@@ -153,12 +153,49 @@ mod MUTUAL-EXCLUSION is
     (msg accessGranted from server to O') CONF}
     [narrowing] .
 
+
+endm
+
+mod MUTUAL-EXCLUSION-2 is
+    protecting MUTUAL-EXCLUSION .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
+    [narrowing] .
+endm
+
+mod MUTUAL-EXCLUSION-3 is
+    protecting MUTUAL-EXCLUSION .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
     rl [bug] :
     {< O : Client | status : crit(s s s N) > CONF}
     =>
     {< O : Client | status : error > CONF}
     [narrowing] .
+endm
 
+mod MUTUAL-EXCLUSION-4 is
+    protecting MUTUAL-EXCLUSION .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
+    [narrowing] .
 endm
 
 mod MUTUAL-EXCLUSION-CONST is
@@ -182,10 +219,52 @@ mod MUTUAL-EXCLUSION-CONST is
 
 endm
 
-mod MUTUAL-EXCLUSION-ANALYSIS is
+mod MUTUAL-EXCLUSION-ANALYSIS-BASE is
     protecting MUTUAL-EXCLUSION .
     protecting MUTUAL-EXCLUSION-CONST .
     including STATE .
     subsort Global < State .
     eq inv(S:State) = true .
+endm
+
+mod MUTUAL-EXCLUSION-ANALYSIS-2 is
+    protecting MUTUAL-EXCLUSION-ANALYSIS-BASE .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
+    [narrowing] .
+endm
+
+mod MUTUAL-EXCLUSION-ANALYSIS-3 is
+    protecting MUTUAL-EXCLUSION-ANALYSIS-BASE .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
+    [narrowing] .
+endm
+
+mod MUTUAL-EXCLUSION-ANALYSIS-4 is
+    protecting MUTUAL-EXCLUSION-ANALYSIS-BASE .
+
+    var O : Oid .
+    var N : Natural .
+    var CONF : Configuration .
+
+    rl [bug] :
+    {< O : Client | status : crit(s s s s N) > CONF}
+    =>
+    {< O : Client | status : error > CONF}
+    [narrowing] .
 endm
