@@ -48,7 +48,7 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
         CF
     ) [narrowing] .
 
-    rl [decide-1-v1] :
+    rl [decide-1-v2] :
     {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S > 
         CF
@@ -71,7 +71,7 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
     } [narrowing] .
 
 
-    rl [update-1-v2] : 
+    rl [update-1-v1] : 
     {TH, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [V1, V2, VA], ATTS:U2S >
         CF
