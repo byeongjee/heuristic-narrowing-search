@@ -6,7 +6,7 @@ fmod VALUE is
     subsort  Value < Value? .
     subsort InitValue? < Value? .
 
-    ops v1 v2 : -> Value [ctor] .
+    subsort Natural < Value .
 
     op nil : -> InitValue? [ctor] .
 endfm
@@ -43,14 +43,20 @@ fmod VOTE-MAP is
     protecting FVP-NAT .
     protecting VALUE .
 
-    sorts VoteMap VoteMapEntry .
-    subsort VoteMapEntry < VoteMap .
+    sorts  VoteMap InitVoteMap Entry InitEntry .
+    subsort InitEntry < Entry InitVoteMap < VoteMap .
 
-    op  _|->_ : Value Natural -> VoteMapEntry [ctor prec 50] .
+    op  _|->_ : Value Natural -> Entry [ctor prec 50] .
+    op  _|->_ : Value FZero -> InitEntry [ctor prec 50] .
 
-    op empty : -> VoteMap [ctor] .
-    op _;_ : VoteMap VoteMap -> VoteMap [ctor assoc comm id: empty prec 60] .
+    op none : -> InitEntry [ctor] .
+    op _;_ : VoteMap VoteMap -> VoteMap [ctor assoc comm id: none prec 60] .
+    op _;_ : InitVoteMap InitVoteMap -> InitVoteMap [ctor assoc comm id: none prec 60] .
 endfm
+
+view VoteMap from TRIV to VOTE-MAP is
+    sort Elt to VoteMap .
+endv
 
 fmod VOTE is
     protecting VOTE-MAP .
@@ -63,22 +69,24 @@ fmod VOTE is
     vars N NA N1 N2 TH : Natural .
     var VMAP : VoteMap .
 
-    eq update([v1 |-> N ; VMAP, NA], v1) = [v1 |-> s N ; VMAP, s NA] [variant] .  
-    eq update([v2 |-> N ; VMAP, NA], v2) = [v2 |-> s N ; VMAP, s NA] [variant] .  
+    eq update([0 |-> N ; VMAP, NA], 0) = [0 |-> s N ; VMAP, s NA] [variant] .  
+    eq update([s |-> N ; VMAP, NA], s) = [s |-> s N ; VMAP, s NA] [variant] .  
 
     op genConst : Value Vote Natural -> Boolean .
 
-    eq genConst(v1, [v1 |-> N1 ; v2 |-> N2, NA], TH) 
+    eq genConst(0, [0 |-> N1 ; s |-> N2, NA], TH) 
     = (N1 < TH) and (TH <= NA) and (N2 <= N1) [variant] .
 
-    eq genConst(v2, [v1 |-> N1 ; v2 |-> N2, NA], TH) 
+    eq genConst(s, [0 |-> N1 ; s |-> N2, NA], TH) 
     = (N2 < TH) and (TH <= NA) and (N1 < N2) [variant] .
 
     sort InitVote .
     subsort InitVote < Vote .
 
+    op [_,_] : InitVoteMap FZero -> InitVote [ctor prec 70] .
+
     op initVote : -> InitVote .
-    eq initVote = [v1 |-> 0 ; v2 |-> 0, 0] [variant] .
+    eq initVote = [0 |-> 0 ; s |-> 0, 0] [variant] .
 endfm
 
 

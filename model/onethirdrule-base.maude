@@ -60,9 +60,11 @@ endm
 mod ONETHIRDRULE-CONST is
     protecting ALT-CFIGURATION .
     protecting SET{Natural} .
+    protecting SET{VoteMap} .
     protecting BOOL .
 
-    vars N N' R : Natural . 
+    vars N N' R N1 N2 N3 : Natural . 
+    vars V V1 V2 V3 : Value .
     var Z : FZero .  
     var S : Step .
     var CF : Configuration . 
@@ -70,6 +72,8 @@ mod ONETHIRDRULE-CONST is
     var O : Oid . 
     var OS : OidSet .
     var NS : Set{Natural} .
+    var VMAP : VoteMap .
+    var VMAPS : Set{VoteMap} .
 
     op noDupl : OidSet -> Bool .
     eq noDupl(O ; O ; OS) = false .
@@ -99,4 +103,21 @@ mod ONETHIRDRULE-CONST is
     eq valid1/2(s s N', s N) = valid1/2(N', N) .
     eq valid1/2(N, Z) = false .
     eq valid1/2(s N, s N N') = true .
+
+    op twoVoteMapEntry : Configuration -> Bool .
+
+    op getVoteMaps : Configuration -> Set{VoteMap} .
+    eq getVoteMaps(< O : Node | votes : [VMAP, N], ATTS:U123S > CF) 
+    = VMAP, getVoteMaps(CF) .
+    eq getVoteMaps(MSG CF) = getVoteMaps(CF) .
+    eq getVoteMaps(none) = empty .
+
+    op hasTwoEntries : Set{VoteMap} -> Bool .
+    eq hasTwoEntries(((V1 |-> N1 ; V2 |-> N2 ; V3 |-> N3 ; VMAP), VMAPS)) = false .
+    eq hasTwoEntries((V1 |-> N1, VMAPS)) = false .
+    eq hasTwoEntries((V1 |-> N1 ; V2 |-> N2, VMAPS)) = hasTwoEntries(VMAPS) .
+    eq hasTwoEntries((V |-> N1 ; V |-> N2, VMAPS)) = false . --- no duplicate key allowed
+    eq hasTwoEntries(empty) = true .
+
+    eq twoVoteMapEntry(CF) = hasTwoEntries(getVoteMaps(CF)) .
 endm

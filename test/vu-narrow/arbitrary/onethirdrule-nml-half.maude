@@ -6,9 +6,10 @@ load ../../../model/onethirdrule-vu-narrow.maude
 
 {fold} vu-narrow {filter,delay} [1] in ONETHIRDRULE-NML-VU-NARROW-ANALYSIS :
 {TH, OS, INITIAL} ||| (noDupl(OS) and noDupl(getOids(INITIAL)) and 
-            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH))
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH)
+            and twoVoteMapEntry(INITIAL))
 =>* 
 {TH, OS,
-< O : Node | decision : v1, ATTS >
-< O' : Node | decision : v2, ATTS' >
+< O : Node | decision : 0, ATTS >
+< O' : Node | decision : s, ATTS' >
 CF} ||| PHI .
