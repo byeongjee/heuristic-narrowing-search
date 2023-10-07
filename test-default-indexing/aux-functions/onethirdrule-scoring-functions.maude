@@ -1,0 +1,96 @@
+
+fmod ONETHIRDRULE-SCORE-BFS is
+    including SCORE .
+
+    subsort Nat < Score .
+
+    vars N N' D : Nat .
+    vars T : Term .
+
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
+
+    eq score(T, D) = D .
+endfm
+
+--- for SCORE-G and SCORE-1
+fmod ONETHIRDRULE-SCORE-BASE is
+    including SCORE .
+    protecting INT .
+
+    vars N N' D : Nat .
+    vars T T1 T2 T3 T4 T5 : Term .
+    vars F : Qid .
+    var TL : TermList .
+    var NTL : NeTermList .
+    var V : Variable .
+
+    subsort Nat < Score .
+
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
+
+    eq score(F[T, T1, T2], D) =  scoreAux(T2) .
+    eq score(F[T, T1, T2, T3, T4, T5], D) =  scoreAux((T4, T5)) .
+
+    op scoreAux : NeTermList -> Score .
+    eq scoreAux('__[NTL]) = scoreAux(NTL) .
+    eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
+    eq scoreAux(T) = 0 [owise] .
+
+    *** auxiliary function
+    op toNumber : TermList -> Nat .
+    eq toNumber(('s.Natural, TL)) = s(toNumber(TL)) .
+    eq toNumber('__[TL]) = toNumber(TL) . 
+    eq toNumber(V) = 0 .
+    eq toNumber(empty) = 0 .
+endfm
+
+fmod ONETHIRDRULE-SCORE-G is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    var TL : TermList .
+
+    eq scoreAux('<_:_|_>[TL]) =  1 . 
+endfm
+
+
+fmod ONETHIRDRULE-SCORE-1 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -9 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-2 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -1 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+
+fmod ONETHIRDRULE-SCORE-3 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    subsort Int < Score .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 100 + 10 * max(1, toNumber(T3)) .
+
+    eq scoreAux('multicast_from_to_[TL]) = -1 .
+endfm

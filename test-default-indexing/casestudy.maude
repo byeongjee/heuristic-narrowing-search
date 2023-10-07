@@ -1,0 +1,34 @@
+
+load ../tool/param.maude
+load aux-functions/onethirdrule-index.maude
+load aux-functions/onethirdrule-scoring-functions.maude
+
+load ../tool/state.maude
+load ../tool/tool.maude
+
+load ../model/onethirdrule.maude
+
+
+mod MAIN is
+    protecting ONETHIRDRULE-ANALYSIS .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var TH : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+
+set print attribute on .
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {TH, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH)
+            and twoVoteMapEntry(INITIAL) .

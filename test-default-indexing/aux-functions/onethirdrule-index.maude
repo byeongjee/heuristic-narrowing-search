@@ -1,0 +1,28 @@
+fmod ONETHIRDRULE-INDEX-AUX is
+    including META-TERM .
+
+    vars T : Term .
+    var NTL : NeTermList .
+    vars N N' : Nat .
+    var CI : ConfigInfo .
+
+    sort ConfigInfo .
+    op {_,_} : Nat Nat -> ConfigInfo [ctor] .
+
+    op getInfo : NeTermList ConfigInfo -> ConfigInfo .
+    eq getInfo('__[NTL], CI) = getInfo(NTL, CI) .
+    eq getInfo((T, NTL), CI) = getInfo(NTL, getInfo(T, CI)) .
+    eq getInfo('multicast_from_to_[NTL], {N, N'}) = {s(N), N'} .
+    eq getInfo('<_:_|_>[NTL], {N, N'}) = {N, s(N')} .
+    eq getInfo(T, CI) = CI [owise] .
+endfm
+
+
+fmod ONETHIRDRULE-INDEX is
+    including DEFAULT-INDEX .
+endfm
+
+
+mod ONETHIRDRULE-VU-NARROW-INDEX is
+    including DEFAULT-INDEX .
+endm

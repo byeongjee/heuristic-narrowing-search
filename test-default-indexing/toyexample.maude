@@ -1,0 +1,67 @@
+load ../tool/state.maude
+load ../tool/param.maude
+load ../tool/tool.maude
+
+
+mod EXAMPLE-SYSTEM is
+    sort Natural .
+    op 0 : -> Natural [ctor] .
+    op s : Natural -> Natural [ctor] .
+
+    sort Global .
+    ops f g : Natural -> Global .
+
+    var N : Natural .
+
+    rl [l1]: f(s(N)) => f(N) [narrowing] .
+    rl [l2]: g(s(N)) => g(N) [narrowing] .
+    rl [l3]: f(s(N)) => g(N) [narrowing] .
+endm
+
+
+mod EXAMPLE-SYSTEM-WITH-INV is
+    protecting EXAMPLE-SYSTEM .
+    including STATE .
+
+    subsort Global < State .
+
+    var N : Natural .
+
+    eq inv(g(s(s(s(N))))) = false .
+    eq inv(f(s(s(s(N))))) = false .
+endm
+
+
+fmod EXAMPLE-2-SCORE is
+    including SCORE .
+    protecting NAT .
+
+    subsort Nat < Score .
+
+    vars N N' : Nat .
+
+    eq N gt N' = N >  N' .
+    eq N lt N' = N <  N' .
+    eq N le N' = N <= N' .
+
+    var F : Qid .
+    var T : Term .
+    var D : Nat .
+
+    eq score(F[T], D) = 1 + score(T, D) .
+    eq score(T, D) = 1 [owise] .
+endfm
+
+
+mod MAIN is
+    protecting EXAMPLE-SYSTEM-WITH-INV .
+    protecting HEURISTIC-NARROWING-DRIVER .
+    protecting EXAMPLE-2-SCORE .
+    protecting DEFAULT-INDEX .
+
+    vars X Y : Natural .
+endm
+
+
+red heuristic-narrow {filter delay} in 'EXAMPLE-SYSTEM-WITH-INV : 
+    f(X) =>* g(X) such that true .

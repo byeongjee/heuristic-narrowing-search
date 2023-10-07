@@ -1,0 +1,108 @@
+
+load ../tool/param.maude
+load aux-functions/onethirdrule-index.maude
+load aux-functions/onethirdrule-scoring-functions.maude
+
+load ../tool/state.maude
+load ../tool/tool.maude
+
+load ../model/onethirdrule.maude
+
+
+mod MAIN is
+    protecting ONETHIRDRULE-ANALYSIS .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var TH : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    var IOBJ1 IOBJ2 IOBJ3 : InitObject .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {s, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
+            sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {TH, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
+            sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) and 
+            valid1/2(numObjs(IOBJ1 IOBJ2 IOBJ3), TH) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {TH, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) .
+
+
+
+mod MAIN-NML is
+    protecting ONETHIRDRULE-NML-ANALYSIS .
+    protecting ONETHIRDRULE-INDEX .
+    protecting ONETHIRDRULE-SCORE-1 .
+    protecting HEURISTIC-NARROWING-DRIVER .
+
+    var TH : Natural .
+    vars O O' : Oid .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    var IOBJ1 IOBJ2 IOBJ3 : InitObject .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
+            sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {s, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {TH, OS, IOBJ1 IOBJ2 IOBJ3} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(IOBJ1 IOBJ2 IOBJ3)) and 
+            sameRound(getRounds(IOBJ1 IOBJ2 IOBJ3)) and 
+            valid1/2(numObjs(IOBJ1 IOBJ2 IOBJ3), TH) .
+
+
+red heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
+      {TH, OS, INITIAL} 
+  =>* {TH, OS, < O  : Node | decision : v1,  ATTS  >
+              < O' : Node | decision : v2, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) .
+
