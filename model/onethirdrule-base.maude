@@ -116,7 +116,7 @@ mod ONETHIRDRULE-CONST is
     eq hasTwoEntries(((V1 |-> N1 ; V2 |-> N2 ; V3 |-> N3 ; VMAP), VMAPS)) = false .
     eq hasTwoEntries((V1 |-> N1, VMAPS)) = false .
     eq hasTwoEntries((V1 |-> N1 ; V2 |-> N2, VMAPS)) = hasTwoEntries(VMAPS) .
-    eq hasTwoEntries((V |-> N1 ; V |-> N2, VMAPS)) = false . --- no duplicate key allowed
+    eq hasTwoEntries((V |-> N1 ; V |-> N2 ; VMAP, VMAPS)) = false . --- no duplicate key allowed
     eq hasTwoEntries(empty) = true .
 
     eq twoVoteMapEntry(CF) = hasTwoEntries(getVoteMaps(CF)) .
