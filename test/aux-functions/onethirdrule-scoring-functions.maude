@@ -42,7 +42,7 @@ fmod ONETHIRDRULE-SCORE-BASE is
 
     *** auxiliary function
     op toNumber : TermList -> Nat .
-    eq toNumber(('s.Natural, TL)) = s(toNumber(TL)) .
+    eq toNumber(('s.NzNatural, TL)) = s(toNumber(TL)) .
     eq toNumber('__[TL]) = toNumber(TL) . 
     eq toNumber(V) = 0 .
     eq toNumber(empty) = 0 .

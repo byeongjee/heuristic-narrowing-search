@@ -8,9 +8,10 @@ fmod FVP-BOOL is
     op false : -> False [ctor] .
     op _and_ : Boolean Boolean -> Boolean [assoc comm] .
 
-    var B : Boolean .
+    vars B  X : Boolean .
 
     eq true and B = B [variant] .
     eq false and B = false [variant] .
     eq B and B = B [variant] .
+    eq B and B and X = B and X [variant] . --- for coherence completion
 endfm

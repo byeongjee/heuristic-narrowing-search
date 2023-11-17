@@ -3,19 +3,23 @@
 fmod FVP-NAT is
     protecting FVP-BOOL .
 
-    sort FZero Natural .
-    subsort FZero < Natural .
+    sort FZero Natural NzNatural .
+    subsort FZero NzNatural < Natural .
     op 0 : -> FZero [ctor] .
-    op s : -> Natural [ctor] .
+    op s : -> NzNatural [ctor] .
+    --- op __ : FZero FZero -> FZero [ctor assoc comm id: 0].
+    op __ : NzNatural Natural -> NzNatural [ctor assoc comm id: 0].
     op __ : Natural Natural -> Natural [ctor assoc comm id: 0].
 
     vars N N' : Natural .
 
     ops _<=_ _<_ : Natural Natural -> Boolean .
-    eq N <= N N' = true [variant] .
-    eq N < N' = s N <= N' [variant] .
-    eq N <= N N' = true .
-    eq N < N' = s N <= N' .
+
+    eq N       <= N N'  = true  [variant] .
+    eq N N' s  <= N     = false [variant] .
+
+    eq N    <  N N' s  = true  [variant] . 
+    eq N N' <  N       = false [variant] .
 endfm
 
 
