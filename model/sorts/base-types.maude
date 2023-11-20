@@ -69,8 +69,9 @@ fmod VOTE is
     vars N NA N1 N2 TH : Natural .
     var VMAP : VoteMap .
 
-    eq update([0 |-> N ; VMAP, NA], 0) = [0 |-> s N ; VMAP, s NA] [variant] .  
-    eq update([s |-> N ; VMAP, NA], s) = [s |-> s N ; VMAP, s NA] [variant] .  
+    var V : Value .
+
+    eq update([V |-> N ; VMAP, NA], V) = [V |-> s N ; VMAP, s NA] [variant] .  
 
     op genConst : Value Vote Natural -> Boolean .
 
