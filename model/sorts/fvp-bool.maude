@@ -2,16 +2,22 @@
 set include BOOL off . 
 
 fmod FVP-BOOL is
-    sort Boolean True False .
-    subsorts True False < Boolean .
-    op true : -> True [ctor] .
-    op false : -> False [ctor] .
-    op _and_ : Boolean Boolean -> Boolean [assoc comm] .
+  sort Boolean .
+  ops true false : -> Boolean [ctor] .
+  op not_ : Boolean -> Boolean .
+  op _and_ : Boolean Boolean -> Boolean [assoc comm] .
+  op _xor_ : Boolean Boolean -> Boolean [assoc comm] .
+  op _or_ : Boolean Boolean -> Boolean .
 
-    vars B  X : Boolean .
+  vars X Y : Boolean .
 
-    eq true and B = B [variant] .
-    eq false and B = false [variant] .
-    eq B and B = B [variant] .
-    eq B and B and X = B and X [variant] . --- for coherence completion
+  eq X and true = X [variant] .
+  eq X and false = false [variant] . 
+  eq X and X = X [variant].
+  eq X and X and Y = X and Y [variant] .  --- AC extension
+  eq X xor false = X [variant] .
+  eq X xor X = false [variant] .  --- AC extension
+  eq X xor X xor Y = Y [variant] .
+  eq not X = X xor true [variant] .
+  eq X or Y = (X and Y) xor X xor Y [variant] . 
 endfm

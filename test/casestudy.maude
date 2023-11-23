@@ -26,9 +26,10 @@ endm
 set print attribute on .
 
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {TH, OS, INITIAL} 
-  =>* {TH, OS, < O  : Node | decision : 0, ATTS  >
+      {TH, s s, OS, INITIAL} 
+  =>* {TH, s s, OS, < O  : Node | decision : 0, ATTS  >
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
-            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH)
-            and twoVoteMapEntry(INITIAL) .
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
+            and noDuplicateVoteMap(getVoteMaps(INITIAL)) .
+            --- and numVoteMapOkay(s s, getVoteMaps(INITIAL)) .

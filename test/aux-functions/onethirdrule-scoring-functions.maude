@@ -20,7 +20,7 @@ fmod ONETHIRDRULE-SCORE-BASE is
     protecting INT .
 
     vars N N' D : Nat .
-    vars T T1 T2 T3 T4 T5 : Term .
+    vars T T1 T2 T3 T4 T5 T6 : Term .
     vars F : Qid .
     var TL : TermList .
     var NTL : NeTermList .
@@ -32,8 +32,8 @@ fmod ONETHIRDRULE-SCORE-BASE is
     eq N lt N' = N <  N' .
     eq N le N' = N <= N' .
 
-    eq score(F[T, T1, T2], D) =  scoreAux(T2) .
-    eq score(F[T, T1, T2, T3, T4, T5], D) =  scoreAux((T4, T5)) .
+    eq score(F[T, T1, T2, T3], D) =  scoreAux(T3) .
+    eq score(F[T, T1, T2, T3, T4, T5, T6], D) =  scoreAux((T5, T6)) .
 
     op scoreAux : NeTermList -> Score .
     eq scoreAux('__[NTL]) = scoreAux(NTL) .

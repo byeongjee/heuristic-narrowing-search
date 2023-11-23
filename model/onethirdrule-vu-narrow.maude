@@ -21,9 +21,9 @@ mod ONETHIRDRULE-VU-NARROW-ANALYSIS is
     op init3 : Natural Oid Oid Oid Natural Value Value Value -> Global .
     eq init3(TH, O1, O2, O3, R, V1, V2, V3)
     = {TH, O1 ; O2 ; O3,
-        < O1 : Node | status : [R, init], value : V1, decision : nil, votes : initVote >
-        < O2 : Node | status : [R, init], value : V2, decision : nil, votes : initVote >
-        < O3 : Node | status : [R, init], value : V3, decision : nil, votes : initVote >} .
+        < O1 : Node | status : [R, init], value : V1, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >
+        < O2 : Node | status : [R, init], value : V2, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >
+        < O3 : Node | status : [R, init], value : V3, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >} .
 endm
 
 mod ONETHIRDRULE-NML-VU-NARROW-ANALYSIS is
@@ -46,7 +46,7 @@ mod ONETHIRDRULE-NML-VU-NARROW-ANALYSIS is
     op init3 : Natural Oid Oid Oid Natural Value Value Value -> Global .
     eq init3(TH, O1, O2, O3, R, V1, V2, V3)
     = {TH, O1 ; O2 ; O3,
-        < O1 : Node | status : [R, init], value : V1, decision : nil, votes : initVote >
-        < O2 : Node | status : [R, init], value : V2, decision : nil, votes : initVote >
-        < O3 : Node | status : [R, init], value : V3, decision : nil, votes : initVote >} .
+        < O1 : Node | status : [R, init], value : V1, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >
+        < O2 : Node | status : [R, init], value : V2, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >
+        < O3 : Node | status : [R, init], value : V3, decision : nil, votes : [0 |-> 0 ; s |-> 0, 0] >} .
 endm
