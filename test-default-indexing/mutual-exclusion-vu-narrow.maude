@@ -52,16 +52,16 @@ mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-4 is
 endm 
 
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-2 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
+{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
 =>* 
-{< O : Client | status : error > CF} ||| PHI .
+{< O : Client | status : error > CF} || PHI .
 
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-3 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
+{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
 =>* 
-{< O : Client | status : error > CF} ||| PHI .
+{< O : Client | status : error > CF} || PHI .
 
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-4 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} ||| noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
+{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
 =>* 
-{< O : Client | status : error > CF} ||| PHI .
+{< O : Client | status : error > CF} || PHI .

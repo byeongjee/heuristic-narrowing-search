@@ -85,7 +85,7 @@ fmod VOTE is
 
     op [_,_] : InitVoteMap FZero -> InitVote [ctor prec 70] .
 
-    op reset : VoteMap Natural -> VoteMap .
+    op reset : VoteMap Natural ~> VoteMap .
     eq reset(none, 0) = none [variant] .
     eq reset((V |-> N) ; VM, s NV) = (V |-> 0) ; reset(VM, NV) [variant] .
 endfm

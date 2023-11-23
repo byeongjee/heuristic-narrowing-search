@@ -5,11 +5,11 @@ load ../../../tool/state.maude
 load ../../../model/onethirdrule-vu-narrow.maude
 
 {fold} vu-narrow {filter,delay} [1] in ONETHIRDRULE-VU-NARROW-ANALYSIS :
-{TH, OS, INITIAL} ||| (noDupl(OS) and noDupl(getOids(INITIAL)) and 
+{TH, OS, INITIAL} || (noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH)
             and twoVoteMapEntry(INITIAL))
 =>* 
 {TH, OS,
 < O : Node | decision : 0, ATTS >
 < O' : Node | decision : s, ATTS' >
-CF} ||| PHI .
+CF} || PHI .
