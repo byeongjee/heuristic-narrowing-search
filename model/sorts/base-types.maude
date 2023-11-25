@@ -75,7 +75,7 @@ fmod VOTE is
 
     op genConst : Value Natural VoteMap  Natural ~> Boolean .
 
-    eq genConst(V, N, none, s) = true [variant] .
+    eq genConst(V, N, none, 0) = true [variant] .
     eq genConst(V, N, (V' |-> N') ; VM, s NV)
     = ((N < N') or ((N <= N') and (V < V')))
      and genConst(V, N, VM, NV) [variant] .
@@ -86,8 +86,8 @@ fmod VOTE is
     op [_,_] : InitVoteMap FZero -> InitVote [ctor prec 70] .
 
     op reset : VoteMap Natural ~> VoteMap .
-    eq reset(none, 0) = none [variant] .
-    eq reset((V |-> N) ; VM, s NV) = (V |-> 0) ; reset(VM, NV) [variant] .
+    eq reset(VM, 0) = none [variant] .
+    eq reset(VM, s NV) = (NV |-> 0) ; reset(VM, NV) [variant] .
 endfm
 
 

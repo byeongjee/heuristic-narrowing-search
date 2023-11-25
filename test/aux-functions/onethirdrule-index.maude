@@ -24,12 +24,12 @@ fmod ONETHIRDRULE-INDEX is
 
     op [_:_] : Qid ConfigInfo -> Index [ctor] .
 
-    vars T TN TO TV TB TOBJ TCF : Term .
+    vars T TN TNV TO TV TB TOBJ TCF : Term .
     var F : Qid .
     var TL : TermList .
 
-    eq index(F[TV, TB, TN, TO, TOBJ, TCF]) = [F : getInfo((TOBJ, TCF), {0,0})] .
-    eq index(F[TN, TO, TCF]) = [F : getInfo(TCF, {0,0})] .
+    eq index(F[TV, TB, TNV, TN, TO, TOBJ, TCF]) = [F : getInfo((TOBJ, TCF), {0,0})] .
+    eq index(F[TN, TNV, TO, TCF]) = [F : getInfo(TCF, {0,0})] .
 endfm
 
 

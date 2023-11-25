@@ -73,7 +73,7 @@ mod ONETHIRDRULE-CONST is
     var OS : OidSet .
     var NS : Set{Natural} .
     var VM : VoteMap .
-    var VMAPS : Set{VoteMap} .
+    var VMS : Set{VoteMap} .
 
     op noDupl : OidSet -> Bool .
     eq noDupl(O ; O ; OS) = false .
@@ -105,7 +105,7 @@ mod ONETHIRDRULE-CONST is
     eq valid1/2(s N, s N N') = true .
 
     op noDuplicateVoteMap : Set{VoteMap} -> Bool .
-    eq noDuplicateVoteMap((V |-> N1 ; V |-> N2 ; VM, VMAPS)) = false .
+    eq noDuplicateVoteMap((V |-> N1 ; V |-> N2 ; VM, VMS)) = false .
 
     op numItemsEq : Natural VoteMap -> Bool .
     eq numItemsEq(s N, ((V |-> N1) ; VM)) 
@@ -115,8 +115,8 @@ mod ONETHIRDRULE-CONST is
     eq numItemsEq(0, ((V |-> N) ; VM)) = false .
 
     op numVoteMapOkay : Natural Set{VoteMap} -> Bool .
-    eq numVoteMapOkay(N, (V |-> N1) ; VMAPS) 
-    = numItemsEq(N, V |-> N1) and numVoteMapOkay(N, VMAPS) .
+    eq numVoteMapOkay(N, (VM , VMS)) 
+    = numItemsEq(N, VM) and numVoteMapOkay(N, VMS) .
     eq numVoteMapOkay(N, empty) = true .
 
     op getVoteMaps : Configuration -> Set{VoteMap} .

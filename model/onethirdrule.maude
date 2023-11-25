@@ -63,13 +63,13 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
 
 
     rl [update-1] : 
-    {TH, NV, OS,
+    {TH, s NV, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [V |-> N ; VM, VA], ATTS:U2S >
         CF
     }
     =>
     update?(V, (V < TH) and (TH <= VA) and genConst(V, N, VM, NV),
-        TH, NV, OS,
+        TH, s NV, OS,
         < O : Node | status : [R, wait], decision : nil, votes : [V |-> N ; VM, VA], ATTS:U2S >,
         CF
     ) [narrowing] .
