@@ -56,6 +56,30 @@ mod GLOBAL is
     op update? :  Value Boolean Natural ValueSet OidSet Object Configuration -> Global [ctor] .
 endm
 
+fmod FUNCTIONS is
+    protecting VOTE .
+
+    vars N N' NA N1 N2 TH : Natural .
+    var VM : VoteMap .
+    var VS : ValueSet .
+
+    vars V V' : Value .
+
+    op update : Vote Value -> Vote .
+    eq update([V |-> N ; VM, NA], V) = [V |-> s N ; VM, s NA] [variant] .  
+
+    op genConst : Value Natural VoteMap ValueSet -> Boolean .
+
+    eq genConst(V, N, none, emptyVs) = true [variant] .
+    eq genConst(V, N, (V' |-> N') ; VM, (V' ; VS))
+    = ((N' < N) or ((N <= N') and (V < V')))
+     and genConst(V, N, VM, VS) [variant] .
+
+    op initVotes : ValueSet -> VoteMap .
+    eq initVotes(V ; VS) = (V |-> 0) ; initVotes(VS) [variant] .
+    eq initVotes(emptyVs) = none [variant] .
+endfm
+
 
 mod ONETHIRDRULE-CONST is
     protecting ALT-CFIGURATION .

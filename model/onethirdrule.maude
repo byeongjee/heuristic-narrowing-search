@@ -3,6 +3,7 @@ load ./onethirdrule-base.maude
 
 mod ONETHIRDRULE-NO-MSG-LOSS is
     including GLOBAL .
+    including FUNCTIONS .
     protecting MULTICAST .
 
     vars O O' : Oid . vars CF : Configuration . var C : Cid .
