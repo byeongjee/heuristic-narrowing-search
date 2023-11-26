@@ -51,9 +51,9 @@ mod GLOBAL is
     protecting FVP-NAT .
 
     sort Global .
-    op {_,_,_,_} : Natural Natural OidSet Configuration -> Global [ctor format (d d d d d s d s d d)] .
-    op decide? :  Value Boolean Natural Natural OidSet Object Configuration -> Global [ctor] .
-    op update? :  Value Boolean Natural Natural OidSet Object Configuration -> Global [ctor] .
+    op {_,_,_,_} : Natural ValueSet OidSet Configuration -> Global [ctor format (d d d d d s d s d d)] .
+    op decide? :  Value Boolean Natural ValueSet OidSet Object Configuration -> Global [ctor] .
+    op update? :  Value Boolean Natural ValueSet OidSet Object Configuration -> Global [ctor] .
 endm
 
 
@@ -74,6 +74,7 @@ mod ONETHIRDRULE-CONST is
     var NS : Set{Natural} .
     var VM : VoteMap .
     var VMS : Set{VoteMap} .
+    var VS : ValueSet .
 
     op noDupl : OidSet -> Bool .
     eq noDupl(O ; O ; OS) = false .
@@ -104,24 +105,22 @@ mod ONETHIRDRULE-CONST is
     eq valid1/2(N, Z) = false .
     eq valid1/2(s N, s N N') = true .
 
-    op noDuplicateVoteMap : Set{VoteMap} -> Bool .
-    eq noDuplicateVoteMap((V |-> N1 ; V |-> N2 ; VM, VMS)) = false .
-
-    op numItemsEq : Natural VoteMap -> Bool .
-    eq numItemsEq(s N, ((V |-> N1) ; VM)) 
-    = numItemsEq(N, VM) .
-    eq numItemsEq(0, none) = true .
-    eq numItemsEq(s N, none) = false .
-    eq numItemsEq(0, ((V |-> N) ; VM)) = false .
-
-    op numVoteMapOkay : Natural Set{VoteMap} -> Bool .
-    eq numVoteMapOkay(N, (VM , VMS)) 
-    = numItemsEq(N, VM) and numVoteMapOkay(N, VMS) .
-    eq numVoteMapOkay(N, empty) = true .
-
     op getVoteMaps : Configuration -> Set{VoteMap} .
     eq getVoteMaps(< O : Node | votes : [VM, N], ATTS:U123S > CF) 
     = VM, getVoteMaps(CF) .
     eq getVoteMaps(MSG CF) = getVoteMaps(CF) .
     eq getVoteMaps(none) = empty .
+
+    op checkVoteMap : ValueSet VoteMap -> Bool .
+    eq checkVoteMap(V ; VS, (V |-> N) ; VM) = checkVoteMap(VS, VM) .
+    eq checkVoteMap(emptyVs, (V |-> N) ; VM) = false .
+    eq checkVoteMap(V ; VS, none) = false .
+    eq checkVoteMap(emptyVs, none) = true .
+
+    op checkVoteMaps : ValueSet Set{VoteMap} -> Bool .
+    eq checkVoteMaps(VS, (VM, VMS)) = checkVoteMap(VS, VM) and checkVoteMaps(VS, VMS) .
+    eq checkVoteMaps(VS, empty) = true .
+
+    op areDifferent : Value Value -> Bool .
+    eq areDifferent(V, V) = false .
 endm

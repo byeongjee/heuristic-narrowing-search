@@ -101,11 +101,12 @@ fmod NARROWING-TRANSITION is
     op lesserSortsMem : Module Sort -> SortSet [memo] .
     eq lesserSortsMem(M, Q) = lesserSorts(M, Q) .
 
+    var LS : Qid .
     --- remove invalid states
     op filter : Module NarrowingApplyResult Nat -> Set{QItem} .
     ceq filter(M, {'_||_[T1,T2],TY,CXT,L,SUB,SUB',Q}, D) 
-      = if T' == 'bot.Top or 
-      not (leastSort(M, getState(T')) in lesserSorts(M, 'State))
+      = if T' == 'bot.Top 
+      --- or not (leastSort(M, getState(T')) in lesserSorts(M, 'State))
       then empty
         else makeItem(idxState(T'), Q, s(D)) fi
      if T' := getTerm(metaReduce(M, '_||_[T1,'_and_[T2,'inv[T1]]])) .

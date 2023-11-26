@@ -9,6 +9,11 @@ fmod VALUE is
     subsort Natural < Value .
 
     op nil : -> InitValue? [ctor] .
+
+    sort ValueSet .
+    subsort Value < ValueSet .
+    op emptyVs : -> ValueSet [ctor] .
+    op _;_ : ValueSet ValueSet -> ValueSet [ctor assoc comm id: emptyVs] .
 endfm
 
 
@@ -66,28 +71,29 @@ fmod VOTE is
 
     op update : Vote Value -> Vote .
 
-    vars N N' NA N1 N2 TH NV : Natural .
+    vars N N' NA N1 N2 TH : Natural .
     var VM : VoteMap .
+    var VS : ValueSet .
 
     vars V V' : Value .
 
     eq update([V |-> N ; VM, NA], V) = [V |-> s N ; VM, s NA] [variant] .  
 
-    op genConst : Value Natural VoteMap  Natural ~> Boolean .
+    op genConst : Value Natural VoteMap ValueSet -> Boolean .
 
-    eq genConst(V, N, none, 0) = true [variant] .
-    eq genConst(V, N, (V' |-> N') ; VM, s NV)
-    = ((N < N') or ((N <= N') and (V < V')))
-     and genConst(V, N, VM, NV) [variant] .
+    eq genConst(V, N, none, emptyVs) = true [variant] .
+    eq genConst(V, N, (V' |-> N') ; VM, (V' ; VS))
+    = ((N' < N) or ((N <= N') and (V < V')))
+     and genConst(V, N, VM, VS) [variant] .
 
     sort InitVote .
     subsort InitVote < Vote .
 
     op [_,_] : InitVoteMap FZero -> InitVote [ctor prec 70] .
 
-    op reset : VoteMap Natural ~> VoteMap .
-    eq reset(VM, 0) = none [variant] .
-    eq reset(VM, s NV) = (NV |-> 0) ; reset(VM, NV) [variant] .
+    op initVotes : ValueSet -> VoteMap .
+    eq initVotes(V ; VS) = (V |-> 0) ; initVotes(VS) [variant] .
+    eq initVotes(emptyVs) = none [variant] .
 endfm
 
 

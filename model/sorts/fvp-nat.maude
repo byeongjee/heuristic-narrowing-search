@@ -14,12 +14,16 @@ fmod FVP-NAT is
     vars N N' : Natural .
 
     ops _<=_ _<_ : Natural Natural -> Boolean .
+    op _equals_ : Natural Natural -> Boolean [comm] .
 
     eq N       <= N N'  = true  [variant] .
     eq N N' s  <= N     = false [variant] .
 
     eq N    <  N N' s  = true  [variant] . 
     eq N N' <  N       = false [variant] .
+
+    eq N equals N       = true [variant] .
+    eq N equals s N N'  = false [variant] .
 endfm
 
 
