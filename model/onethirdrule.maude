@@ -96,11 +96,12 @@ mod ONETHIRDRULE is
     var OS : OidSet . 
     var CF : Configuration . 
     var MSG : Msg .
+    var VS : ValueSet .
 
     rl [loss] : 
-    {TH, NV, OS, MSG CF}
+    {TH, VS, OS, MSG CF}
     =>
-    {TH, NV, OS, CF} [narrowing] .
+    {TH, VS, OS, CF} [narrowing] .
 endm
 
 

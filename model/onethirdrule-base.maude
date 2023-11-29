@@ -144,7 +144,4 @@ mod ONETHIRDRULE-CONST is
     op checkVoteMaps : ValueSet Set{VoteMap} -> Bool .
     eq checkVoteMaps(VS, (VM, VMS)) = checkVoteMap(VS, VM) and checkVoteMaps(VS, VMS) .
     eq checkVoteMaps(VS, empty) = true .
-
-    op areDifferent : Value Value -> Bool .
-    eq areDifferent(V, V) = false .
 endm
