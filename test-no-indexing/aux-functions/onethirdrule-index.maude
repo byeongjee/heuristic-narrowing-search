@@ -18,11 +18,18 @@ fmod ONETHIRDRULE-INDEX-AUX is
 endfm
 
 
+
 fmod ONETHIRDRULE-INDEX is
-    including DEFAULT-INDEX .
+    including INDEX .
+    --- FIXME: This is not no indexing, but we just use it now for simplicity 
+    op nothing : -> Index .
+    eq index(T:Term) = nothing .
 endfm
 
 
 mod ONETHIRDRULE-VU-NARROW-INDEX is
-    including DEFAULT-INDEX .
+    including INDEX .
+    --- FIXME: This is not no indexing, but we just use it now for simplicity 
+    op nothing : -> Index .
+    eq index(T:Term) = nothing .
 endm
