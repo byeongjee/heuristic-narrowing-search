@@ -16,12 +16,12 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
     var VOTE : Vote .
 
     rl [vote] : 
-    {TH, VS, O ; OS,
+    {TH, V ; VS, O ; OS,
         < O : Node | status : [R, init], value : V, decision : nil, votes : VOTE > 
         CF
     }
     =>
-    {TH, VS, O ; OS,
+    {TH, V ; VS, O ; OS,
         < O : Node | status : [R, wait], value : V, decision : nil, votes : update(VOTE, V) > 
         (multicast vote(V, R) from O to OS)
         CF
@@ -29,12 +29,12 @@ mod ONETHIRDRULE-NO-MSG-LOSS is
 
 
     rl [receive] :
-    {TH, VS, OS,
+    {TH, V ; VS, OS,
         < O : Node | status : [R, wait], decision : nil, votes : VOTE, ATTS:U2S > 
         (multicast vote(V, R) from O' to (O ; OS'))
         CF
     } =>
-    {TH, VS, OS,
+    {TH, V ; VS, OS,
         < O : Node | status : [R, wait], decision : nil, votes : update(VOTE, V), ATTS:U2S > 
         (multicast vote(V, R) from O' to OS')  
         CF
