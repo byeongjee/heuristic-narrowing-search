@@ -17,7 +17,6 @@ fmod ONETHIRDRULE-INDEX-AUX is
     eq getInfo(T, CI) = CI [owise] .
 endfm
 
-
 fmod ONETHIRDRULE-INDEX is
     including DEFAULT-INDEX .
 endfm

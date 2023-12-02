@@ -4,10 +4,9 @@ red in TEST-1 :
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
       init3(s, s ; s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s, s ; s s, O1 ; O2 ; O3, 
-               < O  : Node | decision : 0, ATTS >
-               < O' : Node | decision : s, ATTS' > CF}
-  such that noDupl(O1 ; O2 ; O3) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+               < O  : Node | decision : s, ATTS >
+               < O' : Node | decision : s s, ATTS' > CF}
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -15,10 +14,9 @@ red in TEST-2 :
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
       init3(s, s ; s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s, s ; s s, O1 ; O2 ; O3, 
-               < O  : Node | decision : 0, ATTS >
-               < O' : Node | decision : s, ATTS' > CF}
-  such that noDupl(O1 ; O2 ; O3) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+               < O  : Node | decision : s, ATTS >
+               < O' : Node | decision : s s, ATTS' > CF}
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -26,10 +24,9 @@ red in TEST-3 :
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
       init3(s, s ; s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s, s ; s s, O1 ; O2 ; O3, 
-               < O  : Node | decision : 0, ATTS >
-               < O' : Node | decision : s, ATTS' > CF}
-  such that noDupl(O1 ; O2 ; O3) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+               < O  : Node | decision : s, ATTS >
+               < O' : Node | decision : s s, ATTS' > CF}
+  such that noDupl(O1 ; O2 ; O3) .
 
 
 do clear memo .
@@ -38,10 +35,9 @@ red in TEST-G :
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
       init3(s, s ; s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s, s ; s s, O1 ; O2 ; O3, 
-               < O  : Node | decision : 0, ATTS >
-               < O' : Node | decision : s, ATTS' > CF}
-  such that noDupl(O1 ; O2 ; O3) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+               < O  : Node | decision : s, ATTS >
+               < O' : Node | decision : s s, ATTS' > CF}
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
@@ -49,10 +45,9 @@ red in TEST-BFS :
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-NML-ANALYSIS : 
       init3(s, s ; s s, O1, O2, O3, R, V1, V2, V3)
   =>* {s, s ; s s, O1 ; O2 ; O3, 
-               < O  : Node | decision : 0, ATTS >
-               < O' : Node | decision : s, ATTS' > CF}
-  such that noDupl(O1 ; O2 ; O3) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+               < O  : Node | decision : s, ATTS >
+               < O' : Node | decision : s s, ATTS' > CF}
+  such that noDupl(O1 ; O2 ; O3) .
 
 do clear memo .
 
