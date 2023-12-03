@@ -2,55 +2,55 @@ load ../main.maude
 
 red in TEST-1 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {s, (s ; s s), OS, INITIAL} 
-  =>* {s, (s ; s s), OS, < O  : Node | decision : s, ATTS  >
-               < O' : Node | decision : s s, ATTS' > CF}
+      {s, (0 ; s), OS, INITIAL} 
+  =>* {s, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
 
 red in TEST-2 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {s, (s ; s s), OS, INITIAL} 
-  =>* {s, (s ; s s), OS, < O  : Node | decision : s, ATTS  >
-               < O' : Node | decision : s s, ATTS' > CF}
+      {s, (0 ; s), OS, INITIAL} 
+  =>* {s, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
 
 red in TEST-3 : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {s, (s ; s s), OS, INITIAL} 
-  =>* {s, (s ; s s), OS, < O  : Node | decision : s, ATTS  >
-               < O' : Node | decision : s s, ATTS' > CF}
+      {s, (0 ; s), OS, INITIAL} 
+  =>* {s, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
 
 red in TEST-G : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {s, (s ; s s), OS, INITIAL} 
-  =>* {s, (s ; s s), OS, < O  : Node | decision : s, ATTS  >
-               < O' : Node | decision : s s, ATTS' > CF}
+      {s, (0 ; s), OS, INITIAL} 
+  =>* {s, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
 
 red in TEST-BFS : 
 heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
-      {s, (s ; s s), OS, INITIAL} 
-  =>* {s, (s ; s s), OS, < O  : Node | decision : s, ATTS  >
-               < O' : Node | decision : s s, ATTS' > CF}
+      {s, (0 ; s), OS, INITIAL} 
+  =>* {s, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
