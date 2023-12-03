@@ -72,7 +72,7 @@ fmod FUNCTIONS is
 
     eq genConst(V, N, none, emptyVs) = true [variant] .
     eq genConst(V, N, (V' |-> N') ; VM, (V' ; VS))
-    = ((N' < N) or ((N <= N') and (V < V')))
+    = ((N' < N) or ((N' <= N) and (V < V')))
      and genConst(V, N, VM, VS) [variant] .
 
     op initVotes : ValueSet -> VoteMap .
