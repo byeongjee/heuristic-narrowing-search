@@ -64,6 +64,90 @@ mod TEST-1 is
     vars ATTS ATTS' : U124S .
     var CF : Configuration .
 endm
+mod TEST-1-8 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-8 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-7 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-7 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-6 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-6 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-5 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-5 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-4 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-4 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-3 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-3 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
+mod TEST-1-2 is
+    protecting TEST-BASE .
+    protecting ONETHIRDRULE-SCORE-1-2 .
+
+    vars TH R : Natural .
+    vars O O' O1 O2 O3 : Oid .
+    vars V1 V2 V3 : Value .
+    var OS : OidSet .
+    var INITIAL : InitConfiguration .
+    vars ATTS ATTS' : U124S .
+    var CF : Configuration .
+endm
 
 mod TEST-2 is
     protecting TEST-BASE .

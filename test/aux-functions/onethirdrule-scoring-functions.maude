@@ -68,6 +68,83 @@ fmod ONETHIRDRULE-SCORE-1 is
      = 10 + (if T4 == 'done.Step then -9 else 0 fi) + max(1, toNumber(T3)) .
 endfm
 
+fmod ONETHIRDRULE-SCORE-1-8 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -8 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-7 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -7 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-6 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -6 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-5 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -5 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-4 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -4 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-3 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -3 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
+fmod ONETHIRDRULE-SCORE-1-2 is
+    including ONETHIRDRULE-SCORE-BASE .
+
+    vars T1 T2 T3 T4 : Term .
+    vars TL TL' : TermList .
+
+    ---Note: status may not be the first attribute in the meta repr
+    eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
+     = 10 + (if T4 == 'done.Step then -2 else 0 fi) + max(1, toNumber(T3)) .
+endfm
+
 fmod ONETHIRDRULE-SCORE-2 is
     including ONETHIRDRULE-SCORE-BASE .
 

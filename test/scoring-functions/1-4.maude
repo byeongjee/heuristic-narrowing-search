@@ -1,0 +1,12 @@
+load ../heuristic-narrowing/main.maude
+
+set print attribute on .
+
+red in TEST-1-4 : 
+heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
+      {TH, (0 ; s), OS, INITIAL} 
+  =>* {TH, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >
+               < O' : Node | decision : s, ATTS' > CF}
+  such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
+            sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
