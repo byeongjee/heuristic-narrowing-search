@@ -32,4 +32,4 @@ red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((s ; s s), getVoteMaps(INITIAL)) .
+            and validVMS((s ; s s), getVoteMaps(INITIAL)) .

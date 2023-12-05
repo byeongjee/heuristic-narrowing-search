@@ -98,6 +98,7 @@ mod ONETHIRDRULE-CONST is
     var NS : Set{Natural} .
     var VM : VoteMap .
     var VMS : Set{VoteMap} .
+    var NEVMS : NeSet{VoteMap} .
     var VS : ValueSet .
 
     op noDupl : OidSet -> Bool .
@@ -135,13 +136,15 @@ mod ONETHIRDRULE-CONST is
     eq getVoteMaps(MSG CF) = getVoteMaps(CF) .
     eq getVoteMaps(none) = empty .
 
-    op checkVoteMap : ValueSet VoteMap -> Bool .
-    eq checkVoteMap(V ; VS, (V |-> N) ; VM) = checkVoteMap(VS, VM) .
-    eq checkVoteMap(emptyVs, (V |-> N) ; VM) = false .
-    eq checkVoteMap(V ; VS, none) = false .
-    eq checkVoteMap(emptyVs, none) = true .
 
-    op checkVoteMaps : ValueSet Set{VoteMap} -> Bool .
-    eq checkVoteMaps(VS, (VM, VMS)) = checkVoteMap(VS, VM) and checkVoteMaps(VS, VMS) .
-    eq checkVoteMaps(VS, empty) = true .
+    op validVMS : ValueSet Set{VoteMap} -> Bool .
+    op validVM : ValueSet VoteMap -> Bool .
+
+    eq validVMS(VS, (VM, VMS)) = validVM(VS, VM) and validVMS(VS, VMS) .
+    eq validVMS(VS, empty) = true .
+
+    eq validVM(V ; VS, (V |-> N) ; VM) = validVM(VS, VM) .
+    eq validVM(emptyVs, (V |-> N) ; VM) = false .
+    eq validVM(V ; VS, none) = false .
+    eq validVM(emptyVs, none) = true .
 endm

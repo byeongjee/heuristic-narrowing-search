@@ -7,7 +7,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
 
 
 do clear memo .
@@ -19,7 +19,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .
 
@@ -30,7 +30,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
 
 
 do clear memo .
@@ -42,7 +42,7 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
 
 
 do clear memo .
@@ -54,6 +54,6 @@ heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS :
                < O' : Node | decision : s, ATTS' > CF}
   such that noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH) 
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)) .
+            and validVMS((0 ; s), getVoteMaps(INITIAL)) .
 
 do clear memo .

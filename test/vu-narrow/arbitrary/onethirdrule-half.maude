@@ -7,7 +7,7 @@ load ../../../model/onethirdrule-vu-narrow.maude
 {fold} vu-narrow {filter,delay} [1] in ONETHIRDRULE-VU-NARROW-ANALYSIS :
 {TH, 0 ; s, OS, INITIAL} || (noDupl(OS) and noDupl(getOids(INITIAL)) and 
             sameRound(getRounds(INITIAL)) and valid1/2(numObjs(INITIAL), TH)
-            and checkVoteMaps((0 ; s), getVoteMaps(INITIAL)))
+            and validVMS((0 ; s), getVoteMaps(INITIAL)))
 =>* 
 {TH, 0 ; s, OS,
 < O : Node | decision : 0, ATTS >
