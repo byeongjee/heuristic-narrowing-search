@@ -65,7 +65,7 @@ fmod ONETHIRDRULE-SCORE-1 is
 
     ---Note: status may not be the first attribute in the meta repr
     eq scoreAux('<_:_|_>[T1, T2, '_`,_[TL, 'status`:_['`[_`,_`][T3, T4]], TL']])
-     = 10 + (if T4 == 'done.Step then -9 else 0 fi) + max(1, toNumber(T3)) .
+     = 10 + (if T4 == 'done.Step then -5 else 0 fi) + max(1, toNumber(T3)) .
 endfm
 
 fmod ONETHIRDRULE-SCORE-1-8 is

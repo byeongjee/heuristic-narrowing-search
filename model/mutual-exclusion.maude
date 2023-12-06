@@ -11,15 +11,27 @@ mod MUTUAL-EXCLUSION-CLIENT-ATTS is
     sorts Status InitStatus .
     subsort InitStatus < Status .
 
-    op ready : FZero -> InitStatus [ctor] .
-    ops ready wait crit : Natural -> Status [ctor] .
-    op error : -> Status [ctor] .
+    op ready : -> InitStatus [ctor] .
+    ops wait crit error : -> Status [ctor] .
 
     sorts StatusAttr InitStatusAttr .
     subsort InitStatusAttr < StatusAttr .
 
     op status`:_ : InitStatus -> InitStatusAttr [ctor prec 15 gather (&)] .
     op status`:_ : Status -> StatusAttr [ctor prec 15 gather (&)] .
+
+    sorts CounterAttr InitCounterAttr .
+    subsort InitCounterAttr < CounterAttr .
+
+    op counter`:_ : FZero -> InitCounterAttr [ctor prec 15 gather (&)] .
+    op counter`:_ : Natural -> CounterAttr [ctor prec 15 gather (&)] .
+
+    sorts InitClientAttrSet ClientAttrSet .
+    subsort InitClientAttrSet < ClientAttrSet .
+    subsort InitStatusAttr InitCounterAttr < InitClientAttrSet .
+    subsort StatusAttr CounterAttr < ClientAttrSet .
+    op _,_ : InitStatusAttr InitCounterAttr -> InitClientAttrSet [ctor assoc comm format (d d s d)] .
+    op _,_ : StatusAttr CounterAttr -> ClientAttrSet [ctor ditto] .
 endm
 
 mod MUTUAL-EXCLUSION-SERVER-ATTS is
@@ -28,8 +40,8 @@ mod MUTUAL-EXCLUSION-SERVER-ATTS is
 
     sorts FlagAttr InitFlagAttr .
     subsort InitFlagAttr < FlagAttr .
-    op nodeInCs`:_ : False -> InitFlagAttr [ctor prec 15 gather (&)] .
-    op nodeInCs`:_ : Boolean -> FlagAttr [ctor prec 15 gather (&)] .
+    op incrit`:_ : False -> InitFlagAttr [ctor prec 15 gather (&)] .
+    op incrit`:_ : Boolean -> FlagAttr [ctor prec 15 gather (&)] .
 
     sorts EmptyOidList OidList .
     subsorts EmptyOidList Oid < OidList .
@@ -70,8 +82,8 @@ mod ALT-CONFIGURATION is
     op __ : InitConfiguration InitConfiguration -> InitConfiguration [ctor assoc comm id: none] .
     op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
 
-    op <_:_|_> : Oid Client InitStatusAttr -> InitObject [ctor object] .
-    op <_:_|_> : Oid Client StatusAttr -> Object [ctor object] .
+    op <_:_|_> : Oid Client InitClientAttrSet -> InitObject [ctor object] .
+    op <_:_|_> : Oid Client ClientAttrSet -> Object [ctor object] .
     op <_:_|_> : Oid Server ServerAttrSet -> Object [ctor object] .
 endm
 
@@ -102,39 +114,39 @@ mod MUTUAL-EXCLUSION is
     var OL : OidList .
 
     rl [request-access] : 
-    {< O : Client | status : ready(N) > CONF}
+    {< O : Client | status : ready, ATTS:CounterAttr > CONF}
     => 
-    {< O : Client | status : wait(N) > 
+    {< O : Client | status : wait, ATTS:CounterAttr > 
     (msg request from O to server) CONF}
     [narrowing] .
 
     rl [grant-access] : 
     {(msg request from O to server) 
-    < server : Server | nodeInCs : false, ATTS:QueueAttr > CONF}
+    < server : Server | incrit : false, ATTS:QueueAttr > CONF}
     => 
-    {< server : Server | nodeInCs : true, ATTS:QueueAttr > 
+    {< server : Server | incrit : true, ATTS:QueueAttr > 
     (msg accessGranted from server to O) CONF} 
     [narrowing] .
 
     rl [put-in-queue] : 
     {(msg request from O to server) 
-    < server : Server | nodeInCs : true, waiting : OL > CONF}
+    < server : Server | incrit : true, waiting : OL > CONF}
     => 
-    {< server : Server | nodeInCs : true, waiting : (OL :: O) > CONF} 
+    {< server : Server | incrit : true, waiting : (OL :: O) > CONF} 
     [narrowing] .
 
     rl [start-cs] :
     {(msg accessGranted from server to O)
-     < O : Client | status : wait(N) >
+     < O : Client | status : wait, ATTS:CounterAttr >
      CONF}
    =>
-   {< O : Client | status : crit(N) > CONF} 
+   {< O : Client | status : crit, ATTS:CounterAttr > CONF} 
    [narrowing] .
 
     rl [exit-cs] :
-    {< O : Client | status : crit(N) > CONF}
+    {< O : Client | status : crit, counter : N > CONF}
     =>
-    {< O : Client | status : ready(s N) > 
+    {< O : Client | status : ready, counter : s N > 
     (msg release from O to server) CONF}
     [narrowing] .
 
@@ -142,7 +154,7 @@ mod MUTUAL-EXCLUSION is
     {(msg release from O to server) 
     < server : Server | waiting : nil, ATTS:FlagAttr > CONF}
     =>
-    {< server : Server | nodeInCs : false, waiting : nil > CONF}
+    {< server : Server | incrit : false, waiting : nil > CONF}
     [narrowing] .
 
     rl [grant-access-to-first-waiting] :
@@ -164,9 +176,9 @@ mod MUTUAL-EXCLUSION-2 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s N) > CONF}
+    {< O : Client | status : crit, counter : s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s N > CONF}
     [narrowing] .
 endm
 
@@ -178,9 +190,9 @@ mod MUTUAL-EXCLUSION-3 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s s N) > CONF}
+    {< O : Client | status : crit, counter : s s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s s N > CONF}
     [narrowing] .
 endm
 
@@ -192,9 +204,9 @@ mod MUTUAL-EXCLUSION-4 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s s s N) > CONF}
+    {< O : Client | status : crit, counter : s s s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s s s N > CONF}
     [narrowing] .
 endm
 
@@ -214,7 +226,7 @@ mod MUTUAL-EXCLUSION-CONST is
     eq noDupl(O ; O ; OS) = false .
 
     op getOids : Configuration -> OidSet [memo] .
-    eq getOids(< O : C | ATTS:StatusAttr > CF) = O ; getOids(CF) .
+    eq getOids(< O : C | ATTS:ClientAttrSet > CF) = O ; getOids(CF) .
     eq getOids(none) =  none .
 
 endm
@@ -235,9 +247,9 @@ mod MUTUAL-EXCLUSION-ANALYSIS-2 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s N) > CONF}
+    {< O : Client | status : crit, counter : s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s N > CONF}
     [narrowing] .
 endm
 
@@ -249,9 +261,9 @@ mod MUTUAL-EXCLUSION-ANALYSIS-3 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s s N) > CONF}
+    {< O : Client | status : crit, counter : s s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s s N > CONF}
     [narrowing] .
 endm
 
@@ -263,8 +275,8 @@ mod MUTUAL-EXCLUSION-ANALYSIS-4 is
     var CONF : Configuration .
 
     rl [bug] :
-    {< O : Client | status : crit(s s s s N) > CONF}
+    {< O : Client | status : crit, counter : s s s s N > CONF}
     =>
-    {< O : Client | status : error > CONF}
+    {< O : Client | status : error, counter : s s s s N > CONF}
     [narrowing] .
 endm
