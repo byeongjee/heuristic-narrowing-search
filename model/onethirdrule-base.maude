@@ -66,10 +66,13 @@ fmod FUNCTIONS is
     vars V V' : Value .
 
     op update : Vote Value -> Vote .
-    eq update([V |-> N ; VM, NA], V) = [V |-> s N ; VM, s NA] [variant] .  
+    eq update([V |-> N ; VM, NA], V) = [V |-> incr(N) ; VM, incr(NA)] [variant] .  
+
+    op incr : Natural -> Natural .
+    eq incr(Z:FZero) = s [variant] .
+    eq incr(NZ:NzNatural) = s NZ:NzNatural [variant] .
 
     op genConst : Value Natural VoteMap ValueSet -> Boolean .
-
     eq genConst(V, N, none, emptyVs) = true [variant] .
     eq genConst(V, N, (V' |-> N') ; VM, (V' ; VS))
     = ((N' < N) or ((N' <= N) and (V < V')))
