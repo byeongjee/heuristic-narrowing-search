@@ -62,7 +62,6 @@ fmod FUNCTIONS is
     vars N N' NA N1 N2 TH : Natural .
     var VM : VoteMap .
     var VS : ValueSet .
-
     vars V V' : Value .
 
     op update : Vote Value -> Vote .
@@ -75,8 +74,7 @@ fmod FUNCTIONS is
     op genConst : Value Natural VoteMap ValueSet -> Boolean .
     eq genConst(V, N, none, emptyVs) = true [variant] .
     eq genConst(V, N, (V' |-> N') ; VM, (V' ; VS))
-    = ((N' < N) or ((N' <= N) and (V < V')))
-     and genConst(V, N, VM, VS) [variant] .
+     = ((N' < N) or ((N' <= N) and (V < V'))) and genConst(V, N, VM, VS) [variant] .
 
     op initVotes : ValueSet -> VoteMap .
     eq initVotes(V ; VS) = (V |-> 0) ; initVotes(VS) [variant] .
@@ -133,18 +131,17 @@ mod ONETHIRDRULE-CONST is
     eq valid1/2(s N, s N N') = true .
 
     op getVoteMaps : Configuration -> Set{VoteMap} .
-    eq getVoteMaps(< O : Node | votes : [VM, N], ATTS:U123S > CF) 
-    = VM, getVoteMaps(CF) .
+    eq getVoteMaps(< O : Node | votes : [VM, N], ATTS:U123S > CF) = VM, getVoteMaps(CF) .
     eq getVoteMaps(MSG CF) = getVoteMaps(CF) .
     eq getVoteMaps(none) = empty .
 
-    op checkVoteMap : ValueSet VoteMap -> Bool .
-    eq checkVoteMap(V ; VS, (V |-> N) ; VM) = checkVoteMap(VS, VM) .
-    eq checkVoteMap(emptyVs, (V |-> N) ; VM) = false .
-    eq checkVoteMap(V ; VS, none) = false .
-    eq checkVoteMap(emptyVs, none) = true .
+    op validVM : ValueSet VoteMap -> Bool .
+    eq validVM(V ; VS, (V |-> N) ; VM) = validVM(VS, VM) .
+    eq validVM(emptyVs, (V |-> N) ; VM) = false .
+    eq validVM(V ; VS, none) = false .
+    eq validVM(emptyVs, none) = true .
 
-    op checkVoteMaps : ValueSet Set{VoteMap} -> Bool .
-    eq checkVoteMaps(VS, (VM, VMS)) = checkVoteMap(VS, VM) and checkVoteMaps(VS, VMS) .
-    eq checkVoteMaps(VS, empty) = true .
+    op validVMS : ValueSet Set{VoteMap} -> Bool .
+    eq validVMS(VS, (VM, VMS)) = validVM(VS, VM) and validVMS(VS, VMS) .
+    eq validVMS(VS, empty) = true .
 endm
