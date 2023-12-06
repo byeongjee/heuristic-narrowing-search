@@ -7,6 +7,32 @@ fmod SCORE is
 endfm
 
 
+--- a default score function
+fmod DEFAULT-SCORE is
+  including SCORE .
+  protecting NAT .
+  subsort Nat < Score .
+    
+  vars T : Term .  
+  vars N N' D : Nat .  
+  var F : Qid .  
+  var Q : TermQid . 
+  var TL : TermList .   
+  var NTL : NeTermList .   
+
+  eq score(T, D) = size(T) .
+  eq N gt N' = N > N' .    
+  eq N lt N' = N < N' .    
+  eq N le N' = N <= N' .
+
+  op size : TermList -> Nat .
+  eq size((T, NTL)) = size(T) + size(NTL) .
+  eq size(empty) = 0 .
+  eq size(F[TL]) = 1 + size(TL) .
+  eq size(Q) = 1 .
+endfm
+
+
 --- a base module for indexing
 fmod INDEX is
     protecting META-TERM .
