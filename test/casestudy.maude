@@ -24,6 +24,8 @@ mod MAIN is
     vars V1 V2 : Value .
 endm
 
+set print attribute on .
+
 red heuristic-narrow {filter delay} in 'ONETHIRDRULE-ANALYSIS : 
       {TH, (0 ; s), OS, INITIAL} 
   =>* {TH, (0 ; s), OS, < O  : Node | decision : 0, ATTS  >

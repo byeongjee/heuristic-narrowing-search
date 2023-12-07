@@ -3,4 +3,5 @@ fmod STATE is
     including BOOL .
     sort State .
     op inv : State -> Bool .
+    op unreachable : -> State .
 endfm

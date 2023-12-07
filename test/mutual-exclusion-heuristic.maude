@@ -38,22 +38,6 @@ fmod MUTUAL-EXCLUSION-SCORE-BASE is
     eq N gt N' = N >  N' .
     eq N lt N' = N <  N' .
     eq N le N' = N <= N' .
-
-    eq score(F[T], D) = scoreAux(T) .
-
-    op scoreAux : NeTermList -> Score .
-    eq scoreAux('__[NTL]) = scoreAux(NTL) .
-    eq scoreAux((T, NTL)) = scoreAux(T) + scoreAux(NTL) .
-    eq scoreAux('msg_from_to_[NTL]) = 0 .
-    eq scoreAux('<_:_|_>[T, 'Server.Server]) = 0 .
-    eq scoreAux(T) = 0 [owise] .
-
-    *** auxiliary function
-    op toNumber : TermList -> Nat .
-    eq toNumber(('s.NzNatural, TL)) = s(toNumber(TL)) .
-    eq toNumber('__[TL]) = toNumber(TL) . 
-    eq toNumber(V) = 0 .
-    eq toNumber(empty) = 0 .
 endfm
 
 fmod MUTUAL-EXCLUSION-SCORE-G is
@@ -62,45 +46,17 @@ fmod MUTUAL-EXCLUSION-SCORE-G is
     vars T : Term .
     var F : Qid .
     var D : Nat .
+    var NTL : NeTermList .
 
-    eq score(F[T], D) = termSize(F[T]) .
+    op termSize : NeTermList -> Nat .
+    eq termSize(F[NTL]) = 1 + termSize(NTL) .
+    eq termSize((T, NTL)) = termSize(T) + termSize(NTL) .
+    eq termSize(T) = 1 [owise] .
+
+    eq score(T, D) = termSize(T) [print "hi"] .
 endfm
 
 
-fmod MUTUAL-EXCLUSION-SCORE-1 is
-    including MUTUAL-EXCLUSION-SCORE-BASE .
-
-    vars T1 T2 T3 : Term .
-    var F : Qid .
-
-    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_[F[T3]]])
-    = 10 + toNumber(T3) .
-
-    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 10 .
-
-endfm
-
-fmod MUTUAL-EXCLUSION-SCORE-2 is
-    including MUTUAL-EXCLUSION-SCORE-BASE .
-
-    vars T1 T2 T3 : Term .
-    var F : Qid .
-
-    eq scoreAux('<_:_|_>[T1, T2, 'status`:_[F[T3]]])
-    = 2 + toNumber(T3) .
-    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 5 .
-endfm
-
-fmod MUTUAL-EXCLUSION-SCORE-3 is
-    including MUTUAL-EXCLUSION-SCORE-BASE .
-
-    vars T1 T2 T3 : Term .
-    var F : Qid .
-
-    eq scoreAux('<_:_|_>[T1, T2, 'status`:_[F[T3]]])
-    = 1 + toNumber(T3) .
-    eq scoreAux('<_:_|_>[T1, 'Client.Client, 'status`:_['error.Status]]) = 1 .
-endfm
 
 mod MAIN is
     protecting MUTUAL-EXCLUSION-ANALYSIS-BASE .
@@ -133,121 +89,33 @@ mod TEST-G is
     var CF : Configuration .
 endm
 
-mod TEST-1 is
-    protecting MAIN .
-    protecting MUTUAL-EXCLUSION-SCORE-1 .
 
-    vars N M : Natural .
-    vars O O' : Oid .
-    var OS : OidSet .
-    var INIT : InitConfiguration .
-    vars ATTS ATTS' : StatusAttr .
-    var CF : Configuration .
-endm
-
-mod TEST-2 is
-    protecting MAIN .
-    protecting MUTUAL-EXCLUSION-SCORE-2 .
-
-    vars N M : Natural .
-    vars O O' : Oid .
-    var OS : OidSet .
-    var INIT : InitConfiguration .
-    vars ATTS ATTS' : StatusAttr .
-    var CF : Configuration .
-endm
-
-mod TEST-3 is
-    protecting MAIN .
-    protecting MUTUAL-EXCLUSION-SCORE-3 .
-
-    vars N M : Natural .
-    vars O O' : Oid .
-    var OS : OidSet .
-    var INIT : InitConfiguration .
-    vars ATTS ATTS' : StatusAttr .
-    var CF : Configuration .
-endm
-
-
---- error threshold 2
-red in TEST-G : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-
---- error threshold 3
 red in TEST-G : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+      {INIT < server : Server | incrit : false, waiting : nil >} 
   =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+  such that noDupl(getOids(INIT) ; server) .
 
 
---- error threshold 4
+do clear memo .
+
 red in TEST-G : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+      {INIT < server : Server | incrit : false, waiting : nil >} 
   =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+  such that noDupl(getOids(INIT) ; server) .
 
-red in TEST-1 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-2 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-red in TEST-3 : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
-
-
---- bfs tests
-red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
-  =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+do clear memo .
 
 red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-3 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+      {INIT < server : Server | incrit : false, waiting : nil >} 
   =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+  such that noDupl(getOids(INIT) ; server) .
+
+
+do clear memo .
 
 red in TEST-BFS : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-4 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+      {INIT < server : Server | incrit : false, waiting : nil >} 
   =>* {< O : Client | status : error > CF}
-  such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
+  such that noDupl(getOids(INIT) ; server) .
+
+do clear memo .

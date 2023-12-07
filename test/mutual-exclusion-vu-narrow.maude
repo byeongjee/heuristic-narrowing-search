@@ -3,21 +3,6 @@ load ../tool/state.maude
 load ../tool/tool.maude
 load ../model/mutual-exclusion.maude
 
-mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-2 is
-    protecting MUTUAL-EXCLUSION-2 .
-    protecting MUTUAL-EXCLUSION-CONST .
-    protecting HNR-TOP .
-    including STATE . 
-
-    subsort Global < State .
-
-    vars O O' : Oid . 
-    var OS : OidSet .
-    var CF : Configuration .
-    var PHI : Bool .
-    vars N M N' M' : Natural .
-    var INIT : InitConfiguration .
-endm 
 
 mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-3 is
     protecting MUTUAL-EXCLUSION-3 .
@@ -51,17 +36,12 @@ mod MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-4 is
     var INIT : InitConfiguration .
 endm 
 
-{fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-2 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
-=>* 
-{< O : Client | status : error > CF} || PHI .
-
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-3 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
+{INIT < server : Server | incrit : false, waiting : nil >} || noDupl(getOids(INIT) ; server)
 =>* 
 {< O : Client | status : error > CF} || PHI .
 
 {fold} vu-narrow {filter,delay} [1] in MUTUAL-EXCLUSION-VU-NARROW-ANALYSIS-4 :
-{INIT < server : Server | ATTS:InitServerAttrSet >} || noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >))
+{INIT < server : Server | incrit : false, waiting : nil >} || noDupl(getOids(INIT) ; server)
 =>* 
 {< O : Client | status : error > CF} || PHI .

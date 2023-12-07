@@ -18,6 +18,7 @@ mod ONETHIRDRULE-VU-NARROW-ANALYSIS is
     var CF : Configuration .
     var PHI : Bool .
     var VS : ValueSet .
+    var S : State .
 
     op init3 : Natural ValueSet Oid Oid Oid Natural Value Value Value -> Global .
     eq init3(TH, VS, O1, O2, O3, R, V1, V2, V3)

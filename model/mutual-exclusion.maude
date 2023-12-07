@@ -28,8 +28,8 @@ mod MUTUAL-EXCLUSION-SERVER-ATTS is
 
     sorts FlagAttr InitFlagAttr .
     subsort InitFlagAttr < FlagAttr .
-    op nodeInCs`:_ : False -> InitFlagAttr [ctor prec 15 gather (&)] .
-    op nodeInCs`:_ : Boolean -> FlagAttr [ctor prec 15 gather (&)] .
+    op incrit`:_ : False -> InitFlagAttr [ctor prec 15 gather (&)] .
+    op incrit`:_ : Boolean -> FlagAttr [ctor prec 15 gather (&)] .
 
     sorts EmptyOidList OidList .
     subsorts EmptyOidList Oid < OidList .
@@ -110,17 +110,17 @@ mod MUTUAL-EXCLUSION is
 
     rl [grant-access] : 
     {(msg request from O to server) 
-    < server : Server | nodeInCs : false, ATTS:QueueAttr > CONF}
+    < server : Server | incrit : false, ATTS:QueueAttr > CONF}
     => 
-    {< server : Server | nodeInCs : true, ATTS:QueueAttr > 
+    {< server : Server | incrit : true, ATTS:QueueAttr > 
     (msg accessGranted from server to O) CONF} 
     [narrowing] .
 
     rl [put-in-queue] : 
     {(msg request from O to server) 
-    < server : Server | nodeInCs : true, waiting : OL > CONF}
+    < server : Server | incrit : true, waiting : OL > CONF}
     => 
-    {< server : Server | nodeInCs : true, waiting : (OL :: O) > CONF} 
+    {< server : Server | incrit : true, waiting : (OL :: O) > CONF} 
     [narrowing] .
 
     rl [start-cs] :
@@ -142,7 +142,7 @@ mod MUTUAL-EXCLUSION is
     {(msg release from O to server) 
     < server : Server | waiting : nil, ATTS:FlagAttr > CONF}
     =>
-    {< server : Server | nodeInCs : false, waiting : nil > CONF}
+    {< server : Server | incrit : false, waiting : nil > CONF}
     [narrowing] .
 
     rl [grant-access-to-first-waiting] :
