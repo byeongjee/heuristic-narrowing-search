@@ -108,7 +108,7 @@ endm
 set print attribute on .
 
 red in TEST-G : heuristic-narrow {filter delay} in 'MUTUAL-EXCLUSION-ANALYSIS-2 : 
-      {INIT < server : Server | ATTS:InitServerAttrSet >} 
+      {INIT < server : Server | nod waiting : nil >} 
   =>* {< O : Client | status : error > CF}
   such that noDupl(getOids(INIT < server : Server | ATTS:InitServerAttrSet >)) .
 
